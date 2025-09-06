@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,--dependency-file=CMakeFiles/gbemu.dir/link.d CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o -o gbemu

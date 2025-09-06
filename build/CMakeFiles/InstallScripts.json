@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ryanm/dev/gbemu/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
