@@ -1,4 +1,4 @@
-CMakeFiles/gbemu.dir/main.c.o: /home/ryanm/dev/gbemu/src/main.c \
+CMakeFiles/gbemu.dir/main.c.o: /home/ryanm/dev/CGBEmu/src/main.c \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/bits/libc-header-start.h /usr/include/features.h \
  /usr/include/features-time64.h /usr/include/bits/wordsize.h \
@@ -19,4 +19,4 @@ CMakeFiles/gbemu.dir/main.c.o: /home/ryanm/dev/gbemu/src/main.c \
  /usr/include/stdint.h /usr/include/bits/wchar.h \
  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
  /usr/include/bits/stdint-least.h \
- /home/ryanm/dev/gbemu/src/../headers/cart.h
+ /home/ryanm/dev/CGBEmu/src/../headers/cart.h

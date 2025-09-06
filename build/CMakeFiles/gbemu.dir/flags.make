@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/ryanm/dev/gbemu/src/../headers
+C_INCLUDES = -I/home/ryanm/dev/CGBEmu/src/../headers
 
 C_FLAGS = 
 

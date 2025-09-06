@@ -1,5 +1,5 @@
-CMakeFiles/gbemu.dir/bus.c.o: /home/ryanm/dev/gbemu/src/bus.c \
- /usr/include/stdc-predef.h /home/ryanm/dev/gbemu/src/../headers/bus.h \
+CMakeFiles/gbemu.dir/bus.c.o: /home/ryanm/dev/CGBEmu/src/bus.c \
+ /usr/include/stdc-predef.h /home/ryanm/dev/CGBEmu/src/../headers/bus.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -10,7 +10,7 @@ CMakeFiles/gbemu.dir/bus.c.o: /home/ryanm/dev/gbemu/src/bus.c \
  /usr/include/bits/time64.h /usr/include/bits/wchar.h \
  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
  /usr/include/bits/stdint-least.h \
- /home/ryanm/dev/gbemu/src/../headers/cart.h /usr/include/stdio.h \
+ /home/ryanm/dev/CGBEmu/src/../headers/cart.h /usr/include/stdio.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stddef.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdarg.h \
  /usr/include/bits/types/__fpos_t.h /usr/include/bits/types/__mbstate_t.h \

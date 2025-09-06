@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ryanm/dev/gbemu/src
+CMAKE_SOURCE_DIR = /home/ryanm/dev/CGBEmu/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ryanm/dev/gbemu/build
+CMAKE_BINARY_DIR = /home/ryanm/dev/CGBEmu/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/gbemu.dir/depend.make
@@ -73,60 +73,60 @@ CMakeFiles/gbemu.dir/codegen:
 .PHONY : CMakeFiles/gbemu.dir/codegen
 
 CMakeFiles/gbemu.dir/cart.c.o: CMakeFiles/gbemu.dir/flags.make
-CMakeFiles/gbemu.dir/cart.c.o: /home/ryanm/dev/gbemu/src/cart.c
+CMakeFiles/gbemu.dir/cart.c.o: /home/ryanm/dev/CGBEmu/src/cart.c
 CMakeFiles/gbemu.dir/cart.c.o: CMakeFiles/gbemu.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/gbemu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/gbemu.dir/cart.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/cart.c.o -MF CMakeFiles/gbemu.dir/cart.c.o.d -o CMakeFiles/gbemu.dir/cart.c.o -c /home/ryanm/dev/gbemu/src/cart.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/CGBEmu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/gbemu.dir/cart.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/cart.c.o -MF CMakeFiles/gbemu.dir/cart.c.o.d -o CMakeFiles/gbemu.dir/cart.c.o -c /home/ryanm/dev/CGBEmu/src/cart.c
 
 CMakeFiles/gbemu.dir/cart.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/gbemu.dir/cart.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/gbemu/src/cart.c > CMakeFiles/gbemu.dir/cart.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/CGBEmu/src/cart.c > CMakeFiles/gbemu.dir/cart.c.i
 
 CMakeFiles/gbemu.dir/cart.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/gbemu.dir/cart.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/gbemu/src/cart.c -o CMakeFiles/gbemu.dir/cart.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/CGBEmu/src/cart.c -o CMakeFiles/gbemu.dir/cart.c.s
 
 CMakeFiles/gbemu.dir/main.c.o: CMakeFiles/gbemu.dir/flags.make
-CMakeFiles/gbemu.dir/main.c.o: /home/ryanm/dev/gbemu/src/main.c
+CMakeFiles/gbemu.dir/main.c.o: /home/ryanm/dev/CGBEmu/src/main.c
 CMakeFiles/gbemu.dir/main.c.o: CMakeFiles/gbemu.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/gbemu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/gbemu.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/main.c.o -MF CMakeFiles/gbemu.dir/main.c.o.d -o CMakeFiles/gbemu.dir/main.c.o -c /home/ryanm/dev/gbemu/src/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/CGBEmu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/gbemu.dir/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/main.c.o -MF CMakeFiles/gbemu.dir/main.c.o.d -o CMakeFiles/gbemu.dir/main.c.o -c /home/ryanm/dev/CGBEmu/src/main.c
 
 CMakeFiles/gbemu.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/gbemu.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/gbemu/src/main.c > CMakeFiles/gbemu.dir/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/CGBEmu/src/main.c > CMakeFiles/gbemu.dir/main.c.i
 
 CMakeFiles/gbemu.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/gbemu.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/gbemu/src/main.c -o CMakeFiles/gbemu.dir/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/CGBEmu/src/main.c -o CMakeFiles/gbemu.dir/main.c.s
 
 CMakeFiles/gbemu.dir/bus.c.o: CMakeFiles/gbemu.dir/flags.make
-CMakeFiles/gbemu.dir/bus.c.o: /home/ryanm/dev/gbemu/src/bus.c
+CMakeFiles/gbemu.dir/bus.c.o: /home/ryanm/dev/CGBEmu/src/bus.c
 CMakeFiles/gbemu.dir/bus.c.o: CMakeFiles/gbemu.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/gbemu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/gbemu.dir/bus.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/bus.c.o -MF CMakeFiles/gbemu.dir/bus.c.o.d -o CMakeFiles/gbemu.dir/bus.c.o -c /home/ryanm/dev/gbemu/src/bus.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/CGBEmu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/gbemu.dir/bus.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/bus.c.o -MF CMakeFiles/gbemu.dir/bus.c.o.d -o CMakeFiles/gbemu.dir/bus.c.o -c /home/ryanm/dev/CGBEmu/src/bus.c
 
 CMakeFiles/gbemu.dir/bus.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/gbemu.dir/bus.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/gbemu/src/bus.c > CMakeFiles/gbemu.dir/bus.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/CGBEmu/src/bus.c > CMakeFiles/gbemu.dir/bus.c.i
 
 CMakeFiles/gbemu.dir/bus.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/gbemu.dir/bus.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/gbemu/src/bus.c -o CMakeFiles/gbemu.dir/bus.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/CGBEmu/src/bus.c -o CMakeFiles/gbemu.dir/bus.c.s
 
 CMakeFiles/gbemu.dir/cpu.c.o: CMakeFiles/gbemu.dir/flags.make
-CMakeFiles/gbemu.dir/cpu.c.o: /home/ryanm/dev/gbemu/src/cpu.c
+CMakeFiles/gbemu.dir/cpu.c.o: /home/ryanm/dev/CGBEmu/src/cpu.c
 CMakeFiles/gbemu.dir/cpu.c.o: CMakeFiles/gbemu.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/gbemu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/gbemu.dir/cpu.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/cpu.c.o -MF CMakeFiles/gbemu.dir/cpu.c.o.d -o CMakeFiles/gbemu.dir/cpu.c.o -c /home/ryanm/dev/gbemu/src/cpu.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryanm/dev/CGBEmu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/gbemu.dir/cpu.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/gbemu.dir/cpu.c.o -MF CMakeFiles/gbemu.dir/cpu.c.o.d -o CMakeFiles/gbemu.dir/cpu.c.o -c /home/ryanm/dev/CGBEmu/src/cpu.c
 
 CMakeFiles/gbemu.dir/cpu.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/gbemu.dir/cpu.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/gbemu/src/cpu.c > CMakeFiles/gbemu.dir/cpu.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/ryanm/dev/CGBEmu/src/cpu.c > CMakeFiles/gbemu.dir/cpu.c.i
 
 CMakeFiles/gbemu.dir/cpu.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/gbemu.dir/cpu.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/gbemu/src/cpu.c -o CMakeFiles/gbemu.dir/cpu.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/ryanm/dev/CGBEmu/src/cpu.c -o CMakeFiles/gbemu.dir/cpu.c.s
 
 # Object files for target gbemu
 gbemu_OBJECTS = \
@@ -145,7 +145,7 @@ gbemu: CMakeFiles/gbemu.dir/cpu.c.o
 gbemu: CMakeFiles/gbemu.dir/build.make
 gbemu: CMakeFiles/gbemu.dir/compiler_depend.ts
 gbemu: CMakeFiles/gbemu.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ryanm/dev/gbemu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable gbemu"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ryanm/dev/CGBEmu/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable gbemu"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gbemu.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -157,6 +157,6 @@ CMakeFiles/gbemu.dir/clean:
 .PHONY : CMakeFiles/gbemu.dir/clean
 
 CMakeFiles/gbemu.dir/depend:
-	cd /home/ryanm/dev/gbemu/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ryanm/dev/gbemu/src /home/ryanm/dev/gbemu/src /home/ryanm/dev/gbemu/build /home/ryanm/dev/gbemu/build /home/ryanm/dev/gbemu/build/CMakeFiles/gbemu.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/ryanm/dev/CGBEmu/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ryanm/dev/CGBEmu/src /home/ryanm/dev/CGBEmu/src /home/ryanm/dev/CGBEmu/build /home/ryanm/dev/CGBEmu/build /home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/gbemu.dir/depend
 

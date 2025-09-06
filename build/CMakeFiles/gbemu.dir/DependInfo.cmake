@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ryanm/dev/gbemu/src/bus.c" "CMakeFiles/gbemu.dir/bus.c.o" "gcc" "CMakeFiles/gbemu.dir/bus.c.o.d"
-  "/home/ryanm/dev/gbemu/src/cart.c" "CMakeFiles/gbemu.dir/cart.c.o" "gcc" "CMakeFiles/gbemu.dir/cart.c.o.d"
-  "/home/ryanm/dev/gbemu/src/cpu.c" "CMakeFiles/gbemu.dir/cpu.c.o" "gcc" "CMakeFiles/gbemu.dir/cpu.c.o.d"
-  "/home/ryanm/dev/gbemu/src/main.c" "CMakeFiles/gbemu.dir/main.c.o" "gcc" "CMakeFiles/gbemu.dir/main.c.o.d"
+  "/home/ryanm/dev/CGBEmu/src/bus.c" "CMakeFiles/gbemu.dir/bus.c.o" "gcc" "CMakeFiles/gbemu.dir/bus.c.o.d"
+  "/home/ryanm/dev/CGBEmu/src/cart.c" "CMakeFiles/gbemu.dir/cart.c.o" "gcc" "CMakeFiles/gbemu.dir/cart.c.o.d"
+  "/home/ryanm/dev/CGBEmu/src/cpu.c" "CMakeFiles/gbemu.dir/cpu.c.o" "gcc" "CMakeFiles/gbemu.dir/cpu.c.o.d"
+  "/home/ryanm/dev/CGBEmu/src/main.c" "CMakeFiles/gbemu.dir/main.c.o" "gcc" "CMakeFiles/gbemu.dir/main.c.o.d"
   "" "gbemu" "gcc" "CMakeFiles/gbemu.dir/link.d"
   )
 

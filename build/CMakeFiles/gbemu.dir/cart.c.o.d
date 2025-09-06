@@ -1,5 +1,5 @@
-CMakeFiles/gbemu.dir/cart.c.o: /home/ryanm/dev/gbemu/src/cart.c \
- /usr/include/stdc-predef.h /home/ryanm/dev/gbemu/src/../headers/cart.h \
+CMakeFiles/gbemu.dir/cart.c.o: /home/ryanm/dev/CGBEmu/src/cart.c \
+ /usr/include/stdc-predef.h /home/ryanm/dev/CGBEmu/src/../headers/cart.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -32,4 +32,6 @@ CMakeFiles/gbemu.dir/cart.c.o: /home/ryanm/dev/gbemu/src/cart.c \
  /usr/include/bits/pthreadtypes-arch.h \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h
+ /usr/include/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
+ /usr/include/strings.h
