@@ -35,6 +35,12 @@
 #define HuC3                            0xFE
 #define HuC1_RAM_BATTERY                0xFF
 
+/* Cartridge memory locations */
+#define CART_TITLE          0x134
+#define CART_TITLE_BYTES    16
+#define CART_ROM_SIZE       0x148
+
+
 typedef struct {
     uint32_t type;
     char * label;

@@ -1,5 +1,6 @@
 #include "cart.h"
 #include <stdlib.h>
+#include <string.h>
 
 static CARTRIDGE cart;
 
@@ -42,73 +43,10 @@ CARTRIDGE * cartGetCartridge(void) {
     return &cart;
 }
 
-static void cartSetDestCode(FILE * p_file) {
-    fseek(p_file, 0x14A, SEEK_SET);
-    fread(&cart.header.dest_code, 1, 1, p_file);
-}
-
-static void cartSetVersion(FILE * p_file) {
-    fseek(p_file, 0x14C, SEEK_SET);
-    fread(&cart.header.version_num, 1, 1, p_file);
-}
-
-static void cartSetOldLicCode(FILE * p_file) {
-    uint8_t i = 0;
-    fseek(p_file, 0x14B, SEEK_SET);
-    fread(&cart.header.old_lic_code, 1, 1, p_file);
-    for(i = 0; i < 2; i++) {
-        if(cart.header.old_lic_code == (uint8_t)cart_old_lic_table[i].type) {
-            printf("\t\tOld Lic Code: %i (%s)\n", cart.header.old_lic_code, cart_old_lic_table[i].label);
-        }
-    }
-}
-
-static void cartSetNewLicCode(FILE * p_file) {
-    fseek(p_file, 0x144, SEEK_SET);
-    fread(&cart.header.new_lic_code, 1, 1, p_file);
-    printf("\t\tNew Lic Code: %i\n", cart.header.new_lic_code);
-}
-
-static void cartSetCgbFlag(FILE * p_file) {
-    fseek(p_file, 0x143, SEEK_SET);
-    fread(&cart.header.title.title_mfr_cgb.cgb_flag, 1, 1, p_file);
-    printf("\t\tCGB Flag: %i\n", cart.header.title.title_mfr_cgb.cgb_flag);
-}
-static void cartSetMfrCode(FILE * p_file) {
-    fseek(p_file, 0x13F, SEEK_SET);
-    fread(&cart.header.title.title_mfr_cgb.mfr_code, 1, 4, p_file);
-    printf("\t\tManufacturer Code: %s\n", cart.header.title.title_mfr_cgb.mfr_code);
-}
-
-static void cartSetRamSize(FILE * p_file) {
-    fseek(p_file, 0x149, SEEK_SET);
-    fread(&cart.header.ram_size, 1, 1, p_file);
-    printf("\t\tRAM size: %i KiB\n", cart.header.ram_size);
-}
-
-static void cartSetCartType(FILE * p_file) {
-    uint8_t i;
-    fseek(p_file, 0x147, SEEK_SET);
-    fread(&cart.header.cart_type, 1, 1, p_file);
-    for(i = 0; i < NUM_CART_TYPES - 1; i++) {
-        if(cart.header.cart_type == (uint8_t)cart_type_table[i].type){
-            printf("\t\tCartridge type: %s\n", cart_type_table[i].label);
-        }
-    }
-}
-
-static void cartSetRomSize(FILE * p_file) {
-    fseek(p_file, 0x148, SEEK_SET);
-    fread(&cart.header.rom_size, 1, 1, p_file);
-    cart.rom_size = CART_DEFAULT_SIZE * (1 << cart.header.rom_size);
-    printf("\t\tROM size: 0x%4X (%u KiB)\n", cart.rom_size, (cart.rom_size/1024));
-}
-
-static void cartSetRomTitle(FILE * p_file) {
-    fseek(p_file, 0x134, SEEK_SET);
-    fread(&cart.header.title.title, 1, 16, p_file);
-
-    printf("\t\tTITLE: %s\n", cart.header.title.title);
+static void cartGetRomTitle(void) {
+    char title[CART_TITLE_BYTES] = {0};
+    memcpy(title, &cart.rom_data[CART_TITLE], CART_TITLE_BYTES);
+    printf("\tTitle: %s\n", title);
 }
 
 static uint8_t cartGetChecksum(void) {
@@ -124,8 +62,6 @@ static uint8_t cartGetChecksum(void) {
 
 uint8_t cartOpen(char * filename) {
     FILE * p_file = NULL;
-
-    printf("\tAttempting to open %s\n", filename);
     p_file = fopen(filename, "rw+");
     
     if(p_file == NULL) {
@@ -133,24 +69,18 @@ uint8_t cartOpen(char * filename) {
         return 0;
     }
     else {
-        printf("\tParsing Cartridge Header...\n");
-        cartSetRomTitle(p_file);
-        cartSetRomSize(p_file);
-        cartSetCartType(p_file);
-        cartSetRamSize(p_file);
-        cartSetMfrCode(p_file);
-        cartSetNewLicCode(p_file);
-        cartSetOldLicCode(p_file);
-        cartSetCgbFlag(p_file);
-        cartSetVersion(p_file);
-        cartSetDestCode(p_file);
-
+        printf("Loading ROM into memory...\n\n");
         /* Load rom data into memory */
+        fseek(p_file, 0, SEEK_END);
+        cart.rom_size = ftell(p_file);
         rewind(p_file);
+
         cart.rom_data = malloc(cart.rom_size);
         fread(cart.rom_data, cart.rom_size, 1, p_file);
         fclose(p_file);
 
+        /* Output some identifying info... */
+        cartGetRomTitle();
         /* Check checksum */
         (cartGetChecksum()) ? printf("\tPassed Checksum!\n") : printf("\tFailed Checksum!\n");
     }
@@ -161,4 +91,8 @@ uint8_t cartOpen(char * filename) {
 /* Read from ROM loaded into RAM */
 uint8_t cartReadAddr(uint16_t addr) {
     return cart.rom_data[addr];
+}
+
+void cartWriteAddr(uint16_t addr, uint8_t val) {
+    // Will add later
 }
