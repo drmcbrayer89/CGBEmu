@@ -49,6 +49,10 @@ static void cartGetRomTitle(void) {
     printf("\tTitle: %s\n", title);
 }
 
+static void cartGetHeader(void) {
+    memcpy(&cart.header, &cart.rom_data[CART_HEADER_START], CART_HEADER_SIZE);
+}
+
 static uint8_t cartGetChecksum(void) {
     uint16_t checksum = 0;
 
@@ -69,7 +73,7 @@ uint8_t cartOpen(char * filename) {
         return 0;
     }
     else {
-        printf("Loading ROM into memory...\n\n");
+        printf("Loading ROM into memory...\n");
         /* Load rom data into memory */
         fseek(p_file, 0, SEEK_END);
         cart.rom_size = ftell(p_file);
@@ -80,6 +84,7 @@ uint8_t cartOpen(char * filename) {
         fclose(p_file);
 
         /* Output some identifying info... */
+        cartGetHeader();
         cartGetRomTitle();
         /* Check checksum */
         (cartGetChecksum()) ? printf("\tPassed Checksum!\n") : printf("\tFailed Checksum!\n");

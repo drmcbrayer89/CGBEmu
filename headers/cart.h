@@ -36,6 +36,9 @@
 #define HuC1_RAM_BATTERY                0xFF
 
 /* Cartridge memory locations */
+#define CART_HEADER_START   0x0100
+#define CART_HEADER_END     0x014F
+#define CART_HEADER_SIZE    (CART_HEADER_END - CART_HEADER_START)
 #define CART_TITLE          0x134
 #define CART_TITLE_BYTES    16
 #define CART_ROM_SIZE       0x148
@@ -47,35 +50,7 @@ typedef struct {
 } ENUM_MAP;
 
 typedef struct {
-    union {
-        uint8_t title[16];
-
-        struct {
-            uint8_t title[15];
-            uint8_t cgb_flag;
-        } title_cgb;
-
-        struct {
-            uint8_t title[11];
-            uint8_t mfr_code[4];
-            uint8_t cgb_flag;
-        } title_mfr_cgb;
-    } title;
-
-    uint16_t new_lic_code;
-    uint8_t sgb_flag;
-    uint8_t cart_type;
-    uint8_t rom_size;
-    uint8_t ram_size;
-    uint8_t dest_code;
-    uint8_t old_lic_code;
-    uint8_t version_num;
-    uint8_t header_checksum;
-    uint16_t global_checksum;
-} CART_HEADER;
-
-typedef struct {
-    CART_HEADER header;
+    char header[CART_HEADER_SIZE];
     uint32_t rom_size;
     uint8_t * rom_data;
 } CARTRIDGE;
