@@ -76,7 +76,7 @@ typedef enum {
     C_C,
     C_NZ,
     C_NC
-} CPU_INSTRUCTION_CONDITION_TYPE_ENUM;
+} CPU_CONDITION_ENUM;
 
 typedef enum {
     R_NONE,
@@ -99,7 +99,7 @@ typedef enum {
 typedef struct {
     CPU_OPCODE_ENUM op_code;
     CPU_ADDR_MODE_ENUM addr_mode;
-    CPU_INSTRUCTION_CONDITION_TYPE_ENUM condition;
+    CPU_CONDITION_ENUM condition;
     CPU_REGISTER_ENUM r1;
     CPU_REGISTER_ENUM r2;
     uint8_t parameter;
