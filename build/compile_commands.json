@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/home/ryanm/dev/CGBEmu/build",
+  "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/cart.c.o -c /home/ryanm/dev/CGBEmu/src/cart.c",
+  "file": "/home/ryanm/dev/CGBEmu/src/cart.c",
+  "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/cart.c.o"
+},
+{
+  "directory": "/home/ryanm/dev/CGBEmu/build",
+  "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/main.c.o -c /home/ryanm/dev/CGBEmu/src/main.c",
+  "file": "/home/ryanm/dev/CGBEmu/src/main.c",
+  "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/main.c.o"
+},
+{
+  "directory": "/home/ryanm/dev/CGBEmu/build",
+  "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/bus.c.o -c /home/ryanm/dev/CGBEmu/src/bus.c",
+  "file": "/home/ryanm/dev/CGBEmu/src/bus.c",
+  "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/bus.c.o"
+},
+{
+  "directory": "/home/ryanm/dev/CGBEmu/build",
+  "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/cpu.c.o -c /home/ryanm/dev/CGBEmu/src/cpu.c",
+  "file": "/home/ryanm/dev/CGBEmu/src/cpu.c",
+  "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/cpu.c.o"
+}
+]

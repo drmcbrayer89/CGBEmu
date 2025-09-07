@@ -2,49 +2,51 @@
 
 typedef enum {
     /* SM83 INSTRUCTION SET */
-    O_NONE,
-    O_NOP,
-    O_LD,
-    O_INC,
-    O_DEC,
-    O_RL,
-    O_RLA,
-    O_JR,
-    O_ADD,
-    O_RRCA,
-    O_CPL,
-    O_CCF,
-    O_HALT,
-    O_ADC,
-    O_SUB,
-    O_SBC,
-    O_XOR,
-    O_OR,
-    O_CP,
-    O_RET,
-    O_POP,
-    O_JP,
-    O_CALL,
-    O_PUSH,
-    O_RST,
-    O_PREFIX,
-    O_EI,
-    O_DI,
-    O_LDH,
-    O_RLCA,
-    O_STOP,
+    I_NONE,
+    I_NOP,
+    I_LD,
+    I_INC,
+    I_DEC,
+    I_RL,
+    I_RLA,
+    I_JR,
+    I_ADD,
+    I_RRCA,
+    I_CPL,
+    I_CCF,
+    I_HALT,
+    I_ADC,
+    I_SUB,
+    I_SBC,
+    I_XOR,
+    I_OR,
+    I_CP,
+    I_RET,
+    I_POP,
+    I_JP,
+    I_CALL,
+    I_PUSH,
+    I_RST,
+    I_PREFIX,
+    I_EI,
+    I_DI,
+    I_LDH,
+    I_RLCA,
+    I_DAA,
+    I_STOP,
     /* CB PREFIX */
-    O_RLC,
-    O_RRC,
-    O_RR,
-    O_SLA,
-    O_SRA,
-    O_SWAP,
-    O_SRL,
-    O_BIT,
-    O_RES,
-    O_SET
-} CPU_OPCODE_ENUM;
+    I_RLC,
+    I_RRC,
+    I_RR,
+    I_SLA,
+    I_SRA,
+    I_SWAP,
+    I_SRL,
+    I_SCF,
+    I_BIT,
+    I_RES,
+    I_SET
+} CPU_INSTRUCTION_ENUM;
 
 typedef enum {
     M_NONE,
@@ -97,11 +99,11 @@ typedef enum {
 } CPU_REGISTER_ENUM;
 
 typedef struct {
-    CPU_OPCODE_ENUM op_code;
+    CPU_INSTRUCTION_ENUM op_code;
     CPU_ADDR_MODE_ENUM addr_mode;
-    CPU_CONDITION_ENUM condition;
     CPU_REGISTER_ENUM r1;
     CPU_REGISTER_ENUM r2;
+    CPU_CONDITION_ENUM condition;
     uint8_t parameter;
 } CPU_INSTRUCTION;
 
