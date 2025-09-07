@@ -78,8 +78,9 @@ uint8_t cartOpen(char * filename) {
         fseek(p_file, 0, SEEK_END);
         cart.rom_size = ftell(p_file);
         rewind(p_file);
-
+        
         cart.rom_data = malloc(cart.rom_size);
+        printf("Allocated %i bytes\n", cart.rom_size);
         fread(cart.rom_data, cart.rom_size, 1, p_file);
         fclose(p_file);
 

@@ -131,3 +131,5 @@ typedef struct {
     bool stepping;
 } CPU;
 
+CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
+

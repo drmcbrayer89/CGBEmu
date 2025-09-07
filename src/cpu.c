@@ -1,7 +1,7 @@
 #include "cpu.h"
 #include "bus.h"
 
-CPU_INSTRUCTION instructions[0xFFFF] = {
+static CPU_INSTRUCTION instructions[0xFFFF] = {
     /* First Row */
     [0x0000] = {I_NOP,  M_NONE                      },
     [0x0001] = {I_LD,   M_REG_D16,      R_BC        },
