@@ -221,7 +221,7 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
     [0x00CC] = {I_CALL, M_D16, R_NONE, R_NONE, C_Z},
     [0x00CD] = {I_CALL, M_D16},
     [0x00CE] = {I_ADC, M_REG_D8, R_A},
-    [0x00CF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x08}
+    [0x00CF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x08},
     /* ROW FOURTEEN */
     [0x00D0] = {I_RET, M_NONE, R_NONE, R_NONE, C_NC},
     [0x00D1] = {I_POP, M_REG, R_DE},
@@ -238,7 +238,33 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
     [0x00DC] = {I_CALL, M_D16, R_NONE, R_NONE, C_C},
     [0x00DD] = {I_NONE},
     [0x00DE] = {I_SBC, M_REG_D8, R_A},
-    [0x00DF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x18}
+    [0x00DF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x18},
+    /* ROW FIFTEEN */
+    [0X00E0] = {I_LDH, M_A8_REG, R_NONE, R_A},
+    [0X00E1] = {I_POP, M_REG, R_HL},
+    [0X00E2] = {I_LD, M_MEMREG_REG, R_C, R_A},
+    [0X00E5] = {I_PUSH, M_REG, R_HL},
+    [0X00E6] = {I_AND, M_REG_D8, R_SP},
+    [0X00E7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x20},
+    [0X00E8] = {I_ADD, M_REG_D8, R_SP},
+    [0X00E9] = {I_JP, M_REG, R_HL},
+    [0X00EA] = {I_LD, M_A16_REG, R_NONE, R_A},
+    [0X00EE] = {I_XOR, M_REG_D8, R_A},
+    [0X00EF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x28}
+    /* ROW SIXTEEN */
+    [0X00F0] = {I_LDH, M_REG_A8, R_A},
+    [0X00F1] = {I_POP, M_REG, R_AF},
+    [0X00F2] = {I_LD, M_REG_MEMREG, R_A, R_C},
+    [0X00F3] = {I_DI},
+    [0X00F5] = {I_PUSH, M_REG, R_AF},
+    [0X00F6] = {IN_OR, M_REG_D8, R_A},
+    [0X00F7] = {IN_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x30},
+    [0X00F8] = {I_LD, M_HL_SPR, R_HL, R_SP},
+    [0X00F9] = {I_LD, M_REG_REG, R_SP, R_HL},
+    [0X00FA] = {I_LD, M_REG_A16, R_A},
+    [0X00FB] = {I_EI},
+    [0X00FE] = {I_CP, M_REG_D8, R_A},
+    [0X00FF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x38}
 };
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
