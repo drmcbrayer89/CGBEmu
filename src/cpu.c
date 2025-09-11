@@ -1,6 +1,10 @@
 #include "cpu.h"
 #include "bus.h"
 
+#define BYTE_SWAP(x) ((x & 0xFF00) >> 8) | ((x & 0x00FF) << 8)
+#define R8_TO_R16(x, y) ((y <<))
+static CPU cpu;
+
 static CPU_INSTRUCTION instructions[0xFFFF] = {
     /* First Row */
     [0x0000] = {I_NOP,  M_NONE                      },
@@ -269,4 +273,38 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instructions[op_code];
+}
+
+uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
+    switch(reg) {
+        case R_A:
+            return cpu.regs.a;
+        case R_F:
+            return cpu.regs.f;
+        case R_B:
+            return cpu.regs.b;
+        case R_C:
+            return cpu.regs.c;
+        case R_D:
+            return cpu.regs.d;
+        case R_E:
+            return cpu.regs.e;
+        case R_H:
+            return cpu.regs.h;
+        case R_L:
+            return cpu.regs.l;
+        case R_PC:
+            return cpu.regs.pc;
+        case R_SP:
+            return cpu.regs.sp;
+        /* All of these have to be swapped for endian-ness */
+        case R_AF:
+        case R_BC:
+        case R_DE:
+        case R_HL:
+
+        default:
+            printf("Register enumeration %i not found\n", reg);
+            return 0;
+    }
 }
