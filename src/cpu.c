@@ -213,12 +213,32 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
     [0x00C4] = {I_CALL, M_D16, R_NONE, R_NONE, C_NZ},
     [0x00C5] = {I_PUSH, M_REG, R_BC},
     [0x00C6] = {I_ADD, M_REG_D8, R_A},
-    [0x00C7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0X00}
-
-
-
-
-
+    [0x00C7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x00},
+    [0x00C8] = {I_RET, M_NONE, R_NONE, R_NONE, C_Z},
+    [0x00C9] = {I_RET},
+    [0x00CA] = {I_JP, M_D16, R_NONE, R_NONE, C_Z},
+    [0x00CB] = {I_CB, M_D8},
+    [0x00CC] = {I_CALL, M_D16, R_NONE, R_NONE, C_Z},
+    [0x00CD] = {I_CALL, M_D16},
+    [0x00CE] = {I_ADC, M_REG_D8, R_A},
+    [0x00CF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x08}
+    /* ROW FOURTEEN */
+    [0x00D0] = {I_RET, M_NONE, R_NONE, R_NONE, C_NC},
+    [0x00D1] = {I_POP, M_REG, R_DE},
+    [0x00D2] = {I_JP, M_D16, R_NONE, R_NONE, C_NC},
+    [0x00D3] = {I_NONE},
+    [0x00D4] = {I_CALL, M_D16, R_NONE, R_NONE, C_NC},
+    [0x00D5] = {I_PUSH, M_REG, R_DE},
+    [0x00D6] = {I_SUB, M_REG_D8, R_A},
+    [0x00D7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x10},
+    [0x00D8] = {I_RET, M_NONE, R_NONE, R_NONE, C_C},
+    [0x00D9] = {I_RETI},
+    [0x00DA] = {I_JP, M_D16, R_NONE, R_NONE, C_C},
+    [0x00DB] = {I_NONE},
+    [0x00DC] = {I_CALL, M_D16, R_NONE, R_NONE, C_C},
+    [0x00DD] = {I_NONE},
+    [0x00DE] = {I_SBC, M_REG_D8, R_A},
+    [0x00DF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x18}
 };
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {

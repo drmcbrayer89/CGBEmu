@@ -35,6 +35,8 @@ typedef enum {
     I_DAA,
     I_STOP,
     I_AND,
+    I_CB,
+    I_RETI,
     /* CB PREFIX */
     I_RLC,
     I_RRC,
