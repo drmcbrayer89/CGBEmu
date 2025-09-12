@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include "common.h"
 
 typedef enum {
     /* SM83 INSTRUCTION SET */
@@ -37,6 +37,7 @@ typedef enum {
     I_AND,
     I_CB,
     I_RETI,
+    I_SET_SIZE,
     /* CB PREFIX */
     I_RLC,
     I_RRC,
@@ -102,7 +103,7 @@ typedef enum {
 } CPU_REGISTER_ENUM;
 
 typedef struct {
-    CPU_INSTRUCTION_ENUM op_code;
+    CPU_INSTRUCTION_ENUM type;
     CPU_ADDR_MODE_ENUM addr_mode;
     CPU_REGISTER_ENUM r1;
     CPU_REGISTER_ENUM r2;
@@ -135,4 +136,7 @@ typedef struct {
 } CPU;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
+uint16_t cpuRegRead(CPU_REGISTER_ENUM reg);
+void cpuInit(void);
+void cpuShowInstruction(uint32_t i);
 

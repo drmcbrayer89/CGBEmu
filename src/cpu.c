@@ -1,10 +1,9 @@
-#include <stdio.h>
 #include "cpu.h"
 #include "bus.h"
 
 static CPU cpu;
 
-static CPU_INSTRUCTION instructions[0xFFFF] = {
+static CPU_INSTRUCTION instruction_set[0xFFFF] = {
     /* First Row */
     [0x0000] = {I_NOP,  M_NONE                      },
     [0x0001] = {I_LD,   M_REG_D16,      R_BC        },
@@ -270,17 +269,55 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
     [0X00FF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x38}
 };
 
+static char * instruction_set_s[I_SET_SIZE] = {
+    "NONE",
+    "NOP",
+    "LD",
+    "INC",
+    "DEC",
+    "RL",
+    "RLA",
+    "JR",
+    "ADD",
+    "RRCA",
+    "CPL",
+    "CCF",
+    "HALT",
+    "ADC",
+    "SUB",
+    "SBC",
+    "XOR",
+    "OR",
+    "CP",
+    "RET",
+    "POP",
+    "JP",
+    "CALL",
+    "PUSH",
+    "RST",
+    "PREFIX",
+    "EI",
+    "DI",
+    "LDH",
+    "RLCA",
+    "DAA",
+    "STOP",
+    "AND",
+    "CB",
+    "RETI"
+};
+
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
-    return &instructions[op_code];
+    return &instruction_set[op_code];
 }
 
-static uint16_t cpuCombine(uint8_t r1, uint8_t r2) {
-    uint16_t result = 0x0000;
-    
-    result |= (r1 << 8);
-    result |= r2;
-    
-    return result;
+void cpuShowInstruction(uint32_t i) {
+    printf("INSTRUCTION: %s\n", instruction_set_s[i]);
+}
+
+uint16_t cpuRegRead16(uint8_t r1, uint8_t r2) {
+    uint16_t reg16 = r1 | (r2 << 8);
+    return reg16;
 }
 
 uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
@@ -307,12 +344,23 @@ uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
             return cpu.regs.sp;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
+            return cpuRegRead16(cpu.regs.a, cpu.regs.f);
         case R_BC:
+            return cpuRegRead16(cpu.regs.b, cpu.regs.c);
         case R_DE:
+            return cpuRegRead16(cpu.regs.d, cpu.regs.e);
         case R_HL:
+            return cpuRegRead16(cpu.regs.h, cpu.regs.l);
 
         default:
             printf("Register enumeration %i not found\n", reg);
             return 0;
     }
+}
+
+void cpuInit(void) {
+    cpu.regs.sp = 0x0100;
+
+    cpu.regs.a = 0xFF;
+    cpu.regs.f = 0x10;
 }

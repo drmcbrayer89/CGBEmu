@@ -1,5 +1,4 @@
-#include <stdint.h>
-#include <stdio.h>
+#include "common.h"
 
 /* 32KiB = 0x8000*/
 #define CART_DEFAULT_SIZE 0x8000

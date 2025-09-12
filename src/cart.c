@@ -1,6 +1,4 @@
 #include "cart.h"
-#include <stdlib.h>
-#include <string.h>
 
 static CARTRIDGE cart;
 
