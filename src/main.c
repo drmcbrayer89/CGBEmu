@@ -10,7 +10,6 @@ int32_t main(int32_t argc, char * argv[])
 
     cpuInit();
     cpuRegRead(R_AF);
-
     CPU_INSTRUCTION * ins = cpuGetInstructionByOpCode(0x0001);
     cpuShowInstruction(ins->type);
     return 0;

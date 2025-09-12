@@ -126,10 +126,12 @@ typedef struct {
 
 typedef struct {
     CPU_REGISTERS regs;
-
-    uint16_t data;
-    uint16_t mem_dest;
+    CPU_INSTRUCTION * instruction;
     uint8_t  op_code;
+    
+    uint16_t data;
+    uint16_t memory_destination;
+    bool to_memory;
 
     bool halted;
     bool stepping;

@@ -311,10 +311,6 @@ CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instruction_set[op_code];
 }
 
-void cpuShowInstruction(uint32_t i) {
-    printf("INSTRUCTION: %s\n", instruction_set_s[i]);
-}
-
 uint16_t cpuRegRead16(uint8_t r1, uint8_t r2) {
     uint16_t reg16 = r1 | (r2 << 8);
     return reg16;
@@ -358,9 +354,50 @@ uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
     }
 }
 
+static void cpuGetInstruction(void) {
+    cpu.op_code = bus_read(cpu.regs.pc++);
+    cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
+}
+
+static void cpuGetData(void) {
+    cpu.memory_destination = 0x0000;
+    cpu.to_memory = false;
+
+    switch(cpu.instruction->addr_mode) {
+        case M_NONE:
+            return;
+        case M_REG:
+            cpu.data = cpuRegRead(cpu.instruction->r1);
+            return;
+        case M_REG_REG:
+            cpu.data = cpuRegRead(cpu.instruction->r2);
+            return;
+        case M_REG_D8:
+            cpu.data = bus_read(cpu.regs.pc);
+            gbTick(1);
+            cpu.regs.pc++;
+            return;
+        default:
+            printf("Address Mode Not Valid\n");
+            return;
+    }
+}
+
+static void cpuExec(void);
+
+bool cpuStep(void) {
+    if(cpu.halted == false) {
+        cpuGetInstruction();
+        cpuGetData();
+        cpuExec();
+    }
+    return false;
+}
+
 void cpuInit(void) {
     cpu.regs.sp = 0x0100;
+}
 
-    cpu.regs.a = 0xFF;
-    cpu.regs.f = 0x10;
+void cpuShowInstruction(uint32_t i) {
+    printf("INSTRUCTION: %s\n", instruction_set_s[i]);
 }
