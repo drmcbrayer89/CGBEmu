@@ -72,7 +72,7 @@ typedef enum {
     M_MEMREG_D8,
     M_MEMREG,
     M_A16_REG,
-    M_REG_A10
+    M_REG_A16
 } CPU_ADDR_MODE_ENUM;
 
 typedef enum {

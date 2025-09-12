@@ -1,8 +1,7 @@
+#include <stdio.h>
 #include "cpu.h"
 #include "bus.h"
 
-#define BYTE_SWAP(x) ((x & 0xFF00) >> 8) | ((x & 0x00FF) << 8)
-#define R8_TO_R16(x, y) ((y <<))
 static CPU cpu;
 
 static CPU_INSTRUCTION instructions[0xFFFF] = {
@@ -254,15 +253,15 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
     [0X00E9] = {I_JP, M_REG, R_HL},
     [0X00EA] = {I_LD, M_A16_REG, R_NONE, R_A},
     [0X00EE] = {I_XOR, M_REG_D8, R_A},
-    [0X00EF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x28}
+    [0X00EF] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x28},
     /* ROW SIXTEEN */
     [0X00F0] = {I_LDH, M_REG_A8, R_A},
     [0X00F1] = {I_POP, M_REG, R_AF},
     [0X00F2] = {I_LD, M_REG_MEMREG, R_A, R_C},
     [0X00F3] = {I_DI},
     [0X00F5] = {I_PUSH, M_REG, R_AF},
-    [0X00F6] = {IN_OR, M_REG_D8, R_A},
-    [0X00F7] = {IN_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x30},
+    [0X00F6] = {I_OR, M_REG_D8, R_A},
+    [0X00F7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x30},
     [0X00F8] = {I_LD, M_HL_SPR, R_HL, R_SP},
     [0X00F9] = {I_LD, M_REG_REG, R_SP, R_HL},
     [0X00FA] = {I_LD, M_REG_A16, R_A},
@@ -273,6 +272,15 @@ static CPU_INSTRUCTION instructions[0xFFFF] = {
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instructions[op_code];
+}
+
+static uint16_t cpuCombine(uint8_t r1, uint8_t r2) {
+    uint16_t result = 0x0000;
+    
+    result |= (r1 << 8);
+    result |= r2;
+    
+    return result;
 }
 
 uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
