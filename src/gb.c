@@ -1,5 +1,5 @@
-#include "common.h"
+#include "gb.h"
 
-void gbTick(int32_t ticks) {
+void gbTick(uint32_t ticks) {
     // implement later with tick accuracy
 }

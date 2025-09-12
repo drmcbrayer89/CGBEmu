@@ -81,6 +81,14 @@ build CMakeFiles/gbemu.dir/cpu.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ryan
   OBJECT_DIR = CMakeFiles/gbemu.dir
   OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
 
+build CMakeFiles/gbemu.dir/gb.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ryanm/dev/CGBEmu/src/gb.c || cmake_object_order_depends_target_gbemu
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles/gbemu.dir/gb.c.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/ryanm/dev/CGBEmu/src/../headers
+  OBJECT_DIR = CMakeFiles/gbemu.dir
+  OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target gbemu
@@ -89,7 +97,7 @@ build CMakeFiles/gbemu.dir/cpu.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ryan
 #############################################
 # Link the executable gbemu
 
-build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o
+build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o
   CONFIG = Debug
   DEP_FILE = CMakeFiles/gbemu.dir/link.d
   FLAGS = -g

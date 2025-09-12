@@ -1,5 +1,6 @@
 #include "cpu.h"
 #include "bus.h"
+#include "gb.h"
 
 static CPU cpu;
 
@@ -355,7 +356,7 @@ uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
 }
 
 static void cpuGetInstruction(void) {
-    cpu.op_code = bus_read(cpu.regs.pc++);
+    cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 }
 
@@ -373,7 +374,7 @@ static void cpuGetData(void) {
             cpu.data = cpuRegRead(cpu.instruction->r2);
             return;
         case M_REG_D8:
-            cpu.data = bus_read(cpu.regs.pc);
+            cpu.data = busReadAddr(cpu.regs.pc);
             gbTick(1);
             cpu.regs.pc++;
             return;
@@ -383,7 +384,9 @@ static void cpuGetData(void) {
     }
 }
 
-static void cpuExec(void);
+static void cpuExec(void) {
+
+}
 
 bool cpuStep(void) {
     if(cpu.halted == false) {

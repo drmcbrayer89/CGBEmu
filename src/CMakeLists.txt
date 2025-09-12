@@ -4,5 +4,5 @@ project(GBEMU)
 
 include_directories("../headers")
 
-add_executable(gbemu cart.c main.c bus.c cpu.c)
+add_executable(gbemu cart.c main.c bus.c cpu.c gb.c)
 
