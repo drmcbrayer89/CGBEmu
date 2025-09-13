@@ -312,12 +312,12 @@ CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instruction_set[op_code];
 }
 
-uint16_t cpuRegRead16(uint8_t r1, uint8_t r2) {
+uint16_t cpuReadReg16(uint8_t r1, uint8_t r2) {
     uint16_t reg16 = r1 | (r2 << 8);
     return reg16;
 }
 
-uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
+uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
     switch(reg) {
         case R_A:
             return cpu.regs.a;
@@ -341,18 +341,21 @@ uint16_t cpuRegRead(CPU_REGISTER_ENUM reg) {
             return cpu.regs.sp;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
-            return cpuRegRead16(cpu.regs.a, cpu.regs.f);
+            return cpuReadReg16(cpu.regs.a, cpu.regs.f);
         case R_BC:
-            return cpuRegRead16(cpu.regs.b, cpu.regs.c);
+            return cpuReadReg16(cpu.regs.b, cpu.regs.c);
         case R_DE:
-            return cpuRegRead16(cpu.regs.d, cpu.regs.e);
+            return cpuReadReg16(cpu.regs.d, cpu.regs.e);
         case R_HL:
-            return cpuRegRead16(cpu.regs.h, cpu.regs.l);
+            return cpuReadReg16(cpu.regs.h, cpu.regs.l);
 
         default:
             printf("Register enumeration %i not found\n", reg);
             return 0;
     }
+}
+
+void cpuWriteReg(CPU_REGISTER_ENUM r, uint16_t val) {
 }
 
 static void cpuGetInstruction(void) {
@@ -367,17 +370,56 @@ static void cpuGetData(void) {
     switch(cpu.instruction->addr_mode) {
         case M_NONE:
             return;
+
         case M_REG:
-            cpu.data = cpuRegRead(cpu.instruction->r1);
+            cpu.data = cpuReadReg(cpu.instruction->r1);
             return;
+
         case M_REG_REG:
-            cpu.data = cpuRegRead(cpu.instruction->r2);
+            cpu.data = cpuReadReg(cpu.instruction->r2);
             return;
+
         case M_REG_D8:
             cpu.data = busReadAddr(cpu.regs.pc);
-            gbTick(1);
             cpu.regs.pc++;
             return;
+
+        case M_MEMREG_REG:
+            cpu.data = cpuReadReg(cpu.instruction->r2);
+            cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
+            cpu.to_memory = true;
+            /* Special case */
+            if(cpu.instruction->r1 == R_C) {
+                cpu.memory_destination |= 0xFF00;
+            }
+            return;
+
+        case M_REG_MEMREG:
+            /* Read the address being passed in (r2) */
+            uint16_t addr = cpuReadReg(cpu.instruction->r2);
+            /* Special case like above for C register from instr set guide */
+            if(cpu.instruction->r2 == R_C) {
+                addr |= 0xFF00;
+            }
+            /* Read from addr into r1 */
+            cpu.data = cpuReadReg(cpu.instruction->r1);
+            return;
+        
+        /* These do the same thing from a reading standpoint... */
+        case M_D16:
+        case M_REG_D16:
+            uint16_t lower = busReadAddr(cpu.regs.pc);
+            uint16_t upper = busReadAddr(cpu.regs.pc + 1);
+            cpu.data = lower | (upper << 8);
+
+            cpu.regs.pc = cpu.regs.pc + 2;
+            return;
+        
+        case M_REG_HLI:
+            cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
+            cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
+            
+            
         default:
             printf("Address Mode Not Valid\n");
             return;
