@@ -440,7 +440,7 @@ bool cpuStep(void) {
 }
 
 void cpuInit(void) {
-    cpu.regs.sp = 0x0100;
+    cpu.regs.pc = 0x0100;
 }
 
 void cpuShowInstruction(uint32_t i) {
