@@ -53,15 +53,15 @@ typedef enum {
 } CPU_INSTRUCTION_ENUM;
 
 typedef enum {
-    M_NONE,
-    M_REG_D16,
-    M_REG_REG,
-    M_MEMREG_REG,
-    M_REG,
-    M_REG_D8,
-    M_REG_MEMREG,
-    M_REG_HLI,
-    M_REG_HLD,
+    M_NONE,//
+    M_REG_D16,//
+    M_REG_REG,//
+    M_MEMREG_REG,//
+    M_REG,//
+    M_REG_D8,//
+    M_REG_MEMREG,//
+    M_REG_HLI,//
+    M_REG_HLD,//
     M_HLI_R,
     M_HLD_R,
     M_REG_A8,

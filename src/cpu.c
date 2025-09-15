@@ -363,6 +363,8 @@ static void cpuGetInstruction(void) {
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 }
 
+
+/* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
 static void cpuGetData(void) {
     cpu.memory_destination = 0x0000;
     cpu.to_memory = false;
@@ -418,6 +420,16 @@ static void cpuGetData(void) {
         case M_REG_HLI:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
             cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
+            return;
+
+        case M_REG_HLD:
+            cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
+            cpuWriteReg(R_HL, cpuReadReg(R_HL) - 1);
+            return;
+        
+        case M_REG_A8:
+            cpu.data = busReadAddr(cpu.regs.pc++);
+            return;
             
             
         default:
