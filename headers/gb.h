@@ -1,3 +1,5 @@
 #include "common.h"
 
-void gbTick(uint32_t tick);
+#define CYCLES_PER_BYTE 4
+
+void gbTick(void);

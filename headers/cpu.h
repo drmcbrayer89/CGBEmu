@@ -62,9 +62,9 @@ typedef enum {
     M_REG_MEMREG,//
     M_REG_HLI,//
     M_REG_HLD,//
-    M_HLI_R,
-    M_HLD_R,
-    M_REG_A8,
+    M_HLI_R,//
+    M_HLD_R,//
+    M_REG_A8,//
     M_A8_REG,
     M_HL_SPR,
     M_D16,

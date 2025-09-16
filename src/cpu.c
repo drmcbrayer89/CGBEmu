@@ -365,6 +365,7 @@ static void cpuGetInstruction(void) {
 
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
+/* NOTE2: Any bus reads / writes need to call gbTick, registers do not */
 static void cpuGetData(void) {
     cpu.memory_destination = 0x0000;
     cpu.to_memory = false;
@@ -411,26 +412,49 @@ static void cpuGetData(void) {
         case M_D16:
         case M_REG_D16:
             uint16_t lower = busReadAddr(cpu.regs.pc);
+            gbTick();
+            
             uint16_t upper = busReadAddr(cpu.regs.pc + 1);
             cpu.data = lower | (upper << 8);
+            gbTick();
 
             cpu.regs.pc = cpu.regs.pc + 2;
             return;
         
         case M_REG_HLI:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
+            gbTick();
             cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
             return;
 
         case M_REG_HLD:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
+            gbTick();
             cpuWriteReg(R_HL, cpuReadReg(R_HL) - 1);
             return;
         
         case M_REG_A8:
             cpu.data = busReadAddr(cpu.regs.pc++);
+            gbTick();
             return;
             
+        case M_HLI_R:
+            cpu.data = cpuReadReg(cpu.instruction->r2);
+            cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
+            cpu.to_memory = true;
+            cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
+            return;
+
+        case M_HLD_R:
+            cpu.data = cpuReadReg(cpu.instruction->r2);
+            cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
+            cpu.to_memory = true;
+            cpuWriteReg(R_HL, cpuReadReg(R_HL) - 1);
+            return;
+        
+        case M_A8_REG:
+            return;
+
             
         default:
             printf("Address Mode Not Valid\n");
