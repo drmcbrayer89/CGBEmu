@@ -1,6 +1,7 @@
 #include "cpu.h"
 #include "bus.h"
 #include "gb.h"
+#include "asm_func.h"
 
 static CPU cpu;
 
@@ -465,6 +466,7 @@ static void cpuGetData(void) {
 
 static void cpuExec(void) {
     /* Grab asm function & execute with data */
+    asmGetFunction(cpu.instruction->type)();
 }
 
 bool cpuStep(void) {
