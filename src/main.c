@@ -1,5 +1,6 @@
 #include "cart.h"
 #include "cpu.h"
+#include "gb.h"
 
 int32_t main(int32_t argc, char * argv[])
 {
@@ -7,5 +8,7 @@ int32_t main(int32_t argc, char * argv[])
         printf("Starting CGBEmu!\n");
         cartOpen(argv[1]);
     }
+    gbInit();
+    gbStart();
     return 0;
 }

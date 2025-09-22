@@ -359,10 +359,11 @@ void cpuWriteReg(CPU_REGISTER_ENUM r, uint16_t val) {
 }
 
 static void cpuGetInstruction(void) {
+    uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
+    printf("PC: 0x%04X %s\n", pc, instruction_set_s[cpu.instruction->type]);
 }
-
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
 /* NOTE2: Any bus reads / writes need to call gbTick, registers do not */
@@ -463,7 +464,7 @@ static void cpuGetData(void) {
 }
 
 static void cpuExec(void) {
-
+    /* Grab asm function & execute with data */
 }
 
 bool cpuStep(void) {
