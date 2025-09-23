@@ -1,22 +1,28 @@
+#include "common.h"
 #include "cpu.h"
 #include "asm_func.h"
 
-void asmNONE(void) {
+void asmNone(CPU * cpu) {
     return;
 }
 
-void asmNOP(void) {
+void asmNop(CPU * cpu) {
     printf("Got here\n");
 }
 
-void asmLD(void) {
+void asmLd(CPU * cpu) {
     return;
 }
 
+void asmDi(CPU * cpu) {
+    cpu->int_enable = false;
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
-    [I_NONE] = asmNONE,
-    [I_NOP]  = asmNOP,
-    [I_LD]   = asmLD
+    [I_NONE] = asmNone,
+    [I_NOP] = asmNop,
+    [I_LD] = asmLd,
+    [I_DI] = asmDi
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

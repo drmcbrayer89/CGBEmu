@@ -466,7 +466,7 @@ static void cpuGetData(void) {
 
 static void cpuExec(void) {
     /* Grab asm function & execute with data */
-    asmGetFunction(cpu.instruction->type)();
+    asmGetFunction(cpu.instruction->type)(&cpu);
 }
 
 bool cpuStep(void) {

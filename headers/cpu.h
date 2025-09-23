@@ -1,4 +1,14 @@
+#pragma once
 #include "common.h"
+/*
+    Zero flag is set iff result of operation is zero, used by conditional jumps
+    Carry flags are used if values exceed FF or FFFF or when subtraction is lower than 0 or when 
+    shifting/rotating out a "1" bit 
+*/
+#define ZERO_FLAG 7
+#define SUBTRACTION_FLAG 6
+#define HALF_CARRY_FLAG 5
+#define CARRY_FLAG 4
 
 typedef enum {
     /* SM83 INSTRUCTION SET */
@@ -135,6 +145,7 @@ typedef struct {
 
     bool halted;
     bool stepping;
+    bool int_enable;
 } CPU;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
