@@ -6,3 +6,4 @@
 
 #define BIT_CLEAR(a,n) (a &= ~(1<< n))
 #define BIT_SET(a, n) (a |= (1 << n))
+#define BIT_CHECK(a,n) ((a & (1 << n)) ? 1 : 0)

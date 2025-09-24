@@ -75,15 +75,15 @@ typedef enum {
     M_HLI_R,//
     M_HLD_R,//
     M_REG_A8,//
-    M_A8_REG,
-    M_HL_SPR,
-    M_D16,
-    M_D8,
-    M_D16_REG,
-    M_MEMREG_D8,
-    M_MEMREG,
-    M_A16_REG,
-    M_REG_A16
+    M_A8_REG,//
+    M_HL_SPR,//
+    M_D16,//
+    M_D8,//
+    M_D16_REG,//
+    M_MEMREG_D8,//
+    M_MEMREG,//
+    M_A16_REG,//
+    M_REG_A16//
 } CPU_ADDR_MODE_ENUM;
 
 typedef enum {

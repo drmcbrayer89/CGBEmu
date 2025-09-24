@@ -371,6 +371,12 @@ static void cpuGetInstruction(void) {
 static void cpuGetData(void) {
     cpu.memory_destination = 0x0000;
     cpu.to_memory = false;
+    uint8_t upper;
+    uint8_t lower;
+    uint8_t addr8;
+    uint16_t result;
+    uint16_t addr16;
+
 
     switch(cpu.instruction->addr_mode) {
         case M_NONE:
@@ -413,10 +419,10 @@ static void cpuGetData(void) {
         /* These do the same thing from a reading standpoint... */
         case M_D16:
         case M_REG_D16:
-            uint16_t lower = busReadAddr(cpu.regs.pc);
+            lower = busReadAddr(cpu.regs.pc);
             gbTick();
             
-            uint16_t upper = busReadAddr(cpu.regs.pc + 1);
+            upper = busReadAddr(cpu.regs.pc + 1);
             cpu.data = lower | (upper << 8);
             gbTick();
 
@@ -455,8 +461,78 @@ static void cpuGetData(void) {
             return;
         
         case M_A8_REG:
+            cpu.memory_destination = busReadAddr(cpu.regs.pc) | 0xFF00;
+            gbTick();
+            cpu.to_memory = true;
+            cpu.regs.pc++;
+            return;
+        
+        case M_A16_REG:
+            lower = busReadAddr(cpu.regs.pc); // bottom half of address
+            gbTick();
+            upper = busReadAddr(cpu.regs.pc + 1); // top half of address
+            gbTick();
+            
+            cpu.to_memory = true;
+            cpu.memory_destination = lower | (upper << 8);
+            cpu.data = cpuReadReg(cpu.instruction->r2);
+
+            cpu.regs.pc = cpu.regs.pc + 2;
+            return;
+        
+        case M_D16_REG:
+            lower = busReadAddr(cpu.regs.pc);
+            gbTick();
+            upper = busReadAddr(cpu.regs.pc+1);
+            gbTick();
+
+            cpu.to_memory = true;
+            cpu.memory_destination = lower | (upper << 8);
+            cpu.data = cpuReadReg(cpu.instruction->r2);
+
+            cpu.regs.pc = cpu.regs.pc + 2;
             return;
 
+        case M_REG_A16:
+            lower = busReadAddr(cpu.regs.pc);
+            gbTick();
+            
+            upper = busReadAddr(cpu.regs.pc + 1);
+            gbTick();
+            
+            addr16 = lower | (upper << 8);
+            cpu.data = busReadAddr(addr);
+            gbTick();
+
+            cpu.regs.pc = cpu.regs.pc + 2;
+            return;
+
+        case M_HL_SPR:
+            cpu.data = busReadAddr(cpu.regs.pc);
+            gbTick();
+            cpu.regs.pc++;
+            return;
+
+        case M_D8:
+            cpu.data = busReadAddr(cpu.regs.pc);
+            gbTick();
+            cpu.regs.pc++;
+            return;
+        
+        case M_MEMREG:
+            cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
+            cpu.to_memory = true;
+            cpu.data = busReadAddr(cpu.memory_destination);
+            gbTick();
+            return;
+        
+        case M_MEMREG_D8:
+            cpu.data = busReadAddr(cpu.regs.pc);
+            gbTick();
+            cpu.to_memory = true;
+            cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
+            cpu.regs.pc++;
+            return ;
             
         default:
             printf("Address Mode Not Valid\n");
@@ -465,7 +541,7 @@ static void cpuGetData(void) {
 }
 
 static void cpuExec(void) {
-    /* Grab asm function & execute with data */
+    /* Grab asm function & execute -- pass pointer to CPU */
     asmGetFunction(cpu.instruction->type)(&cpu);
 }
 

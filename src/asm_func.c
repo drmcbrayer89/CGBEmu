@@ -11,7 +11,9 @@ void asmNop(CPU * cpu) {
 }
 
 void asmLd(CPU * cpu) {
-    return;
+    bool is_16bit = (cpu->instruction->r2 >= R_AF) ? true : false;
+
+    
 }
 
 void asmDi(CPU * cpu) {
