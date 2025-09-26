@@ -150,6 +150,7 @@ typedef struct {
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
 uint16_t cpuRegRead(CPU_REGISTER_ENUM reg);
+void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val);
 void cpuInit(void);
 void cpuShowInstruction(uint32_t i);
 bool cpuStep(void);

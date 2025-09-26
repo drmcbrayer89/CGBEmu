@@ -1,18 +1,43 @@
 #include "common.h"
+#include "gb.h"
 #include "cpu.h"
 #include "asm_func.h"
+/* Consider just passing a pointer to the CPU with an init function. this is stupid. */
+static bool asmCheckCondition(CPU * cpu) {
+    bool c_flag = BIT_CHECK(cpu->regs.f, CARRY_FLAG);
+    bool z_flag = BIT_CHECK(cpu->regs.f, ZERO_FLAG);
+
+    switch(cpu->instruction->condition) {
+        case C_NONE:
+            return true;
+        case C_Z:
+            return z_flag;
+        case C_NZ:
+            return !z_flag;
+        case C_C:
+            return c_flag;
+        case C_NC:
+            return !c_flag;
+        default:
+            printf("Wrong condition detected!\n");
+            return false;
+    }
+}
 
 void asmNone(CPU * cpu) {
     return;
 }
 
 void asmNop(CPU * cpu) {
-    printf("Got here\n");
+    return;
 }
 
 void asmLd(CPU * cpu) {
-    bool is_16bit = (cpu->instruction->r2 >= R_AF) ? true : false;
-
+    bool is_16bit = (cpu->instruction->r1 >= R_AF) ? true : false;
+    if(cpu->to_memory == false) {
+        /* Default (easiest option) */
+        cpuWriteReg(cpu->instruction->r1, cpu->data);
+    }
     
 }
 
@@ -20,11 +45,20 @@ void asmDi(CPU * cpu) {
     cpu->int_enable = false;
 }
 
+void asmJp(CPU * cpu) {
+    /* Lots of cases here... */
+    if(asmCheckCondition(cpu) == true) {
+        cpu->regs.pc = cpu->data;
+        gbTick();
+    }
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
     [I_LD] = asmLd,
-    [I_DI] = asmDi
+    [I_DI] = asmDi,
+    [I_JP] = asmJp
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

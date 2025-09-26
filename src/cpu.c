@@ -356,14 +356,48 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
     }
 }
 
-void cpuWriteReg(CPU_REGISTER_ENUM r, uint16_t val) {
+void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
+    switch(reg) {
+        /* 8 bit registers */
+        case R_A:
+            cpu.regs.a = val;
+            return;
+        case R_F:
+            cpu.regs.f = val;
+            return;
+        case R_B:
+            cpu.regs.b = val;
+            return;
+        case R_C:
+            cpu.regs.c = val;
+            return;
+        case R_D:
+            cpu.regs.d = val;
+            return;
+        case R_E:
+            cpu.regs.e = val;
+            return;
+        case R_H:
+            cpu.regs.h = val;
+            return;
+        case R_L:
+            cpu.regs.l = val;
+            return;
+        /* Begin 16 bit registers */
+        default:
+            printf("Incorrect register!\n");
+            return;
+    }
 }
 
 static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-    printf("PC: 0x%04X %s\n", pc, instruction_set_s[cpu.instruction->type]);
+    printf("PC: 0x%04X %-4s 0x%02X 0x%02X\n",   pc, 
+                                            instruction_set_s[cpu.instruction->type], 
+                                            busReadAddr(cpu.regs.pc + 1), 
+                                            busReadAddr(cpu.regs.pc + 2));
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -542,7 +576,14 @@ static void cpuGetData(void) {
 
 static void cpuExec(void) {
     /* Grab asm function & execute -- pass pointer to CPU */
-    asmGetFunction(cpu.instruction->type)(&cpu);
+    ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
+    if(p_func != NULL) {
+        p_func(&cpu);
+    }
+    else {
+        printf("ASM function not defined\n");
+        exit(-1);
+    }
 }
 
 bool cpuStep(void) {
@@ -550,7 +591,9 @@ bool cpuStep(void) {
         cpuGetInstruction();
         cpuGetData();
         cpuExec();
+        return true;
     }
+
     return false;
 }
 
