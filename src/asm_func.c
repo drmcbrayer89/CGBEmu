@@ -90,7 +90,14 @@ void asmCcf(CPU * cpu) {
 }
 
 void asmHalt(CPU * cpu) {
-    
+
+}
+
+void asmXor(CPU * cpu) {
+    cpu->regs.a ^= cpu->data & 0xFF;
+    if(cpu->regs.a == 0x00) {
+        cpuSetFlags(1,0,0,0);
+    } 
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
@@ -98,7 +105,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NOP] = asmNop,
     [I_LD] = asmLd,
     [I_DI] = asmDi,
-    [I_JP] = asmJp
+    [I_JP] = asmJp,
+    [I_XOR] = asmXor
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
