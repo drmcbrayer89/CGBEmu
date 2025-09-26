@@ -574,6 +574,21 @@ static void cpuGetData(void) {
     }
 }
 
+void cpuSetFlags(byte z, byte n, byte h, byte c) {
+    if(z != -1) {
+        BIT_SET(cpu.regs.f, ZERO_FLAG, z);
+    }
+    if(n != -1) {
+        BIT_SET(cpu.regs.f, SUBTRACTION_FLAG, n);
+    }
+    if(h != -1){
+        BIT_SET(cpu.regs.f, HALF_CARRY_FLAG, h);
+    }
+    if(c != -1){
+        BIT_SET(cpu.regs.f, CARRY_FLAG, c);
+    }
+}
+
 static void cpuExec(void) {
     /* Grab asm function & execute -- pass pointer to CPU */
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);

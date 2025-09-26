@@ -2,6 +2,7 @@
 #include "gb.h"
 #include "cpu.h"
 #include "asm_func.h"
+
 /* Consider just passing a pointer to the CPU with an init function. this is stupid. */
 static bool asmCheckCondition(CPU * cpu) {
     bool c_flag = BIT_CHECK(cpu->regs.f, CARRY_FLAG);
@@ -38,7 +39,6 @@ void asmLd(CPU * cpu) {
         /* Default (easiest option) */
         cpuWriteReg(cpu->instruction->r1, cpu->data);
     }
-    
 }
 
 void asmDi(CPU * cpu) {
@@ -51,6 +51,46 @@ void asmJp(CPU * cpu) {
         cpu->regs.pc = cpu->data;
         gbTick();
     }
+}
+
+void asmInc(CPU * cpu) {
+
+}
+
+void asmDec(CPU * cpu) {
+
+}
+
+void asmRl(CPU * cpu) {
+
+}
+
+void asmRla(CPU * cpu) {
+
+}
+
+void asmJr(CPU * cpu) {
+
+}
+
+void asmAdd(CPU * cpu) {
+
+}
+
+void asmRrca(CPU * cpu) {
+
+}
+
+void asmCpl(CPU * cpu) {
+
+}
+
+void asmCcf(CPU * cpu) {
+
+}
+
+void asmHalt(CPU * cpu) {
+    
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
