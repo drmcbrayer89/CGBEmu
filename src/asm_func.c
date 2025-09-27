@@ -54,59 +54,71 @@ void asmJp() {
     }
 }
 
-void asmInc() {
+void asmInc(void) {
 
 }
 
-void asmDec() {
+void asmDec(void) {
 
 }
 
-void asmRl() {
+void asmRl(void) {
 
 }
 
-void asmRla() {
+void asmRla(void) {
 
 }
 
-void asmJr() {
+void asmJr(void) {
 
 }
 
-void asmAdd() {
+void asmAdd(void) {
 
 }
 
-void asmRrca() {
+void asmRrca(void) {
 
 }
 
-void asmCpl() {
+void asmCpl(void) {
 
 }
 
-void asmCcf() {
+void asmCcf(void) {
 
 }
 
-void asmHalt() {
+void asmHalt(void) {
 
 }
 
-void asmStop() {
+void asmStop(void) {
     
 }
 
-void asmLdh() {
+void asmLdh(void) {
 
 }
 
-void asmCp() {
+void asmCp(void) {
 
 }
 
-void asmXor() {
+void asmOr(void) {
+
+}
+
+void asmCall(void) {
+
+}
+
+void asmEi(void) {
+
+}
+
+void asmXor(void) {
     p_cpu->regs.a ^= p_cpu->data & 0xFF;
     if(p_cpu->regs.a == 0x00) {
         cpuSetFlags(1,0,0,0);
@@ -124,7 +136,12 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_DEC] = asmDec,
     [I_JR] = asmJr,
     [I_LDH] = asmLdh,
-    [I_CP] = asmCp
+    [I_CP] = asmCp,
+    [I_OR] = asmOr,
+    [I_INC] = asmInc,
+    [I_CALL] = asmCall,
+    [I_EI] = asmEi,
+    [I_ADD] = asmAdd
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
