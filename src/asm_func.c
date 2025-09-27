@@ -3,12 +3,13 @@
 #include "cpu.h"
 #include "asm_func.h"
 
+static CPU * p_cpu;
 /* Consider just passing a pointer to the CPU with an init function. this is stupid. */
-static bool asmCheckCondition(CPU * cpu) {
-    bool c_flag = BIT_CHECK(cpu->regs.f, CARRY_FLAG);
-    bool z_flag = BIT_CHECK(cpu->regs.f, ZERO_FLAG);
+static bool asmCheckCondition() {
+    bool c_flag = BIT_CHECK(p_cpu->regs.f, CARRY_FLAG);
+    bool z_flag = BIT_CHECK(p_cpu->regs.f, ZERO_FLAG);
 
-    switch(cpu->instruction->condition) {
+    switch(p_cpu->instruction->condition) {
         case C_NONE:
             return true;
         case C_Z:
@@ -25,77 +26,89 @@ static bool asmCheckCondition(CPU * cpu) {
     }
 }
 
-void asmNone(CPU * cpu) {
+void asmNone() {
     return;
 }
 
-void asmNop(CPU * cpu) {
+void asmNop() {
     return;
 }
 
-void asmLd(CPU * cpu) {
-    bool is_16bit = (cpu->instruction->r1 >= R_AF) ? true : false;
-    if(cpu->to_memory == false) {
+void asmLd() {
+    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
+    if(p_cpu->to_memory == false) {
         /* Default (easiest option) */
-        cpuWriteReg(cpu->instruction->r1, cpu->data);
+        cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
     }
 }
 
-void asmDi(CPU * cpu) {
-    cpu->int_enable = false;
+void asmDi() {
+    p_cpu->int_enable = false;
 }
 
-void asmJp(CPU * cpu) {
+void asmJp() {
     /* Lots of cases here... */
-    if(asmCheckCondition(cpu) == true) {
-        cpu->regs.pc = cpu->data;
+    if(asmCheckCondition() == true) {
+        p_cpu->regs.pc = p_cpu->data;
         gbTick();
     }
 }
 
-void asmInc(CPU * cpu) {
+void asmInc() {
 
 }
 
-void asmDec(CPU * cpu) {
+void asmDec() {
 
 }
 
-void asmRl(CPU * cpu) {
+void asmRl() {
 
 }
 
-void asmRla(CPU * cpu) {
+void asmRla() {
 
 }
 
-void asmJr(CPU * cpu) {
+void asmJr() {
 
 }
 
-void asmAdd(CPU * cpu) {
+void asmAdd() {
 
 }
 
-void asmRrca(CPU * cpu) {
+void asmRrca() {
 
 }
 
-void asmCpl(CPU * cpu) {
+void asmCpl() {
 
 }
 
-void asmCcf(CPU * cpu) {
+void asmCcf() {
 
 }
 
-void asmHalt(CPU * cpu) {
+void asmHalt() {
 
 }
 
-void asmXor(CPU * cpu) {
-    cpu->regs.a ^= cpu->data & 0xFF;
-    if(cpu->regs.a == 0x00) {
+void asmStop() {
+    
+}
+
+void asmLdh() {
+
+}
+
+void asmCp() {
+
+}
+
+void asmXor() {
+    p_cpu->regs.a ^= p_cpu->data & 0xFF;
+    if(p_cpu->regs.a == 0x00) {
         cpuSetFlags(1,0,0,0);
     }
 }
@@ -106,9 +119,20 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_LD] = asmLd,
     [I_DI] = asmDi,
     [I_JP] = asmJp,
-    [I_XOR] = asmXor
+    [I_XOR] = asmXor,
+    [I_STOP] = asmStop,
+    [I_DEC] = asmDec,
+    [I_JR] = asmJr,
+    [I_LDH] = asmLdh,
+    [I_CP] = asmCp
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
     return asm_functions[i];
+}
+
+void asmSetCpuPtr(CPU * cpu) {
+    p_cpu = cpu;
+
+    printf("\t\t\tcheck: 0x%02X\n", p_cpu->regs.a);
 }

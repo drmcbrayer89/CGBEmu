@@ -620,7 +620,7 @@ static void cpuExec(void) {
     /* Grab asm function & execute -- pass pointer to CPU */
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
-        p_func(&cpu);
+        p_func();
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);
@@ -641,6 +641,7 @@ bool cpuStep(void) {
 
 void cpuInit(void) {
     cpu.regs.pc = 0x0100;
+    asmSetCpuPtr(&cpu);
 }
 
 void cpuShowInstruction(uint32_t i) {
