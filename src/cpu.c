@@ -356,6 +356,15 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
     }
 }
 
+static uint16_t cpuSwapEndian(uint16_t val) {
+    return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
+}
+
+static void cpuWriteReg16(uint16_t val, uint8_t * r1, uint8_t * r2) {
+    *r1 = ((val & 0x00FF) << 8) >> 8;
+    *r2 = (val & 0xFF00) >> 8;
+}
+
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
     switch(reg) {
         /* 8 bit registers */
@@ -384,8 +393,29 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
             cpu.regs.l = val;
             return;
         /* Begin 16 bit registers */
+        case R_AF:
+            cpuWriteReg16(val, &cpu.regs.a, &cpu.regs.f);
+            printf("\tA: %i F: %i\n", cpu.regs.a, cpu.regs.f);
+            return;
+        case R_BC:
+            cpuWriteReg16(val, &cpu.regs.b, &cpu.regs.c);
+            printf("\tB: %i C: %i\n", cpu.regs.b, cpu.regs.c);
+            return;
+        case R_DE:
+            cpuWriteReg16(val, &cpu.regs.d, &cpu.regs.e);
+            printf("\tD: %i E: %i\n", cpu.regs.d, cpu.regs.e);
+            return;
+        case R_HL:
+            cpuWriteReg16(val, &cpu.regs.h, &cpu.regs.l);
+            printf("\tH: %i L: %i\n", cpu.regs.h, cpu.regs.l);
+            return;
+        case R_SP:
+            return;
+        case R_PC:
+            return;
         default:
-            printf("Incorrect register!\n");
+            cpuSwapEndian(val);
+            printf("Incorrect register: %i\n", reg);
             return;
     }
 }
@@ -394,10 +424,7 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-    printf("PC: 0x%04X %-4s 0x%02X 0x%02X\n",   pc, 
-                                            instruction_set_s[cpu.instruction->type], 
-                                            busReadAddr(cpu.regs.pc + 1), 
-                                            busReadAddr(cpu.regs.pc + 2));
+    printf("PC: 0x%04X %-4s\n", pc, instruction_set_s[cpu.instruction->type]);
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -596,7 +623,7 @@ static void cpuExec(void) {
         p_func(&cpu);
     }
     else {
-        printf("ASM function not defined\n");
+        printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);
         exit(-1);
     }
 }

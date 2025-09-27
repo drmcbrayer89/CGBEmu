@@ -97,7 +97,7 @@ void asmXor(CPU * cpu) {
     cpu->regs.a ^= cpu->data & 0xFF;
     if(cpu->regs.a == 0x00) {
         cpuSetFlags(1,0,0,0);
-    } 
+    }
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
