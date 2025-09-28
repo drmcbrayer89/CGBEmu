@@ -74,25 +74,39 @@ void asmJr(void) {
 }
 
 void asmAdd(void) {
-    CPU_FLAGS flags = {0,0,0,0};
+    CPU_FLAGS flags = {-1,0,-1,-1};
+    uint16_t val = 0;
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true: false;
-    /* Need to add additional ticks for 2 byte read */
-    if(is_16bit) {
-        gbTick(1);
-    }
-    /* R1 value + R2 value */
-    uint16_t val = cpuReadReg(p_cpu->instruction->r1) + p_cpu->data;
-    /* ADD SP, e8 is a special case with signed val (e8) */
+
     if(p_cpu->instruction->r1 != R_SP){
-        if(val == 0x00) {
-            flags.z = 1;
+        val = cpuReadReg(p_cpu->instruction->r1) + p_cpu->data;
+
+        if(is_16bit == false) {
+            if(val == 0x00) {
+                flags.z = 1;
+            }
+            /* These are checking if bits 3 or 7 are exceeded by the sum */
+            flags.h = ((val & 0xF)  >= 0x10)  ? true : false;
+            flags.c = ((val & 0xFF) >= 0x100) ? true : false;
         }
-        /* These are checking if bits 3 or 7 are exceeded by the sum */
-        flags.h = ((val & 0xF)  >= 0x10)  ? true : false;
-        flags.c = ((val & 0xFF) >= 0x100) ? true : false;
+        /* 16 bit register ...*/
+        else {
+            /* Checking if bits 11 or 15 are exceeded by the sum */
+            uint32_t temp_sum = 0; 
+            flags.h = ((val & 0xFFF) >= 0x1000) ? true: false;
+            temp_sum = (uint32_t(cpuReadReg(p_cpu->instruction->r1)) + (uint32_t)p_cpu->data);
+            flags.c = (temp_sum >= 0x10000) ? true: false;
+            /* Needs more ticks */
+            gbTick(1);
+        }
     }
     else {
-        // SP & SP related flags here
+        /* ADD SP, e8 is a special case with signed val (e8) */
+        val = cpuReadReg(p_cpu->instruction->r1) + (int8_t)p_cpu->data;
+        /* These are checking if bits 3 or 7 are exceeded by the sum */
+        flags.z = 0;
+        flags.h = ((val & 0xF)  >= 0x10)  ? true : false;
+        flags.c = ((val & 0xFF) >= 0x100) ? true : false;
     }
 
     cpuWriteReg(p_cpu->instruction->r1, val & 0xFFFF);
