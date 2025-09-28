@@ -453,6 +453,7 @@ static void cpuGetData(void) {
 
         case M_REG_D8:
             cpu.data = busReadAddr(cpu.regs.pc);
+            gbTick(1);
             cpu.regs.pc++;
             return;
 

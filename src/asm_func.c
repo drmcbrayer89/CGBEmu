@@ -94,7 +94,7 @@ void asmAdd(void) {
             /* Checking if bits 11 or 15 are exceeded by the sum */
             uint32_t temp_sum = 0; 
             flags.h = ((val & 0xFFF) >= 0x1000) ? true: false;
-            temp_sum = (uint32_t(cpuReadReg(p_cpu->instruction->r1)) + (uint32_t)p_cpu->data);
+            temp_sum = (uint32_t)(cpuReadReg(p_cpu->instruction->r1)) + (uint32_t)p_cpu->data;
             flags.c = (temp_sum >= 0x10000) ? true: false;
             /* Needs more ticks */
             gbTick(1);
