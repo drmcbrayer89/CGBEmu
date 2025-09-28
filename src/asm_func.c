@@ -59,7 +59,6 @@ void asmInc(void) {
 }
 
 void asmDec(void) {
-
 }
 
 void asmRl(void) {
@@ -107,7 +106,26 @@ void asmCp(void) {
 }
 
 void asmOr(void) {
+    ASM_FLAGS flags = {0,0,0,0};
+    p_cpu->regs.a = (p_cpu->regs.a | p_cpu->data);
 
+    if(p_cpu->regs.a == 0x00) {
+        flags.z = 1;
+    }
+
+    cpuSetFlags(flags.z, flags.n, flags.h, flags.c);
+}
+
+void asmAnd(void) {
+    ASM_FLAGS flags = {0,0,0,0};
+    p_cpu->regs.a = (p_cpu->regs.a & p_cpu->data);
+
+    flags.h = 1;
+    if(p_cpu->regs.a == 0x00) {
+        flags.z = 1;
+    }
+
+    cpuSetFlags(flags.z, flags.n, flags.h, flags.c);
 }
 
 void asmCall(void) {
@@ -121,7 +139,7 @@ void asmEi(void) {
 void asmXor(void) {
     p_cpu->regs.a ^= p_cpu->data & 0xFF;
     if(p_cpu->regs.a == 0x00) {
-        cpuSetFlags(1,0,0,0);
+        cpuSetFlags(SET, STAY, STAY, STAY);
     }
 }
 
@@ -141,7 +159,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_INC] = asmInc,
     [I_CALL] = asmCall,
     [I_EI] = asmEi,
-    [I_ADD] = asmAdd
+    [I_ADD] = asmAdd,
+    [I_AND] = asmAnd
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
