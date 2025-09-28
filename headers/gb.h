@@ -7,6 +7,6 @@ typedef struct {
     uint64_t ticks;
 } GB;
 
-void gbTick(void);
+void gbTick(uint8_t cycles);
 void gbInit(void);
 void gbStart(void);

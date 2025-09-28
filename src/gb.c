@@ -3,12 +3,15 @@
 
 GB gameboy;
 
-void gbTick(void) {
+void gbTick(uint8_t cycles) {
     // implement later with tick accuracy
     uint16_t i = 0;
-    for(i; i < CYCLES_PER_BYTE; i++) {
-        gameboy.ticks++;
-        // sync with PPU later :)
+    uint16_t j = 0;
+    for(i; i < cycles; i++){
+        for(j; j < CYCLES_PER_BYTE; j++) {
+            gameboy.ticks++;
+            // sync with PPU later :)
+        }
     }
 }
 

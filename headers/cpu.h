@@ -148,9 +148,16 @@ typedef struct {
     bool int_enable;
 } CPU;
 
+typedef struct {
+    uint8_t z;
+    uint8_t n;
+    uint8_t h;
+    uint8_t c;
+} CPU_FLAGS;
+
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
-void cpuSetFlags(char z, char n, char h, char c);
-uint16_t cpuRegRead(CPU_REGISTER_ENUM reg);
+void cpuSetFlags(CPU_FLAGS flags);
+uint16_t cpuReadReg(CPU_REGISTER_ENUM reg);
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val);
 void cpuInit(void);
 void cpuShowInstruction(uint32_t i);

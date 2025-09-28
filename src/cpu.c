@@ -481,30 +481,30 @@ static void cpuGetData(void) {
         case M_D16:
         case M_REG_D16:
             lower = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             
             upper = busReadAddr(cpu.regs.pc + 1);
             cpu.data = lower | (upper << 8);
-            gbTick();
+            gbTick(1);
 
             cpu.regs.pc = cpu.regs.pc + 2;
             return;
         
         case M_REG_HLI:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
-            gbTick();
+            gbTick(1);
             cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
             return;
 
         case M_REG_HLD:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
-            gbTick();
+            gbTick(1);
             cpuWriteReg(R_HL, cpuReadReg(R_HL) - 1);
             return;
         
         case M_REG_A8:
             cpu.data = busReadAddr(cpu.regs.pc++);
-            gbTick();
+            gbTick(1);
             return;
             
         case M_HLI_R:
@@ -523,16 +523,16 @@ static void cpuGetData(void) {
         
         case M_A8_REG:
             cpu.memory_destination = busReadAddr(cpu.regs.pc) | 0xFF00;
-            gbTick();
+            gbTick(1);
             cpu.to_memory = true;
             cpu.regs.pc++;
             return;
         
         case M_A16_REG:
             lower = busReadAddr(cpu.regs.pc); // bottom half of address
-            gbTick();
+            gbTick(1);
             upper = busReadAddr(cpu.regs.pc + 1); // top half of address
-            gbTick();
+            gbTick(1);
             
             cpu.to_memory = true;
             cpu.memory_destination = lower | (upper << 8);
@@ -543,9 +543,9 @@ static void cpuGetData(void) {
         
         case M_D16_REG:
             lower = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             upper = busReadAddr(cpu.regs.pc+1);
-            gbTick();
+            gbTick(1);
 
             cpu.to_memory = true;
             cpu.memory_destination = lower | (upper << 8);
@@ -556,27 +556,27 @@ static void cpuGetData(void) {
 
         case M_REG_A16:
             lower = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             
             upper = busReadAddr(cpu.regs.pc + 1);
-            gbTick();
+            gbTick(1);
             
             addr16 = lower | (upper << 8);
             cpu.data = busReadAddr(addr);
-            gbTick();
+            gbTick(1);
 
             cpu.regs.pc = cpu.regs.pc + 2;
             return;
 
         case M_HL_SPR:
             cpu.data = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             cpu.regs.pc++;
             return;
 
         case M_D8:
             cpu.data = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             cpu.regs.pc++;
             return;
         
@@ -584,12 +584,12 @@ static void cpuGetData(void) {
             cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
             cpu.to_memory = true;
             cpu.data = busReadAddr(cpu.memory_destination);
-            gbTick();
+            gbTick(1);
             return;
         
         case M_MEMREG_D8:
             cpu.data = busReadAddr(cpu.regs.pc);
-            gbTick();
+            gbTick(1);
             cpu.to_memory = true;
             cpu.memory_destination = cpuReadReg(cpu.instruction->r1);
             cpu.regs.pc++;
@@ -601,18 +601,20 @@ static void cpuGetData(void) {
     }
 }
 
-void cpuSetFlags(byte z, byte n, byte h, byte c) {
-    if(z != -1) {
-        BIT_SET(cpu.regs.f, ZERO_FLAG, z);
+
+//void cpuSetFlags(byte z, byte n, byte h, byte c) {
+void cpuSetFlags(CPU_FLAGS flags){
+    if(flags.z != -1) {
+        BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
     }
-    if(n != -1) {
-        BIT_SET(cpu.regs.f, SUBTRACTION_FLAG, n);
+    if(flags.n != -1) {
+        BIT_SET(cpu.regs.f, SUBTRACTION_FLAG, flags.n);
     }
-    if(h != -1){
-        BIT_SET(cpu.regs.f, HALF_CARRY_FLAG, h);
+    if(flags.h != -1){
+        BIT_SET(cpu.regs.f, HALF_CARRY_FLAG, flags.h);
     }
-    if(c != -1){
-        BIT_SET(cpu.regs.f, CARRY_FLAG, c);
+    if(flags.c != -1){
+        BIT_SET(cpu.regs.f, CARRY_FLAG, flags.c);
     }
 }
 
