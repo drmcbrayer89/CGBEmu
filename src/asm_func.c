@@ -42,10 +42,6 @@ void asmLd() {
     }
 }
 
-void asmDi() {
-    p_cpu->int_enable = false;
-}
-
 void asmJp() {
     /* Lots of cases here... */
     if(asmCheckCondition() == true) {
@@ -55,7 +51,35 @@ void asmJp() {
 }
 
 void asmInc(void) {
+    CPU_FLAGS flags = {-1, 0, -1, -1};
+    uint16_t val = 0;
+    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
 
+    /* INC r8 */
+    if(is_16bit == false) {
+        val = (p_cpu->data) + 1;
+
+        if(val == 0x0) {
+            flags.z = 1;
+        }
+        if(val >= 0x10) {
+            flags.h = 1;
+        }
+    }
+    /* INC [HL] */
+    if(p_cpu->to_memory == true) {
+        val = 0;// What do i need to do here?
+
+        if(val == 0x00) {
+            flags.z = 1;
+        }
+        if(val >= 0x10) {
+            flags.h = 1;
+        }
+    }
+    
+    cpuWriteReg(p_cpu->instruction->r1, val);
+    cpuSetFlags(flags);
 }
 
 void asmDec(void) {
@@ -141,15 +165,16 @@ void asmCp(void) {
 
 }
 
-void asmOr(void) {
-    CPU_FLAGS flags = {0,0,0,0};
-    p_cpu->regs.a = (p_cpu->regs.a | p_cpu->data);
+void asmCall(void) {
 
-    if(p_cpu->regs.a == 0x00) {
-        flags.z = 1;
-    }
+}
 
-    cpuSetFlags(flags);
+void asmEi(void) {
+    p_cpu->int_enable = true;
+}
+
+void asmDi() {
+    p_cpu->int_enable = false;
 }
 
 void asmAnd(void) {
@@ -164,12 +189,15 @@ void asmAnd(void) {
     cpuSetFlags(flags);
 }
 
-void asmCall(void) {
+void asmOr(void) {
+    CPU_FLAGS flags = {0,0,0,0};
+    p_cpu->regs.a = (p_cpu->regs.a | p_cpu->data);
 
-}
+    if(p_cpu->regs.a == 0x00) {
+        flags.z = 1;
+    }
 
-void asmEi(void) {
-
+    cpuSetFlags(flags);
 }
 
 void asmXor(void) {
