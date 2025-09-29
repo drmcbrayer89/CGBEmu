@@ -57,7 +57,8 @@ void asmInc(void) {
 
     /* INC r8 */
     if(is_16bit == false) {
-        val = (p_cpu->data) + 1;
+        val = p_cpu->data + 1;
+        cpuWriteReg(p_cpu->instruction->r1, val & 0xF);
 
         if(val == 0x0) {
             flags.z = 1;
@@ -65,21 +66,36 @@ void asmInc(void) {
         if(val >= 0x10) {
             flags.h = 1;
         }
+        cpuSetFlags(flags);
     }
-    /* INC [HL] */
-    if(p_cpu->to_memory == true) {
-        val = 0;// What do i need to do here?
+    else {
+        /* Cycle for extra byte */
+        gbTick(1);
+        /* INC [HL] */
+        if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
+            val = busReadAddr(cpuReadReg(RT_HL)) + 1;
+            val = val & 0xFF;
+            busWriteAddr(cpuReadReg(RT_HL), val);
 
-        if(val == 0x00) {
-            flags.z = 1;
+            /* 3 total cycles for INC [HL] */
+            gbTick(1);
+
+            if(val == 0x00) {
+                flags.z = 1;
+            }
+            if(val >= 0x10) {
+                flags.h = 1;
+            }
+            cpuSetFlags(flags);
         }
-        if(val >= 0x10) {
-            flags.h = 1;
+        /* INC r16 */
+        else {
+            val = p_cpu->data + 1;
+            val = val & 0xFF;
+
+            cpuWriteReg(p_cpu->instruction->r1, val);
         }
     }
-    
-    cpuWriteReg(p_cpu->instruction->r1, val);
-    cpuSetFlags(flags);
 }
 
 void asmDec(void) {
