@@ -309,6 +309,24 @@ static char * instruction_set_s[I_SET_SIZE] = {
     "RETI"
 };
 
+static char * registers_s[R_PC + 1] = {
+    "R_NONE",
+    "R_A",
+    "R_F",
+    "R_B",
+    "R_C",
+    "R_D",
+    "R_E",
+    "R_H",
+    "R_L",
+    "R_AF",
+    "R_BC",
+    "R_DE",
+    "R_HL",
+    "R_SP",
+    "R_PC"
+};
+
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instruction_set[op_code];
 }
@@ -649,4 +667,12 @@ void cpuInit(void) {
 
 void cpuShowInstruction(uint32_t i) {
     printf("INSTRUCTION: %s\n", instruction_set_s[i]);
+}
+
+char * cpuGetInsString(uint32_t i) {
+    return instruction_set_s[i];
+}
+
+char * cpuGetRegString(uint32_t i) {
+    return registers_s[i];
 }

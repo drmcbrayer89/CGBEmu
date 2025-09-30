@@ -2,6 +2,7 @@
 #include "gb.h"
 #include "cpu.h"
 #include "asm_func.h"
+#include "bus.h"
 
 static CPU * p_cpu;
 /* Consider just passing a pointer to the CPU with an init function. this is stupid. */
@@ -73,9 +74,9 @@ void asmInc(void) {
         gbTick(1);
         /* INC [HL] */
         if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
-            val = busReadAddr(cpuReadReg(RT_HL)) + 1;
+            val = busReadAddr(cpuReadReg(R_HL)) + 1;
             val = val & 0xFF;
-            busWriteAddr(cpuReadReg(RT_HL), val);
+            busWriteAddr(cpuReadReg(R_HL), val);
 
             /* 3 total cycles for INC [HL] */
             gbTick(1);

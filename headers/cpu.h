@@ -161,5 +161,7 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg);
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val);
 void cpuInit(void);
 void cpuShowInstruction(uint32_t i);
+char * cpuGetInsString(uint32_t i);
+char * cpuGetRegString(uint32_t i);
 bool cpuStep(void);
 
