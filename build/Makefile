@@ -129,6 +129,30 @@ gbemu/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/build
 .PHONY : gbemu/fast
 
+asm_func.o: asm_func.c.o
+.PHONY : asm_func.o
+
+# target to build an object file
+asm_func.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/asm_func.c.o
+.PHONY : asm_func.c.o
+
+asm_func.i: asm_func.c.i
+.PHONY : asm_func.i
+
+# target to preprocess a source file
+asm_func.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/asm_func.c.i
+.PHONY : asm_func.c.i
+
+asm_func.s: asm_func.c.s
+.PHONY : asm_func.s
+
+# target to generate assembly for a file
+asm_func.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/asm_func.c.s
+.PHONY : asm_func.c.s
+
 bus.o: bus.c.o
 .PHONY : bus.o
 
@@ -201,6 +225,30 @@ cpu.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/cpu.c.s
 .PHONY : cpu.c.s
 
+gb.o: gb.c.o
+.PHONY : gb.o
+
+# target to build an object file
+gb.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/gb.c.o
+.PHONY : gb.c.o
+
+gb.i: gb.c.i
+.PHONY : gb.i
+
+# target to preprocess a source file
+gb.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/gb.c.i
+.PHONY : gb.c.i
+
+gb.s: gb.c.s
+.PHONY : gb.s
+
+# target to generate assembly for a file
+gb.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/gbemu.dir/build.make CMakeFiles/gbemu.dir/gb.c.s
+.PHONY : gb.c.s
+
 main.o: main.c.o
 .PHONY : main.o
 
@@ -234,6 +282,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... gbemu"
+	@echo "... asm_func.o"
+	@echo "... asm_func.i"
+	@echo "... asm_func.s"
 	@echo "... bus.o"
 	@echo "... bus.i"
 	@echo "... bus.s"
@@ -243,6 +294,9 @@ help:
 	@echo "... cpu.o"
 	@echo "... cpu.i"
 	@echo "... cpu.s"
+	@echo "... gb.o"
+	@echo "... gb.i"
+	@echo "... gb.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

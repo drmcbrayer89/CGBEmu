@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define BIT_CLEAR(a,n) (a &= ~(1<< n))
 // stole this one :P
