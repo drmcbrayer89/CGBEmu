@@ -494,6 +494,7 @@ static void cpuGetData(void) {
             }
             /* Read from addr into r1 */
             cpu.data = cpuReadReg(cpu.instruction->r1);
+            gbTick(1);
             return;
         
         /* These do the same thing from a reading standpoint... */
@@ -620,6 +621,9 @@ static void cpuGetData(void) {
     }
 }
 
+bool cpuGetFlag(uint32_t flag) {
+    return BIT_CHECK(cpu.regs.f, flag);
+}
 
 //void cpuSetFlags(byte z, byte n, byte h, byte c) {
 void cpuSetFlags(CPU_FLAGS flags){

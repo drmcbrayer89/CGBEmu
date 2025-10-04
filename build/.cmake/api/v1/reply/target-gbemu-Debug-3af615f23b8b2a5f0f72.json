@@ -39,6 +39,12 @@
 	"compileGroups" : 
 	[
 		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				}
+			],
 			"includes" : 
 			[
 				{
@@ -61,6 +67,13 @@
 	"id" : "gbemu::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			}
+		],
 		"language" : "C"
 	},
 	"name" : "gbemu",

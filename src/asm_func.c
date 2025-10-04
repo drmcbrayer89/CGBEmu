@@ -100,6 +100,51 @@ void asmInc(void) {
 }
 
 void asmDec(void) {
+    CPU_FLAGS flags = {-1, 1, -1, -1};
+    uint16_t val = 0;
+    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
+
+    /* DEC r8 */
+    if(is_16bit == false) {
+        val = p_cpu->data - 1;
+        cpuWriteReg(p_cpu->instruction->r1, val & 0xF);
+
+        if(val == 0x0) {
+            flags.z = 1;
+        }
+        if(val >= 0x10) {
+            flags.h = 1;
+        }
+        cpuSetFlags(flags);
+    }
+    else {
+        /* Cycle for extra byte */
+        gbTick(1);
+        /* DEC [HL] */
+        if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
+            val = busReadAddr(cpuReadReg(R_HL)) - 1;
+            val = val & 0xFF;
+            busWriteAddr(cpuReadReg(R_HL), val);
+
+            /* 3 total cycles for INC [HL] */
+            gbTick(1);
+
+            if(val == 0x00) {
+                flags.z = 1;
+            }
+            if((val & 0x0F) == 0x0F) {
+                flags.h = 1;
+            }
+            cpuSetFlags(flags);
+        }
+        /* DEC r16 */
+        else {
+            val = p_cpu->data - 1;
+            val = val & 0xFF;
+
+            cpuWriteReg(p_cpu->instruction->r1, val);
+        }
+    }
 }
 
 void asmRl(void) {
@@ -154,12 +199,26 @@ void asmAdd(void) {
     cpuSetFlags(flags);
 }
 
+void asmSub(void) {
+    CPU_FLAGS flags = {-1, 1, -1, -1};
+
+    uint8_t result = p_cpu->regs.a - p_cpu->data;
+
+    flags.c = (result == 0) ? 1 : 0;
+    flags.h = ((result & 0x0F) == 0x0F) ? 1 : 0;
+    flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
+
+    cpuSetFlags(flags);
+}
+
 void asmRrca(void) {
 
 }
-
+/* This is just a NOT operator for register A */
 void asmCpl(void) {
-
+    CPU_FLAGS flags = {-1, 1, 1, -1};
+    p_cpu->regs.a = ~p_cpu->regs.a;
+    cpuSetFlags(flags);
 }
 
 void asmCcf(void) {
@@ -179,7 +238,15 @@ void asmLdh(void) {
 }
 
 void asmCp(void) {
+    CPU_FLAGS flags = {-1, 1, -1, -1};
 
+    int32_t compare = (int32_t)p_cpu->regs.a - (int32_t)p_cpu->data;
+
+    flags.z = (compare == 0) ? 1 : 0;
+    flags.h = ((compare & 0x0F) == 0x0F) ? 1 : 0;
+    flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
+
+    cpuSetFlags(flags);
 }
 
 void asmCall(void) {
@@ -223,6 +290,22 @@ void asmXor(void) {
     if(p_cpu->regs.a == 0x00) {
         cpuSetFlags(flags);
     }
+}
+
+void asmAdc(void) {
+    CPU_FLAGS flags = {-1, 0, -1, cpuGetFlag(CARRY_FLAG)};
+
+    uint16_t a = p_cpu->regs.a;
+    uint16_t r8 = p_cpu->data;
+    uint16_t val = a + r8 + flags.c;
+
+    p_cpu->regs.a = val & 0xFF;
+
+    flags.z = (val == 0x00) ? 1 : 0;
+    flags.h = ((val & 0x0F) > 0x0F) ? 1 : 0;
+    flags.c = (val > 0xFF) ? 1 : 0;
+
+    cpuSetFlags(flags);
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
