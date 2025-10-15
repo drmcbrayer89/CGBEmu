@@ -222,7 +222,12 @@ void asmCpl(void) {
 }
 
 void asmCcf(void) {
+    /* Complement Carry Flag */
+    CPU_FLAGS flags = {-1, 0, 0, 0};
 
+    flags.c = !cpuGetFlag(CARRY_FLAG);
+
+    cpuSetFlags(flags);
 }
 
 void asmHalt(void) {
@@ -234,7 +239,14 @@ void asmStop(void) {
 }
 
 void asmLdh(void) {
-
+    /* Copy the byte at address $FF00 + C into register A */
+    if(p_cpu->instruction->r1 == R_A) {
+        cpuWriteReg(R_A, busReadAddr(0xFF00 + p_cpu->data));
+    }
+    /* Copy value in register A into the byte pointed by R1 */
+    else {
+        busWriteAddr(p_cpu->memory_destination, p_cpu->regs.a);
+    }
 }
 
 void asmCp(void) {
@@ -325,7 +337,10 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_CALL] = asmCall,
     [I_EI] = asmEi,
     [I_ADD] = asmAdd,
-    [I_AND] = asmAnd
+    [I_AND] = asmAnd,
+    [I_ADC] = asmAdc,
+    [I_SUB] = asmSub,
+    [I_LDH] = asmLdh
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

@@ -492,8 +492,8 @@ static void cpuGetData(void) {
             if(cpu.instruction->r2 == R_C) {
                 addr |= 0xFF00;
             }
-            /* Read from addr into r1 */
-            cpu.data = cpuReadReg(cpu.instruction->r1);
+            /* Read from addr */
+            cpu.data = busReadAddr(addr);
             gbTick(1);
             return;
         
