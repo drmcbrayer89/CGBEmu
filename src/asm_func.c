@@ -148,6 +148,19 @@ void asmDec(void) {
 }
 
 void asmRl(void) {
+    /* Rotate bits in register through the carry flag */
+    CPU_FLAGS flags = {0, 0, 0, 0};
+
+    uint8_t r8 = p_cpu->data;
+    uint8_t carry_flag = cpuGetFlag(CARRY_FLAG);
+    uint8_t result; // figure out how to do this...
+
+
+
+    /* set flags */
+    flags.z = (result == 0) ? 1 : 0;
+    flags.c = result;
+    cpuSetFlags(flags);
 
 }
 
