@@ -153,19 +153,56 @@ void asmRl(void) {
 
     uint8_t r8 = p_cpu->data;
     uint8_t carry_flag = cpuGetFlag(CARRY_FLAG);
-    uint8_t result; // figure out how to do this...
+    /* Grab MSB, this will be the new carry flag */
+    uint8_t carry_temp = (r8 >> 7) & 1;
+    /* Shift bits in register to the left, add carry flag to LSB*/
+    r8 = (r8 << 1) | carry_flag;
 
-
-
-    /* set flags */
-    flags.z = (result == 0) ? 1 : 0;
-    flags.c = result;
+    /* Set if r8 is 0 */
+    flags.z = (r8 == 0) ? 1 : 0;
+    flags.c = carry_flag;
     cpuSetFlags(flags);
 
+    if(p_cpu->instruction->r1 == R_HL)
+        gbTick(3);
+    else
+        gbTick(1);
 }
 
 void asmRla(void) {
+    CPU_FLAGS flags = {0,0,0,0};
 
+    uint8_t a_reg = cpuReadReg(R_A);
+    uint8_t carry_flag = cpuGetFlag(CARRY_FLAG);
+    /* Grab MSB & store as new carry flag */
+    uint8_t carry_temp = (a_reg >> 7) & 1;
+    /* Shift bits to the left, add carry flag as LSB */
+    a_reg = (a_reg << 1) | carry_temp;
+
+    flags.c = carry_temp;
+    /* Store rotated register back into A */
+    cpuWriteReg(R_A, a_reg);
+    cpuSetFlags(flags);
+}
+
+void asmRlca(void) {
+    CPU_FLAGS flags = {0,0,0,0};
+
+    uint8_t a_reg = cpuReadReg(R_A);
+    /* Grab MSB */
+    uint8_t msb = (a_reg >> 7) & 1;
+    /* Store for later*/
+    uint8_t carry_flag = msb;
+    /* Shift register to the left, bit 7 added to bit 0 */
+    a_reg = (a_reg << 1) | msb;
+
+    flags.c = carry_flag;
+    
+    cpuWriteReg(R_A, a_reg);
+    cpuSetFlags(flags);
+
+    // 1 cycle
+    gbTick(1);
 }
 
 void asmJr(void) {
@@ -225,7 +262,17 @@ void asmSub(void) {
 }
 
 void asmRrca(void) {
+    CPU_FLAGS flags = {0,0,0,0};
 
+    uint8_t a_reg = cpuReadReg(R_A);
+    uint8_t lsb = a_reg & 1;
+    uint8_t carry_flag = lsb;
+    /* Shift A to the right, add LSB to MSB */
+    a_reg = (a_reg >> 1) | (lsb << 7);
+    flags.c = carry_flag;
+    
+    cpuWriteReg(R_A, a_reg);
+    cpuSetFlags(flags);
 }
 /* This is just a NOT operator for register A */
 void asmCpl(void) {
@@ -353,7 +400,10 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_AND] = asmAnd,
     [I_ADC] = asmAdc,
     [I_SUB] = asmSub,
-    [I_LDH] = asmLdh
+    [I_LDH] = asmLdh,
+    [I_RLA] = asmRla,
+    [I_RLCA] = asmRlca,
+    [I_RRCA] = asmRrca
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
