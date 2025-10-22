@@ -11,3 +11,11 @@
 #define NO_ACCESS_END 0xFEFF
 #define IO_END 0xFF7F
 #define HRAM_END 0xFFFE
+
+void memRead(uint16_t addr) {
+
+}
+
+void memWrite(uint16_t addr, uint16_t val){
+    
+}
