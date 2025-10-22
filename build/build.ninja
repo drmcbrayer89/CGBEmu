@@ -97,6 +97,14 @@ build CMakeFiles/gbemu.dir/asm_func.c.o: C_COMPILER__gbemu_unscanned_Debug /home
   OBJECT_DIR = CMakeFiles/gbemu.dir
   OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
 
+build CMakeFiles/gbemu.dir/memory.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ryanm/dev/CGBEmu/src/memory.c || cmake_object_order_depends_target_gbemu
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles/gbemu.dir/memory.c.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/ryanm/dev/CGBEmu/src/../headers
+  OBJECT_DIR = CMakeFiles/gbemu.dir
+  OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target gbemu
@@ -105,7 +113,7 @@ build CMakeFiles/gbemu.dir/asm_func.c.o: C_COMPILER__gbemu_unscanned_Debug /home
 #############################################
 # Link the executable gbemu
 
-build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o
+build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o CMakeFiles/gbemu.dir/memory.c.o
   CONFIG = Debug
   DEP_FILE = CMakeFiles/gbemu.dir/link.d
   FLAGS = -g

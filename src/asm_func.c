@@ -146,19 +146,15 @@ void asmDec(void) {
         }
     }
 }
-
+/* This isn't in the gbz80 instr table lol 
 void asmRl(void) {
-    /* Rotate bits in register through the carry flag */
     CPU_FLAGS flags = {0, 0, 0, 0};
 
     uint8_t r8 = p_cpu->data;
     uint8_t carry_flag = cpuGetFlag(CARRY_FLAG);
-    /* Grab MSB, this will be the new carry flag */
     uint8_t carry_temp = (r8 >> 7) & 1;
-    /* Shift bits in register to the left, add carry flag to LSB*/
     r8 = (r8 << 1) | carry_flag;
 
-    /* Set if r8 is 0 */
     flags.z = (r8 == 0) ? 1 : 0;
     flags.c = carry_flag;
     cpuSetFlags(flags);
@@ -168,7 +164,7 @@ void asmRl(void) {
     else
         gbTick(1);
 }
-
+*/
 void asmRla(void) {
     CPU_FLAGS flags = {0,0,0,0};
 
@@ -401,7 +397,6 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_ADC] = asmAdc,
     [I_SUB] = asmSub,
     [I_LDH] = asmLdh,
-    [I_RLA] = asmRla,
     [I_RLCA] = asmRlca,
     [I_RRCA] = asmRrca
 };
