@@ -1,6 +1,7 @@
 #include "cpu.h"
 #include "bus.h"
 #include "gb.h"
+#include "memory.h"
 #include "asm_func.h"
 
 static CPU cpu;
@@ -442,7 +443,7 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-    printf("PC: 0x%04X %-4s\n", pc, instruction_set_s[cpu.instruction->type]);
+    printf("PC: 0x%04X %-4s %-4s %-4s\n", pc, instruction_set_s[cpu.instruction->type], registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2]);
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/

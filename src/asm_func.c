@@ -398,7 +398,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_SUB] = asmSub,
     [I_LDH] = asmLdh,
     [I_RLCA] = asmRlca,
-    [I_RRCA] = asmRrca
+    [I_RRCA] = asmRrca,
+    [I_RLA] = asmRla
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
