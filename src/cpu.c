@@ -389,27 +389,35 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
         /* 8 bit registers */
         case R_A:
             cpu.regs.a = val;
+            printf("\tA: %i\n", cpu.regs.a);
             return;
         case R_F:
             cpu.regs.f = val;
+            printf("\tF: %i\n", cpu.regs.f);
             return;
         case R_B:
             cpu.regs.b = val;
+            printf("\tB: %i\n", cpu.regs.b);
             return;
         case R_C:
             cpu.regs.c = val;
+            printf("\tC: %i\n", cpu.regs.c);
             return;
         case R_D:
             cpu.regs.d = val;
+            printf("\tD: %i\n", cpu.regs.d);
             return;
         case R_E:
             cpu.regs.e = val;
+            printf("\tE: %i\n", cpu.regs.e);
             return;
         case R_H:
             cpu.regs.h = val;
+            printf("\tH: %i\n", cpu.regs.h);
             return;
         case R_L:
             cpu.regs.l = val;
+            printf("\tL: %i\n", cpu.regs.l);
             return;
         /* Begin 16 bit registers */
         case R_AF:

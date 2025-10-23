@@ -27,23 +27,38 @@ static bool asmCheckCondition() {
     }
 }
 
-void asmNone() {
+void asmNone(void) {
     return;
 }
 
-void asmNop() {
+void asmNop(void) {
     return;
 }
 
-void asmLd() {
-    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
+void asmLd(void) {
+    bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
     if(p_cpu->to_memory == false) {
         /* Default (easiest option) */
         cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
+        return;
+    }
+    else if(p_cpu->to_memory == true) {
+        if(is_16bit == true) {
+            busWriteAddr16(p_cpu->memory_destination, p_cpu->data);
+            gbTick(1);
+        }
+        else{
+            busWriteAddr(p_cpu->memory_destination, p_cpu->data);
+        }
+        gbTick(1);
+        return;
+    }
+    else if(p_cpu->instruction->addr_mode == M_HL_SPR) {
+        // Do this later...
     }
 }
 
-void asmJp() {
+void asmJp(void) {
     /* Lots of cases here... */
     if(asmCheckCondition() == true) {
         p_cpu->regs.pc = p_cpu->data;
