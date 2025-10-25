@@ -58,3 +58,4 @@ typedef struct {
 CARTRIDGE * cartGetCartridge(void);
 uint8_t cartOpen(char * filename);
 uint8_t cartReadAddr(uint16_t addr);
+void cartWriteAddr(uint16_t addr, uint8_t val);
