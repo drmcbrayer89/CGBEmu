@@ -269,6 +269,7 @@ void asmSub(void) {
     flags.h = ((result & 0x0F) == 0x0F) ? 1 : 0;
     flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
 
+    cpuWriteReg(p_cpu->instruction->r1, result);
     cpuSetFlags(flags);
 }
 
@@ -302,7 +303,7 @@ void asmCcf(void) {
 }
 
 void asmHalt(void) {
-
+    printf("HALT\n");
 }
 
 void asmStop(void) {
@@ -391,6 +392,25 @@ void asmAdc(void) {
     cpuSetFlags(flags);
 }
 
+void asmSbc(void) {
+    CPU_FLAGS flags = {-1, 1, -1, cpuGetFlag(CARRY_FLAG)};
+    uint8_t reg_a = cpuReadReg(R_A);
+    if(p_cpu->instruction->r2 == R_HL || p_cpu->instruction->r2 == R_NONE) {
+        // SBC A [HL] & SBC A n8 require additional cycles
+        gbTick(1);
+    }
+
+    // Subtract value in r8/[hl]/n8 and the carry flag from A
+    reg_a = reg_a - (flags.c + p_cpu->data);
+    cpuWriteReg(R_A, reg_a);
+
+    // Flags...
+    flags.z = (reg_a == 0) ? 1 : 0;
+    flags.h = ((reg_a & 0xF) < ((p_cpu->data & 0xF) + flags.c)) ? 1 : 0;
+    flags.c = ((p_cpu->data + flags.c) > reg_a) ? 1 : 0;
+    cpuSetFlags(flags);
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -414,7 +434,9 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_LDH] = asmLdh,
     [I_RLCA] = asmRlca,
     [I_RRCA] = asmRrca,
-    [I_RLA] = asmRla
+    [I_RLA] = asmRla,
+    [I_HALT] = asmHalt,
+    [I_SBC] = asmSbc
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

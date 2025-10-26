@@ -62,6 +62,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         cartWriteAddr(addr, val);
     }
     else if(addr <= WRAM_END) {
+        printf("\t\t\t\tWriting WRAM\n");
         memWriteWRam(addr, val);
     }
     else if(addr <= ECHO_RAM_END) {

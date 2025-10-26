@@ -13,7 +13,7 @@
 #define IO_END 0xFF7F
 #define HRAM_END 0xFFFE
 
-typedef char MEMORY;
+typedef uint8_t MEMORY;
 
 uint8_t memReadWRam(uint16_t addr);
 void memWriteWRam(uint16_t addr, uint8_t val);
