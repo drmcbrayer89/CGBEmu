@@ -312,20 +312,20 @@ static char * instruction_set_s[I_SET_SIZE] = {
 
 static char * registers_s[R_PC + 1] = {
     "R_NONE",
-    "R_A",
-    "R_F",
-    "R_B",
-    "R_C",
-    "R_D",
-    "R_E",
-    "R_H",
-    "R_L",
-    "R_AF",
-    "R_BC",
-    "R_DE",
-    "R_HL",
-    "R_SP",
-    "R_PC"
+    "A",
+    "F",
+    "B",
+    "C",
+    "D",
+    "E",
+    "H",
+    "L",
+    "AF",
+    "BC",
+    "DE",
+    "HL",
+    "SP",
+    "PC"
 };
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
@@ -389,52 +389,40 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
         /* 8 bit registers */
         case R_A:
             cpu.regs.a = val;
-            printf("\tA: %i\n", cpu.regs.a);
             return;
         case R_F:
             cpu.regs.f = val;
-            printf("\tF: %i\n", cpu.regs.f);
             return;
         case R_B:
             cpu.regs.b = val;
-            printf("\tB: %i\n", cpu.regs.b);
             return;
         case R_C:
             cpu.regs.c = val;
-            printf("\tC: %i\n", cpu.regs.c);
             return;
         case R_D:
             cpu.regs.d = val;
-            printf("\tD: %i\n", cpu.regs.d);
             return;
         case R_E:
             cpu.regs.e = val;
-            printf("\tE: %i\n", cpu.regs.e);
             return;
         case R_H:
             cpu.regs.h = val;
-            printf("\tH: %i\n", cpu.regs.h);
             return;
         case R_L:
             cpu.regs.l = val;
-            printf("\tL: %i\n", cpu.regs.l);
             return;
         /* Begin 16 bit registers */
         case R_AF:
             cpuWriteReg16(val, &cpu.regs.a, &cpu.regs.f);
-            printf("\tA: %i F: %i\n", cpu.regs.a, cpu.regs.f);
             return;
         case R_BC:
             cpuWriteReg16(val, &cpu.regs.b, &cpu.regs.c);
-            printf("\tB: %i C: %i\n", cpu.regs.b, cpu.regs.c);
             return;
         case R_DE:
             cpuWriteReg16(val, &cpu.regs.d, &cpu.regs.e);
-            printf("\tD: %i E: %i\n", cpu.regs.d, cpu.regs.e);
             return;
         case R_HL:
             cpuWriteReg16(val, &cpu.regs.h, &cpu.regs.l);
-            printf("\tH: %i L: %i\n", cpu.regs.h, cpu.regs.l);
             return;
         case R_SP:
             return;
@@ -451,7 +439,11 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-    printf("PC: 0x%04X %-4s %-4s %-4s\n", pc, instruction_set_s[cpu.instruction->type], registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2]);
+    printf("PC: 0x%04X %-4s %-4s %-4s\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
+                                                                                                            instruction_set_s[cpu.instruction->type], 
+                                                                                                            registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
+                                                                                                            cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
+                                                                                                            cpu.regs.l);
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -464,7 +456,6 @@ static void cpuGetData(void) {
     uint8_t addr8;
     uint16_t result;
     uint16_t addr16;
-
 
     switch(cpu.instruction->addr_mode) {
         case M_NONE:
@@ -655,6 +646,9 @@ static void cpuExec(void) {
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
         p_func();
+        printf("\tAFTER  A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  cpu.regs.a, cpu.regs.b, cpu.regs.c,
+                                                                                    cpu.regs.d, cpu.regs.e, cpu.regs.h,
+                                                                                    cpu.regs.l);
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);

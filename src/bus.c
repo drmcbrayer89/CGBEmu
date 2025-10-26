@@ -62,7 +62,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         cartWriteAddr(addr, val);
     }
     else if(addr <= WRAM_END) {
-
+        memWriteWRam(addr, val);
     }
     else if(addr <= ECHO_RAM_END) {
         printf("\t\t\tNintendo says nintenDONT do anything here\n");
@@ -74,13 +74,10 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         printf("\t\t\tNintendo says nintenDONT do anything here\n");
     }
     else if(addr <= IO_END) {
-
-    }
-    else if(addr <= HRAM_END) {
-
+        printf("\t\t\tTODO\n");
     }
     else {
-        printf("\t\t\tInvalid Memory Address\n");
+        memWriteHRam(addr, val);
     }
 
 }

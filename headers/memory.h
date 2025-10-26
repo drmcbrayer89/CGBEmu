@@ -14,13 +14,8 @@
 #define HRAM_END 0xFFFE
 
 typedef char MEMORY;
-/*
-typedef struct {
-    uint8_t wram[8 * KBYTE];
-    //fill this out...
-} MEMORY;
-*/
+
 uint8_t memReadWRam(uint16_t addr);
-void memWriteWRam(uint16_t addr, uint16_t val);
+void memWriteWRam(uint16_t addr, uint8_t val);
 uint8_t memReadHRam(uint16_t addr);
-void memWriteHRam(uint16_t addr, uint16_t val);
+void memWriteHRam(uint16_t addr, uint8_t val);

@@ -4,17 +4,19 @@
 static MEMORY mem[0xFFFF];
 
 uint8_t memReadWRam(uint16_t addr) {
-    printf("nothing here\n");
+    //printf("nothing here\n");
+    printf("0x%02X", mem[addr]);
+    return mem[addr];
 }
 
-void memWriteWRam(uint16_t addr, uint16_t val) {
-    printf("nothing here either\n");
+void memWriteWRam(uint16_t addr, uint8_t val) {
+    mem[addr] = val;
 }
 
 uint8_t memReadHRam(uint16_t addr) {
-    printf("nothing here either\n");
+    return mem[addr];
 }
 
-void memWriteHRam(uint16_t addr, uint16_t val) {
-    printf("nothing here either\n");
+void memWriteHRam(uint16_t addr, uint8_t val) {
+    mem[addr] = val;
 }
