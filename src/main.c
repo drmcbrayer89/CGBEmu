@@ -1,5 +1,4 @@
 #include "cart.h"
-#include "cpu.h"
 #include "gb.h"
 
 int32_t main(int32_t argc, char * argv[])

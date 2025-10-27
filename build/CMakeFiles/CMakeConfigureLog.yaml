@@ -2660,3 +2660,1545 @@ events:
       Running the CXX compiler's linker: "/usr/bin/ld" "-v"
       GNU ld (GNU Binutils) 2.45.0
 ...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:69 (find_program)"
+      - "/usr/lib/cmake/SDL3/SDL3Config.cmake:100 (find_package)"
+      - "CMakeLists.txt:5 (find_package)"
+    mode: "program"
+    variable: "PKG_CONFIG_EXECUTABLE"
+    description: "pkg-config executable"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "pkg-config"
+      - "pkgconf"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/"
+      - "/usr/bin/"
+      - "/usr/sbin/"
+      - "/usr/"
+      - "/bin/"
+      - "/sbin/"
+      - "/usr/X11R6/bin/"
+      - "/usr/X11R6/sbin/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/bin/"
+      - "/usr/pkg/sbin/"
+      - "/usr/pkg/"
+      - "/opt/bin/"
+      - "/opt/sbin/"
+      - "/opt/"
+    searched_directories:
+      - "/usr/local/sbin/pkg-config"
+      - "/usr/local/sbin/pkgconf"
+      - "/usr/local/bin/pkg-config"
+      - "/usr/local/bin/pkgconf"
+    found: "/usr/bin/pkg-config"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:307 (find_library)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:357 (_pkg_find_libs)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:695 (_pkg_recalculate)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:867 (_pkg_check_modules_internal)"
+      - "/usr/lib/cmake/SDL3/SDL3Config.cmake:102 (pkg_check_modules)"
+      - "CMakeLists.txt:5 (find_package)"
+    mode: "library"
+    variable: "pkgcfg_lib_PC_LIBUNWIND_unwind-generic"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "unwind-generic"
+    candidate_directories:
+      - "/usr/lib/"
+    found: "/usr/lib/libunwind-generic.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:307 (find_library)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:357 (_pkg_find_libs)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:695 (_pkg_recalculate)"
+      - "/usr/share/cmake/Modules/FindPkgConfig.cmake:867 (_pkg_check_modules_internal)"
+      - "/usr/lib/cmake/SDL3/SDL3Config.cmake:102 (pkg_check_modules)"
+      - "CMakeLists.txt:5 (find_package)"
+    mode: "library"
+    variable: "pkgcfg_lib_PC_LIBUNWIND_unwind"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "unwind"
+    candidate_directories:
+      - "/usr/lib/"
+    found: "/usr/lib/libunwind.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "CMakeLists.txt:5 (find_package)"
+    name: "SDL3"
+    configs:
+      -
+        filename: "SDL3Config.cmake"
+        kind: "cmake"
+      -
+        filename: "sdl3-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "SDL3"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/SDL3Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/sdl3-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/SDL3Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/sdl3-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/SDL3Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/sdl3-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "/usr/lib/cmake/SDL3/SDL3Config.cmake"
+      mode: "config"
+      version: "3.2.24"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "CMakeLists.txt:6 (find_package)"
+    name: "SDL3_ttf"
+    configs:
+      -
+        filename: "SDL3_ttfConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "sdl3_ttf-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "SDL3_ttf"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/SDL3_ttfConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found: null
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindSDL_ttf.cmake:118 (find_path)"
+      - "CMakeLists.txt:6 (find_package)"
+    mode: "path"
+    variable: "SDL_TTF_INCLUDE_DIR"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "SDL_ttf.h"
+    candidate_directories:
+      - "/usr/local/sbin/SDL/"
+      - "/usr/local/sbin/include/SDL/"
+      - "/usr/local/sbin/include/SDL12/"
+      - "/usr/local/sbin/include/SDL11/"
+      - "/usr/local/sbin/include/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/SDL/"
+      - "/usr/local/bin/include/SDL/"
+      - "/usr/local/bin/include/SDL12/"
+      - "/usr/local/bin/include/SDL11/"
+      - "/usr/local/bin/include/"
+      - "/usr/local/bin/"
+      - "/usr/bin/SDL/"
+      - "/usr/bin/include/SDL/"
+      - "/usr/bin/include/SDL12/"
+      - "/usr/bin/include/SDL11/"
+      - "/usr/bin/include/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/SDL/"
+      - "/usr/lib/jvm/default/bin/include/SDL/"
+      - "/usr/lib/jvm/default/bin/include/SDL12/"
+      - "/usr/lib/jvm/default/bin/include/SDL11/"
+      - "/usr/lib/jvm/default/bin/include/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/SDL/"
+      - "/usr/bin/site_perl/include/SDL/"
+      - "/usr/bin/site_perl/include/SDL12/"
+      - "/usr/bin/site_perl/include/SDL11/"
+      - "/usr/bin/site_perl/include/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/SDL/"
+      - "/usr/bin/vendor_perl/include/SDL/"
+      - "/usr/bin/vendor_perl/include/SDL12/"
+      - "/usr/bin/vendor_perl/include/SDL11/"
+      - "/usr/bin/vendor_perl/include/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/SDL/"
+      - "/usr/bin/core_perl/include/SDL/"
+      - "/usr/bin/core_perl/include/SDL12/"
+      - "/usr/bin/core_perl/include/SDL11/"
+      - "/usr/bin/core_perl/include/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/include/SDL/"
+      - "/usr/local/include/include/SDL/"
+      - "/usr/local/include/include/SDL12/"
+      - "/usr/local/include/include/SDL11/"
+      - "/usr/local/include/include/"
+      - "/usr/local/include/"
+      - "/usr/local/SDL/"
+      - "/usr/local/include/SDL/"
+      - "/usr/local/include/SDL12/"
+      - "/usr/local/include/SDL11/"
+      - "/usr/local/include/"
+      - "/usr/local/"
+      - "/usr/include/SDL/"
+      - "/usr/include/include/SDL/"
+      - "/usr/include/include/SDL12/"
+      - "/usr/include/include/SDL11/"
+      - "/usr/include/include/"
+      - "/usr/include/"
+      - "/usr/SDL/"
+      - "/usr/include/SDL/"
+      - "/usr/include/SDL12/"
+      - "/usr/include/SDL11/"
+      - "/usr/include/"
+      - "/usr/"
+      - "/include/SDL/"
+      - "/include/include/SDL/"
+      - "/include/include/SDL12/"
+      - "/include/include/SDL11/"
+      - "/include/include/"
+      - "/include/"
+      - "/usr/X11R6/include/SDL/"
+      - "/usr/X11R6/include/include/SDL/"
+      - "/usr/X11R6/include/include/SDL12/"
+      - "/usr/X11R6/include/include/SDL11/"
+      - "/usr/X11R6/include/include/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/SDL/"
+      - "/usr/X11R6/include/SDL/"
+      - "/usr/X11R6/include/SDL12/"
+      - "/usr/X11R6/include/SDL11/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/include/SDL/"
+      - "/usr/pkg/include/include/SDL/"
+      - "/usr/pkg/include/include/SDL12/"
+      - "/usr/pkg/include/include/SDL11/"
+      - "/usr/pkg/include/include/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/SDL/"
+      - "/usr/pkg/include/SDL/"
+      - "/usr/pkg/include/SDL12/"
+      - "/usr/pkg/include/SDL11/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/"
+      - "/opt/include/SDL/"
+      - "/opt/include/include/SDL/"
+      - "/opt/include/include/SDL12/"
+      - "/opt/include/include/SDL11/"
+      - "/opt/include/include/"
+      - "/opt/include/"
+      - "/opt/SDL/"
+      - "/opt/include/SDL/"
+      - "/opt/include/SDL12/"
+      - "/opt/include/SDL11/"
+      - "/opt/include/"
+      - "/opt/"
+      - "/usr/include/X11/SDL/"
+      - "/usr/include/X11/include/SDL/"
+      - "/usr/include/X11/include/SDL12/"
+      - "/usr/include/X11/include/SDL11/"
+      - "/usr/include/X11/include/"
+      - "/usr/include/X11/"
+    searched_directories:
+      - "/usr/local/sbin/SDL/SDL_ttf.h"
+      - "/usr/local/sbin/include/SDL/SDL_ttf.h"
+      - "/usr/local/sbin/include/SDL12/SDL_ttf.h"
+      - "/usr/local/sbin/include/SDL11/SDL_ttf.h"
+      - "/usr/local/sbin/include/SDL_ttf.h"
+      - "/usr/local/sbin/SDL_ttf.h"
+      - "/usr/local/bin/SDL/SDL_ttf.h"
+      - "/usr/local/bin/include/SDL/SDL_ttf.h"
+      - "/usr/local/bin/include/SDL12/SDL_ttf.h"
+      - "/usr/local/bin/include/SDL11/SDL_ttf.h"
+      - "/usr/local/bin/include/SDL_ttf.h"
+      - "/usr/local/bin/SDL_ttf.h"
+      - "/usr/bin/SDL/SDL_ttf.h"
+      - "/usr/bin/include/SDL/SDL_ttf.h"
+      - "/usr/bin/include/SDL12/SDL_ttf.h"
+      - "/usr/bin/include/SDL11/SDL_ttf.h"
+      - "/usr/bin/include/SDL_ttf.h"
+      - "/usr/bin/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/SDL/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/include/SDL/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/include/SDL12/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/include/SDL11/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/include/SDL_ttf.h"
+      - "/usr/lib/jvm/default/bin/SDL_ttf.h"
+      - "/usr/bin/site_perl/SDL/SDL_ttf.h"
+      - "/usr/bin/site_perl/include/SDL/SDL_ttf.h"
+      - "/usr/bin/site_perl/include/SDL12/SDL_ttf.h"
+      - "/usr/bin/site_perl/include/SDL11/SDL_ttf.h"
+      - "/usr/bin/site_perl/include/SDL_ttf.h"
+      - "/usr/bin/site_perl/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/SDL/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/include/SDL/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/include/SDL12/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/include/SDL11/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/include/SDL_ttf.h"
+      - "/usr/bin/vendor_perl/SDL_ttf.h"
+      - "/usr/bin/core_perl/SDL/SDL_ttf.h"
+      - "/usr/bin/core_perl/include/SDL/SDL_ttf.h"
+      - "/usr/bin/core_perl/include/SDL12/SDL_ttf.h"
+      - "/usr/bin/core_perl/include/SDL11/SDL_ttf.h"
+      - "/usr/bin/core_perl/include/SDL_ttf.h"
+      - "/usr/bin/core_perl/SDL_ttf.h"
+      - "/usr/local/include/SDL/SDL_ttf.h"
+      - "/usr/local/include/include/SDL/SDL_ttf.h"
+      - "/usr/local/include/include/SDL12/SDL_ttf.h"
+      - "/usr/local/include/include/SDL11/SDL_ttf.h"
+      - "/usr/local/include/include/SDL_ttf.h"
+      - "/usr/local/include/SDL_ttf.h"
+      - "/usr/local/SDL/SDL_ttf.h"
+      - "/usr/local/include/SDL/SDL_ttf.h"
+      - "/usr/local/include/SDL12/SDL_ttf.h"
+      - "/usr/local/include/SDL11/SDL_ttf.h"
+      - "/usr/local/include/SDL_ttf.h"
+      - "/usr/local/SDL_ttf.h"
+    found: "/usr/include/SDL/"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_INCLUDE_PATH:
+        - "/usr/include/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindSDL_ttf.cmake:137 (find_library)"
+      - "CMakeLists.txt:6 (find_package)"
+    mode: "library"
+    variable: "SDL_TTF_LIBRARY"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "SDL_ttf"
+    candidate_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+      - "/usr/lib/"
+      - "/usr/lib/"
+      - "/usr/lib/x64/"
+      - "/usr/"
+      - "/lib/lib/"
+      - "/lib/lib/x64/"
+      - "/lib/"
+      - "/usr/X11R6/lib/lib/"
+      - "/usr/X11R6/lib/lib/x64/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/x64/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/lib/lib/"
+      - "/usr/pkg/lib/lib/x64/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/x64/"
+      - "/usr/pkg/"
+      - "/opt/lib/lib/"
+      - "/opt/lib/lib/x64/"
+      - "/opt/lib/"
+      - "/opt/lib/"
+      - "/opt/lib/x64/"
+      - "/opt/"
+      - "/usr/lib/X11/lib/"
+      - "/usr/lib/X11/lib/x64/"
+      - "/usr/lib/X11/"
+    searched_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+    found: "/usr/lib/libSDL_ttf.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindSDL.cmake:178 (find_path)"
+      - "CMakeLists.txt:6 (find_package)"
+    mode: "path"
+    variable: "SDL_INCLUDE_DIR"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "SDL.h"
+    candidate_directories:
+      - "/usr/local/sbin/SDL/"
+      - "/usr/local/sbin/SDL12/"
+      - "/usr/local/sbin/SDL11/"
+      - "/usr/local/sbin/include/SDL/"
+      - "/usr/local/sbin/include/SDL12/"
+      - "/usr/local/sbin/include/SDL11/"
+      - "/usr/local/sbin/include/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/SDL/"
+      - "/usr/local/bin/SDL12/"
+      - "/usr/local/bin/SDL11/"
+      - "/usr/local/bin/include/SDL/"
+      - "/usr/local/bin/include/SDL12/"
+      - "/usr/local/bin/include/SDL11/"
+      - "/usr/local/bin/include/"
+      - "/usr/local/bin/"
+      - "/usr/bin/SDL/"
+      - "/usr/bin/SDL12/"
+      - "/usr/bin/SDL11/"
+      - "/usr/bin/include/SDL/"
+      - "/usr/bin/include/SDL12/"
+      - "/usr/bin/include/SDL11/"
+      - "/usr/bin/include/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/SDL/"
+      - "/usr/lib/jvm/default/bin/SDL12/"
+      - "/usr/lib/jvm/default/bin/SDL11/"
+      - "/usr/lib/jvm/default/bin/include/SDL/"
+      - "/usr/lib/jvm/default/bin/include/SDL12/"
+      - "/usr/lib/jvm/default/bin/include/SDL11/"
+      - "/usr/lib/jvm/default/bin/include/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/SDL/"
+      - "/usr/bin/site_perl/SDL12/"
+      - "/usr/bin/site_perl/SDL11/"
+      - "/usr/bin/site_perl/include/SDL/"
+      - "/usr/bin/site_perl/include/SDL12/"
+      - "/usr/bin/site_perl/include/SDL11/"
+      - "/usr/bin/site_perl/include/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/SDL/"
+      - "/usr/bin/vendor_perl/SDL12/"
+      - "/usr/bin/vendor_perl/SDL11/"
+      - "/usr/bin/vendor_perl/include/SDL/"
+      - "/usr/bin/vendor_perl/include/SDL12/"
+      - "/usr/bin/vendor_perl/include/SDL11/"
+      - "/usr/bin/vendor_perl/include/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/SDL/"
+      - "/usr/bin/core_perl/SDL12/"
+      - "/usr/bin/core_perl/SDL11/"
+      - "/usr/bin/core_perl/include/SDL/"
+      - "/usr/bin/core_perl/include/SDL12/"
+      - "/usr/bin/core_perl/include/SDL11/"
+      - "/usr/bin/core_perl/include/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/include/SDL/"
+      - "/usr/local/include/SDL12/"
+      - "/usr/local/include/SDL11/"
+      - "/usr/local/include/include/SDL/"
+      - "/usr/local/include/include/SDL12/"
+      - "/usr/local/include/include/SDL11/"
+      - "/usr/local/include/include/"
+      - "/usr/local/include/"
+      - "/usr/local/SDL/"
+      - "/usr/local/SDL12/"
+      - "/usr/local/SDL11/"
+      - "/usr/local/include/SDL/"
+      - "/usr/local/include/SDL12/"
+      - "/usr/local/include/SDL11/"
+      - "/usr/local/include/"
+      - "/usr/local/"
+      - "/usr/include/SDL/"
+      - "/usr/include/SDL12/"
+      - "/usr/include/SDL11/"
+      - "/usr/include/include/SDL/"
+      - "/usr/include/include/SDL12/"
+      - "/usr/include/include/SDL11/"
+      - "/usr/include/include/"
+      - "/usr/include/"
+      - "/usr/SDL/"
+      - "/usr/SDL12/"
+      - "/usr/SDL11/"
+      - "/usr/include/SDL/"
+      - "/usr/include/SDL12/"
+      - "/usr/include/SDL11/"
+      - "/usr/include/"
+      - "/usr/"
+      - "/include/SDL/"
+      - "/include/SDL12/"
+      - "/include/SDL11/"
+      - "/include/include/SDL/"
+      - "/include/include/SDL12/"
+      - "/include/include/SDL11/"
+      - "/include/include/"
+      - "/include/"
+      - "/usr/X11R6/include/SDL/"
+      - "/usr/X11R6/include/SDL12/"
+      - "/usr/X11R6/include/SDL11/"
+      - "/usr/X11R6/include/include/SDL/"
+      - "/usr/X11R6/include/include/SDL12/"
+      - "/usr/X11R6/include/include/SDL11/"
+      - "/usr/X11R6/include/include/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/SDL/"
+      - "/usr/X11R6/SDL12/"
+      - "/usr/X11R6/SDL11/"
+      - "/usr/X11R6/include/SDL/"
+      - "/usr/X11R6/include/SDL12/"
+      - "/usr/X11R6/include/SDL11/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/include/SDL/"
+      - "/usr/pkg/include/SDL12/"
+      - "/usr/pkg/include/SDL11/"
+      - "/usr/pkg/include/include/SDL/"
+      - "/usr/pkg/include/include/SDL12/"
+      - "/usr/pkg/include/include/SDL11/"
+      - "/usr/pkg/include/include/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/SDL/"
+      - "/usr/pkg/SDL12/"
+      - "/usr/pkg/SDL11/"
+      - "/usr/pkg/include/SDL/"
+      - "/usr/pkg/include/SDL12/"
+      - "/usr/pkg/include/SDL11/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/"
+      - "/opt/include/SDL/"
+      - "/opt/include/SDL12/"
+      - "/opt/include/SDL11/"
+      - "/opt/include/include/SDL/"
+      - "/opt/include/include/SDL12/"
+      - "/opt/include/include/SDL11/"
+      - "/opt/include/include/"
+      - "/opt/include/"
+      - "/opt/SDL/"
+      - "/opt/SDL12/"
+      - "/opt/SDL11/"
+      - "/opt/include/SDL/"
+      - "/opt/include/SDL12/"
+      - "/opt/include/SDL11/"
+      - "/opt/include/"
+      - "/opt/"
+      - "/usr/include/X11/SDL/"
+      - "/usr/include/X11/SDL12/"
+      - "/usr/include/X11/SDL11/"
+      - "/usr/include/X11/include/SDL/"
+      - "/usr/include/X11/include/SDL12/"
+      - "/usr/include/X11/include/SDL11/"
+      - "/usr/include/X11/include/"
+      - "/usr/include/X11/"
+    searched_directories:
+      - "/usr/local/sbin/SDL/SDL.h"
+      - "/usr/local/sbin/SDL12/SDL.h"
+      - "/usr/local/sbin/SDL11/SDL.h"
+      - "/usr/local/sbin/include/SDL/SDL.h"
+      - "/usr/local/sbin/include/SDL12/SDL.h"
+      - "/usr/local/sbin/include/SDL11/SDL.h"
+      - "/usr/local/sbin/include/SDL.h"
+      - "/usr/local/sbin/SDL.h"
+      - "/usr/local/bin/SDL/SDL.h"
+      - "/usr/local/bin/SDL12/SDL.h"
+      - "/usr/local/bin/SDL11/SDL.h"
+      - "/usr/local/bin/include/SDL/SDL.h"
+      - "/usr/local/bin/include/SDL12/SDL.h"
+      - "/usr/local/bin/include/SDL11/SDL.h"
+      - "/usr/local/bin/include/SDL.h"
+      - "/usr/local/bin/SDL.h"
+      - "/usr/bin/SDL/SDL.h"
+      - "/usr/bin/SDL12/SDL.h"
+      - "/usr/bin/SDL11/SDL.h"
+      - "/usr/bin/include/SDL/SDL.h"
+      - "/usr/bin/include/SDL12/SDL.h"
+      - "/usr/bin/include/SDL11/SDL.h"
+      - "/usr/bin/include/SDL.h"
+      - "/usr/bin/SDL.h"
+      - "/usr/lib/jvm/default/bin/SDL/SDL.h"
+      - "/usr/lib/jvm/default/bin/SDL12/SDL.h"
+      - "/usr/lib/jvm/default/bin/SDL11/SDL.h"
+      - "/usr/lib/jvm/default/bin/include/SDL/SDL.h"
+      - "/usr/lib/jvm/default/bin/include/SDL12/SDL.h"
+      - "/usr/lib/jvm/default/bin/include/SDL11/SDL.h"
+      - "/usr/lib/jvm/default/bin/include/SDL.h"
+      - "/usr/lib/jvm/default/bin/SDL.h"
+      - "/usr/bin/site_perl/SDL/SDL.h"
+      - "/usr/bin/site_perl/SDL12/SDL.h"
+      - "/usr/bin/site_perl/SDL11/SDL.h"
+      - "/usr/bin/site_perl/include/SDL/SDL.h"
+      - "/usr/bin/site_perl/include/SDL12/SDL.h"
+      - "/usr/bin/site_perl/include/SDL11/SDL.h"
+      - "/usr/bin/site_perl/include/SDL.h"
+      - "/usr/bin/site_perl/SDL.h"
+      - "/usr/bin/vendor_perl/SDL/SDL.h"
+      - "/usr/bin/vendor_perl/SDL12/SDL.h"
+      - "/usr/bin/vendor_perl/SDL11/SDL.h"
+      - "/usr/bin/vendor_perl/include/SDL/SDL.h"
+      - "/usr/bin/vendor_perl/include/SDL12/SDL.h"
+      - "/usr/bin/vendor_perl/include/SDL11/SDL.h"
+      - "/usr/bin/vendor_perl/include/SDL.h"
+      - "/usr/bin/vendor_perl/SDL.h"
+      - "/usr/bin/core_perl/SDL/SDL.h"
+      - "/usr/bin/core_perl/SDL12/SDL.h"
+      - "/usr/bin/core_perl/SDL11/SDL.h"
+      - "/usr/bin/core_perl/include/SDL/SDL.h"
+      - "/usr/bin/core_perl/include/SDL12/SDL.h"
+      - "/usr/bin/core_perl/include/SDL11/SDL.h"
+      - "/usr/bin/core_perl/include/SDL.h"
+      - "/usr/bin/core_perl/SDL.h"
+      - "/usr/local/include/SDL/SDL.h"
+      - "/usr/local/include/SDL12/SDL.h"
+      - "/usr/local/include/SDL11/SDL.h"
+      - "/usr/local/include/include/SDL/SDL.h"
+      - "/usr/local/include/include/SDL12/SDL.h"
+      - "/usr/local/include/include/SDL11/SDL.h"
+      - "/usr/local/include/include/SDL.h"
+      - "/usr/local/include/SDL.h"
+      - "/usr/local/SDL/SDL.h"
+      - "/usr/local/SDL12/SDL.h"
+      - "/usr/local/SDL11/SDL.h"
+      - "/usr/local/include/SDL/SDL.h"
+      - "/usr/local/include/SDL12/SDL.h"
+      - "/usr/local/include/SDL11/SDL.h"
+      - "/usr/local/include/SDL.h"
+      - "/usr/local/SDL.h"
+    found: "/usr/include/SDL/"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_INCLUDE_PATH:
+        - "/usr/include/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindSDL.cmake:194 (find_library)"
+      - "CMakeLists.txt:6 (find_package)"
+    mode: "library"
+    variable: "SDL_LIBRARY_TEMP"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "SDL"
+      - "SDL-1.1"
+    candidate_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+      - "/usr/lib/"
+      - "/usr/lib/"
+      - "/usr/lib/x64/"
+      - "/usr/"
+      - "/lib/lib/"
+      - "/lib/lib/x64/"
+      - "/lib/"
+      - "/usr/X11R6/lib/lib/"
+      - "/usr/X11R6/lib/lib/x64/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/x64/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/lib/lib/"
+      - "/usr/pkg/lib/lib/x64/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/x64/"
+      - "/usr/pkg/"
+      - "/opt/lib/lib/"
+      - "/opt/lib/lib/x64/"
+      - "/opt/lib/"
+      - "/opt/lib/"
+      - "/opt/lib/x64/"
+      - "/opt/"
+      - "/usr/lib/X11/lib/"
+      - "/usr/lib/X11/lib/x64/"
+      - "/usr/lib/X11/"
+    searched_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+    found: "/usr/lib/libSDL.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindSDL.cmake:212 (find_library)"
+      - "CMakeLists.txt:6 (find_package)"
+    mode: "library"
+    variable: "SDLMAIN_LIBRARY"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "SDLmain"
+      - "SDLmain-1.1"
+    candidate_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+      - "/usr/lib/"
+      - "/usr/lib/"
+      - "/usr/lib/x64/"
+      - "/usr/"
+      - "/lib/lib/"
+      - "/lib/lib/x64/"
+      - "/lib/"
+      - "/usr/X11R6/lib/lib/"
+      - "/usr/X11R6/lib/lib/x64/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/x64/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/lib/lib/"
+      - "/usr/pkg/lib/lib/x64/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/x64/"
+      - "/usr/pkg/"
+      - "/opt/lib/lib/"
+      - "/opt/lib/lib/x64/"
+      - "/opt/lib/"
+      - "/opt/lib/"
+      - "/opt/lib/x64/"
+      - "/opt/"
+      - "/usr/lib/X11/lib/"
+      - "/usr/lib/X11/lib/x64/"
+      - "/usr/lib/X11/"
+      - "/opt/lib/"
+      - "/opt/lib/x64/"
+      - "/opt/"
+    searched_directories:
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/x64/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/x64/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/x64/"
+      - "/usr/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/x64/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/x64/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/x64/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/x64/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/x64/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/x64/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/x64/"
+    found: "/usr/lib/libSDLmain.a"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:104 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/FindThreads.cmake:97 (check_c_source_compiles)"
+      - "/usr/share/cmake/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "/usr/share/cmake/Modules/FindSDL.cmake:228 (find_package)"
+      - "CMakeLists.txt:6 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/CMakeScratch/TryCompile-yHdaAv"
+      binary: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/CMakeScratch/TryCompile-yHdaAv"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/ryanm/dev/CGBEmu/build/CMakeFiles/CMakeScratch/TryCompile-yHdaAv'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_2aa10
+        [1/2] /usr/bin/gcc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_2aa10.dir/src.c.o -c /home/ryanm/dev/CGBEmu/build/CMakeFiles/CMakeScratch/TryCompile-yHdaAv/src.c
+        [2/2] : && /usr/bin/gcc   CMakeFiles/cmTC_2aa10.dir/src.c.o -o cmTC_2aa10   && :
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "CMakeLists.txt:6 (find_package)"
+    name: "SDL3_TTF"
+    configs:
+      -
+        filename: "SDL3_TTFConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "sdl3_ttf-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "SDL3_TTF"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/SDL3_TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/sdl3_ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found: null
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "CMakeLists.txt:6 (find_package)"
+    name: "SDL3TTF"
+    configs:
+      -
+        filename: "SDL3TTFConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "sdl3ttf-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "SDL3TTF"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/home/ryanm/dev/CGBEmu/build/CMakeFiles/pkgRedirects/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/local/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/jvm/default/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/site_perl/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/vendor_perl/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/bin/core_perl/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/SDL3TTFConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/opt/sdl3ttf-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found: null
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...
