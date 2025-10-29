@@ -411,6 +411,26 @@ void asmSbc(void) {
     cpuSetFlags(flags);
 }
 
+void asmPop(void) {
+    /* These are only used for 16 bit values*/
+    uint16_t lo = stackPop();
+    uint16_t hi = stackPop();
+    gbTick(2);
+
+    uint16_t result = (hi << 8) | lo;
+    /* Register AF is a bit different */
+    if(p_cpu->instruction->r1 == R_AF) {
+        cpuWriteReg(p_cpu->instruction->r1, result & 0xFFF0);
+    }
+    else {
+        cpuWriteReg(p_cpu->instruction->r1, result);
+    }
+}
+
+void asmPush(void) {
+
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -436,7 +456,9 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_RRCA] = asmRrca,
     [I_RLA] = asmRla,
     [I_HALT] = asmHalt,
-    [I_SBC] = asmSbc
+    [I_SBC] = asmSbc,
+    [I_POP] = asmPop,
+    [I_PUSH] = asmPush
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

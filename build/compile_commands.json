@@ -40,5 +40,11 @@
   "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/memory.c.o -c /home/ryanm/dev/CGBEmu/src/memory.c",
   "file": "/home/ryanm/dev/CGBEmu/src/memory.c",
   "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/memory.c.o"
+},
+{
+  "directory": "/home/ryanm/dev/CGBEmu/build",
+  "command": "/usr/bin/gcc -I/home/ryanm/dev/CGBEmu/src/../headers -g -o CMakeFiles/gbemu.dir/stack.c.o -c /home/ryanm/dev/CGBEmu/src/stack.c",
+  "file": "/home/ryanm/dev/CGBEmu/src/stack.c",
+  "output": "/home/ryanm/dev/CGBEmu/build/CMakeFiles/gbemu.dir/stack.c.o"
 }
 ]

@@ -105,6 +105,14 @@ build CMakeFiles/gbemu.dir/memory.c.o: C_COMPILER__gbemu_unscanned_Debug /home/r
   OBJECT_DIR = CMakeFiles/gbemu.dir
   OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
 
+build CMakeFiles/gbemu.dir/stack.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ryanm/dev/CGBEmu/src/stack.c || cmake_object_order_depends_target_gbemu
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles/gbemu.dir/stack.c.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/ryanm/dev/CGBEmu/src/../headers
+  OBJECT_DIR = CMakeFiles/gbemu.dir
+  OBJECT_FILE_DIR = CMakeFiles/gbemu.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target gbemu
@@ -113,7 +121,7 @@ build CMakeFiles/gbemu.dir/memory.c.o: C_COMPILER__gbemu_unscanned_Debug /home/r
 #############################################
 # Link the executable gbemu
 
-build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o CMakeFiles/gbemu.dir/memory.c.o | /usr/lib/libSDL3_ttf.so.0.2.2 /usr/lib/libSDL3.so.0.2.24
+build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o CMakeFiles/gbemu.dir/memory.c.o CMakeFiles/gbemu.dir/stack.c.o | /usr/lib/libSDL3_ttf.so.0.2.2 /usr/lib/libSDL3.so.0.2.24
   CONFIG = Debug
   DEP_FILE = CMakeFiles/gbemu.dir/link.d
   FLAGS = -g
