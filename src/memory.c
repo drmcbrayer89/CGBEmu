@@ -10,6 +10,7 @@ uint8_t memReadWRam(uint16_t addr) {
 }
 
 void memWriteWRam(uint16_t addr, uint8_t val) {
+    printf("WRITING 0x%02X\n", val);
     mem[addr] = val;
 }
 
@@ -18,5 +19,6 @@ uint8_t memReadHRam(uint16_t addr) {
 }
 
 void memWriteHRam(uint16_t addr, uint8_t val) {
+    printf("WRITING 0x%02X\n", val);
     mem[addr] = val;
 }

@@ -5,10 +5,40 @@
 
 // Start doing SDL shit here
 GB gameboy;
+SDL_Window * game_window;
+SDL_Renderer * renderer;
+SDL_Window * debug_window;
 
-void delay(uint32_t t) {
+static void delay(uint32_t t) {
     SDL_Delay(t);
 }
+
+static void gbInitDebugWindow(void) {
+    if(SDL_Init(SDL_INIT_VIDEO)) {
+        printf("SDL Init Successful\n");
+    }
+    if(TTF_Init()) {
+        printf("TTF Init Successful\n");
+    }
+}
+
+static bool gbInitWindow(void) {
+    if(SDL_Init(SDL_INIT_VIDEO)) {
+        printf("SDL Init Successful\n");
+    }
+    game_window = SDL_CreateWindow("CGBEmu", 320, 160, SDL_WINDOW_OPENGL);
+    renderer = SDL_CreateRenderer(game_window, NULL);
+    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderPresent(renderer);
+    
+    if(game_window == NULL) {
+        printf("Error creating window\n");
+        return false;
+    }
+    return true;
+}
+
 void gbTick(uint8_t cycles) {
     // implement later with tick accuracy
     uint16_t i = 0;
@@ -23,12 +53,11 @@ void gbTick(uint8_t cycles) {
 
 void gbStart(void) {
     /* create window */
-    if(SDL_Init(SDL_INIT_VIDEO)) {
-        printf("SDL Init Successful\n");
+    if(gbInitWindow() == false) {
+        printf("SDL Game Window Init FAILED\n");
+        exit(-1);
     }
-    if(TTF_Init()) {
-        printf("TTF Init Successful\n");
-    }
+    gbInitDebugWindow();
     /* start cpu */
     cpuInit();
     while(gameboy.running)
