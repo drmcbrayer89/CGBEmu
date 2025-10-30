@@ -3,6 +3,7 @@
 #include "cpu.h"
 #include "asm_func.h"
 #include "bus.h"
+#include "stack.h"
 
 static CPU * p_cpu;
 /* Consider just passing a pointer to the CPU with an init function. this is stupid. */
@@ -35,7 +36,7 @@ void asmNop(void) {
     return;
 }
 
-void asmLd(void) {
+void asmLd(void) { 
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
     if(p_cpu->to_memory == false) {
         /* Default (easiest option) */
@@ -413,11 +414,13 @@ void asmSbc(void) {
 
 void asmPop(void) {
     /* These are only used for 16 bit values*/
-    uint16_t lo = stackPop();
-    uint16_t hi = stackPop();
-    gbTick(2);
-
+    /*
+    uint16_t lo = stackPop8();
+    uint16_t hi = stackPop8();
     uint16_t result = (hi << 8) | lo;
+    */
+    uint16_t result = stackPop16();
+    gbTick(2);
     /* Register AF is a bit different */
     if(p_cpu->instruction->r1 == R_AF) {
         cpuWriteReg(p_cpu->instruction->r1, result & 0xFFF0);
@@ -428,7 +431,21 @@ void asmPop(void) {
 }
 
 void asmPush(void) {
+    stackPush16(p_cpu->data);
+    gbTick(4);
+}
 
+void asmRet(void) {
+    /* RET is similar to a POP PC.
+       POP value from stack, assign to pc register 
+    */
+    if(p_cpu->instruction->condition != C_NONE) {
+        gbTick(1);
+    }
+
+    uint16_t pc = stackPop16();
+    p_cpu->regs.pc = pc;
+    gbTick(3);
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
@@ -458,7 +475,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_HALT] = asmHalt,
     [I_SBC] = asmSbc,
     [I_POP] = asmPop,
-    [I_PUSH] = asmPush
+    [I_PUSH] = asmPush,
+    [I_RET] = asmRet
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

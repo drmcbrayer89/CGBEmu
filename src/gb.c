@@ -62,6 +62,7 @@ void gbStart(void) {
     cpuInit();
     while(gameboy.running)
     {
+        delay(100);
         if(cpuStep() == false) {
             gameboy.running = false;
         }
