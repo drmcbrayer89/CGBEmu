@@ -16,7 +16,7 @@ static CPU_INSTRUCTION instruction_set[0xFFFF] = {
     [0x0005] = {I_DEC,  M_REG,          R_B         },
     [0x0006] = {I_LD,   M_REG_D8,       R_B         },
     [0x0007] = {I_RLCA                              },
-    [0x0008] = {I_LD,   M_A16_REG,      R_SP        },
+    [0x0008] = {I_LD,   M_A16_REG,      R_NONE, R_SP},
     [0x0009] = {I_ADD,  M_REG_REG,      R_HL,   R_BC},
     [0x000A] = {I_LD,   M_REG_MEMREG,   R_A,    R_BC},
     [0x000B] = {I_DEC,  M_REG,          R_BC        },
@@ -370,7 +370,12 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
             return cpuReadReg16(cpu.regs.h, cpu.regs.l);
 
         default:
-            printf("Register enumeration %i not found\n", reg);
+            bool r1_undef = false;
+            if(cpu.instruction->r1 == 0) {
+                r1_undef = true;
+            } 
+            printf("Register enumeration %i on register %i not found for instruction %s\n", reg, r1_undef, instruction_set_s[cpu.instruction->type]);
+            printf("OP Code: 0x%02X\n", cpu.op_code);
             return 0;
     }
 }
@@ -439,11 +444,13 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
+    /*
     printf("PC: 0x%04X %-4s %-4s %-4s\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
                                                                                                             cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
                                                                                                             cpu.regs.l);
+        */                                                                                                    
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -646,9 +653,11 @@ static void cpuExec(void) {
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
         p_func();
+        /*
         printf("\tAFTER  A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  cpu.regs.a, cpu.regs.b, cpu.regs.c,
                                                                                     cpu.regs.d, cpu.regs.e, cpu.regs.h,
                                                                                     cpu.regs.l);
+                                                                                    */
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);

@@ -15,7 +15,7 @@ static void delay(uint32_t t) {
 
 static void gbInitDebugWindow(void) {
     if(SDL_Init(SDL_INIT_VIDEO)) {
-        printf("SDL Init Successful\n");
+        printf("SDL Debug Window Init Successful\n");
     }
     if(TTF_Init()) {
         printf("TTF Init Successful\n");
@@ -24,7 +24,7 @@ static void gbInitDebugWindow(void) {
 
 static bool gbInitWindow(void) {
     if(SDL_Init(SDL_INIT_VIDEO)) {
-        printf("SDL Init Successful\n");
+        printf("SDL Main Window Init Successful\n");
     }
     game_window = SDL_CreateWindow("CGBEmu", 320, 160, SDL_WINDOW_OPENGL);
     renderer = SDL_CreateRenderer(game_window, NULL);
@@ -52,6 +52,7 @@ void gbTick(uint8_t cycles) {
 }
 
 void gbStart(void) {
+    SDL_Event event;
     /* create window */
     if(gbInitWindow() == false) {
         printf("SDL Game Window Init FAILED\n");
@@ -62,10 +63,18 @@ void gbStart(void) {
     cpuInit();
     while(gameboy.running)
     {
-        delay(100);
+        SDL_PollEvent(&event);
+        if(event.type == SDL_EVENT_KEY_DOWN) {
+            if(event.key.scancode == SDL_SCANCODE_Q) {
+                gameboy.running = false;
+            }
+        }
+        delay(10);
         if(cpuStep() == false) {
             gameboy.running = false;
         }
+
+
     }
     printf("CGBEmu Stopped!\n");
 }

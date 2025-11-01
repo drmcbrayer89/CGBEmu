@@ -28,6 +28,35 @@ static bool asmCheckCondition() {
     }
 }
 
+void gotoAddr(uint16_t addr, bool push) {
+    if(asmCheckCondition() == true) {
+        if(push == true) {
+            stackPush16(p_cpu->regs.pc);
+            gbTick(2);
+        }
+
+        p_cpu->regs.pc = addr;
+        gbTick(1);
+    }
+}
+
+void asmJp(void) {
+    // JP does not push the program counter
+    gotoAddr(p_cpu->data, false);
+}
+
+void asmJr(void) {
+    byte relative_addr = (byte)(p_cpu->data & 0xFF);
+    uint16_t new_addr = relative_addr + p_cpu->regs.pc;
+    //printf("PC: 0x%04X REL: 0x%04X NEW: 0x%04X BEFORE\n", p_cpu->regs.pc, relative_addr, new_addr);
+    gotoAddr(new_addr, false);
+    //printf("PC: 0x%04X AFTER\n", p_cpu->regs.pc);
+}
+
+void asmCall(void) {
+    gotoAddr(p_cpu->data, true);
+}
+
 void asmNone(void) {
     return;
 }
@@ -56,14 +85,6 @@ void asmLd(void) {
     }
     else if(p_cpu->instruction->addr_mode == M_HL_SPR) {
         // Do this later...
-    }
-}
-
-void asmJp(void) {
-    /* Lots of cases here... */
-    if(asmCheckCondition() == true) {
-        p_cpu->regs.pc = p_cpu->data;
-        gbTick(1);
     }
 }
 
@@ -217,10 +238,6 @@ void asmRlca(void) {
     gbTick(1);
 }
 
-void asmJr(void) {
-
-}
-
 void asmAdd(void) {
     CPU_FLAGS flags = {-1,0,-1,-1};
     uint16_t val = 0;
@@ -304,7 +321,7 @@ void asmCcf(void) {
 }
 
 void asmHalt(void) {
-    printf("HALT\n");
+    p_cpu->halted = true;
 }
 
 void asmStop(void) {
@@ -332,10 +349,6 @@ void asmCp(void) {
     flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
 
     cpuSetFlags(flags);
-}
-
-void asmCall(void) {
-
 }
 
 void asmEi(void) {

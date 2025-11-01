@@ -46,10 +46,6 @@ uint8_t busReadAddr(uint16_t addr) {
 
 }
 
-void busWriteAddr16(uint16_t addr, uint16_t val) {
-    printf("\t\t\tNot implemented.\n");
-}
-
 void busWriteAddr(uint16_t addr, uint8_t val) {
     /* Cartridge */
     if(addr <= ROM_BANK01_END) {
@@ -81,4 +77,9 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         memWriteHRam(addr, val);
     }
 
+}
+
+void busWriteAddr16(uint16_t addr, uint16_t val) {
+    busWriteAddr(addr + 1, (val >> 8) & 0xFF);
+    busWriteAddr(addr, val & 0xFF);   
 }
