@@ -121,12 +121,12 @@ build CMakeFiles/gbemu.dir/stack.c.o: C_COMPILER__gbemu_unscanned_Debug /home/ry
 #############################################
 # Link the executable gbemu
 
-build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o CMakeFiles/gbemu.dir/memory.c.o CMakeFiles/gbemu.dir/stack.c.o | /usr/lib/libSDL3_ttf.so.0.2.2 /usr/lib/libSDL3.so.0.2.24
+build gbemu: C_EXECUTABLE_LINKER__gbemu_Debug CMakeFiles/gbemu.dir/cart.c.o CMakeFiles/gbemu.dir/main.c.o CMakeFiles/gbemu.dir/bus.c.o CMakeFiles/gbemu.dir/cpu.c.o CMakeFiles/gbemu.dir/gb.c.o CMakeFiles/gbemu.dir/asm_func.c.o CMakeFiles/gbemu.dir/memory.c.o CMakeFiles/gbemu.dir/stack.c.o | /usr/lib/libSDL3_ttf.so.0.2.2 /usr/lib/libSDL3.so.0.2.26
   CONFIG = Debug
   DEP_FILE = CMakeFiles/gbemu.dir/link.d
   FLAGS = -g
   LINK_FLAGS = -Wl,--dependency-file=CMakeFiles/gbemu.dir/link.d
-  LINK_LIBRARIES = /usr/lib/libSDL3_ttf.so.0.2.2  /usr/lib/libSDL3.so.0.2.24
+  LINK_LIBRARIES = /usr/lib/libSDL3_ttf.so.0.2.2  /usr/lib/libSDL3.so.0.2.26
   OBJECT_DIR = CMakeFiles/gbemu.dir
   POST_BUILD = :
   PRE_LINK = :

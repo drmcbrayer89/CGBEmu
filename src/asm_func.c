@@ -183,25 +183,7 @@ void asmDec(void) {
         }
     }
 }
-/* This isn't in the gbz80 instr table lol 
-void asmRl(void) {
-    CPU_FLAGS flags = {0, 0, 0, 0};
 
-    uint8_t r8 = p_cpu->data;
-    uint8_t carry_flag = cpuGetFlag(CARRY_FLAG);
-    uint8_t carry_temp = (r8 >> 7) & 1;
-    r8 = (r8 << 1) | carry_flag;
-
-    flags.z = (r8 == 0) ? 1 : 0;
-    flags.c = carry_flag;
-    cpuSetFlags(flags);
-
-    if(p_cpu->instruction->r1 == R_HL)
-        gbTick(3);
-    else
-        gbTick(1);
-}
-*/
 void asmRla(void) {
     CPU_FLAGS flags = {0,0,0,0};
 

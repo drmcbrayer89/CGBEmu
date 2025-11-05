@@ -15,6 +15,7 @@ uint8_t busReadAddr(uint16_t addr) {
         return cartReadAddr(addr);
     }
     else if(addr <= WRAM_END) {
+        printf("HI!\n");
         return memReadWRam(addr);
     }
     else if(addr <= ECHO_RAM_END) {

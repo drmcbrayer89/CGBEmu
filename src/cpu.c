@@ -6,7 +6,7 @@
 
 static CPU cpu;
 
-static CPU_INSTRUCTION instruction_set[0xFFFF] = {
+static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     /* First Row */
     [0x0000] = {I_NOP,  M_NONE                      },
     [0x0001] = {I_LD,   M_REG_D16,      R_BC        },
@@ -444,13 +444,11 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-    /*
-    printf("PC: 0x%04X %-4s %-4s %-4s\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
+    printf("PC: 0x%04X %-4s %-4s %-4s\n\tA: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
                                                                                                             cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
-                                                                                                            cpu.regs.l);
-        */                                                                                                    
+                                                                                                            cpu.regs.l);                                                                                                   
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -649,7 +647,7 @@ void cpuSetFlags(CPU_FLAGS flags){
 }
 
 static void cpuExec(void) {
-    /* Grab asm function & execute -- pass pointer to CPU */
+    /* Grab asm function & execute */
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
         p_func();
@@ -666,6 +664,8 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
+    // Hacky but quick
+    cpu.halted = false;
     if(cpu.halted == false) {
         cpuGetInstruction();
         cpuGetData();

@@ -89,7 +89,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/usr/lib/libSDL3.so.0.2.24",
+				"fragment" : "/usr/lib/libSDL3.so.0.2.26",
 				"role" : "libraries"
 			}
 		],
