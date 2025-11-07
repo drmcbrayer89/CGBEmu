@@ -465,6 +465,8 @@ void asmCb(void) {
     uint8_t bit = (xx >> 3) & 0b111;
     /* the operation is from the highest 2 bits */
     uint8_t op = (xx >> 6) & 0b11;
+    /* get the current value in the register */
+    uint8_t reg_val = cpuReadRegCb(cb_reg);
 
     if(cb_reg == R_HL) {
         gbTick(3);
@@ -475,10 +477,18 @@ void asmCb(void) {
     //z n h c
     switch(op) {
         case I_CB_BIT:
+            flags.z = !(reg_val & (1 << bit));
+            flags.n = 0;
+            flags.h = 1;
+            cpuSetFlags(flags);
             return;
         case I_CB_RES:
+            reg_val &= ~(1 << bit);
+            cpuWriteRegCb(cb_reg, reg_val);
             return;
         case I_CB_SET:
+            reg_val |= (1 << bit);
+            cpuWriteRegCb(cb_reg, reg_val);
             return;
         default:
             printf("\t\t$CB%02X instruction not valid\n", xx);
@@ -489,7 +499,6 @@ void asmCb(void) {
 
 
 }
-
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,

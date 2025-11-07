@@ -381,6 +381,56 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
     }
 }
 
+uint8_t cpuReadRegCb(CPU_REGISTER_ENUM reg) {
+    switch(reg) {
+        case R_A:
+            return cpu.regs.a;
+        case R_F:
+            return cpu.regs.f;
+        case R_B:
+            return cpu.regs.b;
+        case R_C:
+            return cpu.regs.c;
+        case R_D:
+            return cpu.regs.d;
+        case R_E:
+            return cpu.regs.e;
+        case R_H:
+            return cpu.regs.h;
+        case R_L:
+            return cpu.regs.l;
+        case R_HL:
+            return busReadAddr(cpuReadReg(reg));
+        default:
+            exit(-1);
+    }
+}
+
+void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val) {
+        switch(reg) {
+        case R_A:
+            cpu.regs.a = val;
+        case R_F:
+            cpu.regs.f = val;
+        case R_B:
+            cpu.regs.b = val;
+        case R_C:
+            cpu.regs.c = val;
+        case R_D:
+            cpu.regs.d = val;
+        case R_E:
+            cpu.regs.e = val;
+        case R_H:
+            cpu.regs.h = val;
+        case R_L:
+            cpu.regs.l = val;
+        case R_HL:
+            busWriteAddr(cpuReadReg(reg), val);
+        default:
+            exit(-1);
+    }
+}
+
 static uint16_t cpuSwapEndian(uint16_t val) {
     return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
 }

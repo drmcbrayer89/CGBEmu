@@ -164,6 +164,8 @@ typedef struct {
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
 void cpuSetFlags(CPU_FLAGS flags);
 bool cpuGetFlag(uint32_t flag);
+uint8_t cpuReadRegCb(CPU_REGISTER_ENUM reg);
+void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val);
 uint16_t cpuReadReg(CPU_REGISTER_ENUM reg);
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val);
 void cpuInit(void);
