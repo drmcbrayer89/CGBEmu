@@ -443,6 +443,51 @@ void asmRet(void) {
     gbTick(3);
 }
 
+CPU_REGISTER_ENUM cb_reg_order_lookup[] = {
+    R_B,
+    R_C,
+    R_D,
+    R_E,
+    R_H,
+    R_L,
+    R_HL,
+    R_A
+};
+
+void asmCb(void) {
+    /* This is annoying. Extends zilog z80 instr set 
+    $CB $xx, where xx is how the instruction is found. read as next byte after CB op code */
+    uint8_t xx = p_cpu->data;
+    /* the registers cycle starting from b->a and go from 0 to 7 (0 to 111)*/
+    CPU_REGISTER_ENUM cb_reg = (xx > 0b111) ? R_NONE : cb_reg_order_lookup[xx & 0b111];
+    /* the bit being changes is from the middle 3 bits */
+    uint8_t bit = (xx >> 3) & 0b111;
+    /* the operation is from the highest 2 bits */
+    uint8_t op = (xx >> 6) & 0b11;
+
+    if(cb_reg == R_HL) {
+        gbTick(3);
+    }
+    else {
+        gbTick(1);
+    }
+
+    switch(op) {
+        case I_CB_BIT:
+            return;
+        case I_CB_RES:
+            return;
+        case I_CB_SET:
+            return;
+        default:
+            printf("\t\t$CBxx instruction not valid\n");
+            return;
+    }
+
+
+}
+
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -471,7 +516,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_SBC] = asmSbc,
     [I_POP] = asmPop,
     [I_PUSH] = asmPush,
-    [I_RET] = asmRet
+    [I_RET] = asmRet,
+    [I_CB] = asmCb
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

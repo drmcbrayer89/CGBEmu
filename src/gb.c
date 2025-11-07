@@ -73,8 +73,6 @@ void gbStart(void) {
         if(cpuStep() == false) {
             gameboy.running = false;
         }
-
-
     }
     printf("CGBEmu Stopped!\n");
 }

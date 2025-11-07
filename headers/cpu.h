@@ -11,6 +11,12 @@
 #define CARRY_FLAG 4
 
 typedef enum {
+    I_CB_BIT = 1,
+    I_CB_RES = 2,
+    I_CB_SET = 3
+} CPU_INSTRUCTION_CB_ENUM;
+
+typedef enum {
     /* SM83 INSTRUCTION SET */
     I_NONE,
     I_NOP,
