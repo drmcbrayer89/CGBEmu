@@ -455,6 +455,7 @@ CPU_REGISTER_ENUM cb_reg_order_lookup[] = {
 };
 
 void asmCb(void) {
+    CPU_FLAGS flags = {-1, -1. -1. -1};
     /* This is annoying. Extends zilog z80 instr set 
     $CB $xx, where xx is how the instruction is found. read as next byte after CB op code */
     uint8_t xx = p_cpu->data;
@@ -471,7 +472,7 @@ void asmCb(void) {
     else {
         gbTick(1);
     }
-
+    //z n h c
     switch(op) {
         case I_CB_BIT:
             return;
@@ -480,9 +481,11 @@ void asmCb(void) {
         case I_CB_SET:
             return;
         default:
-            printf("\t\t$CBxx instruction not valid\n");
+            printf("\t\t$CB%02X instruction not valid\n", xx);
             return;
     }
+
+    bool flag_c = cpuGetFlag(CARRY_FLAG);
 
 
 }
