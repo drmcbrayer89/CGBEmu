@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 
 project(GBEMU)
 
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(SDL3 REQUIRED)
 find_package(SDL3_ttf REQUIRED)
 

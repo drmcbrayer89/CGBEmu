@@ -12,6 +12,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/gbemu.dir/gb.c.o.d"
   "CMakeFiles/gbemu.dir/main.c.o"
   "CMakeFiles/gbemu.dir/main.c.o.d"
+  "CMakeFiles/gbemu.dir/memory.c.o"
+  "CMakeFiles/gbemu.dir/memory.c.o.d"
+  "CMakeFiles/gbemu.dir/stack.c.o"
+  "CMakeFiles/gbemu.dir/stack.c.o.d"
   "gbemu"
   "gbemu.pdb"
 )

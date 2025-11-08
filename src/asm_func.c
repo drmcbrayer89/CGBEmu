@@ -497,6 +497,19 @@ void asmCb(void) {
 
     bool flag_c = cpuGetFlag(CARRY_FLAG);
 
+    switch(bit) {
+        case I_CB_RLC: // RLC
+        case I_CB_RRC: // RRC
+        case I_CB_RL: // RL
+        case I_CB_RR: // RR
+        case I_CB_SLA: // SLA
+        case I_CB_SRA: // SRA
+        case I_CB_SWAP: // SWAP
+        case I_CB_SRL: // SRL
+        default:
+            printf("\t\t$CB%02X instruction not valid\n", xx);
+            return;
+    }
 
 }
 

@@ -11,9 +11,17 @@
 #define CARRY_FLAG 4
 
 typedef enum {
-    I_CB_BIT = 1,
-    I_CB_RES = 2,
-    I_CB_SET = 3
+    I_CB_BIT    = 1,
+    I_CB_RES    = 2,
+    I_CB_SET    = 3,
+    I_CB_RLC    = 0,
+    I_CB_RRC    = 1,
+    I_CB_RL     = 2,
+    I_CB_RR     = 3,
+    I_CB_SLA    = 4,
+    I_CB_SRA    = 5,
+    I_CB_SWAP   = 6,
+    I_CB_SRL    = 7
 } CPU_INSTRUCTION_CB_ENUM;
 
 typedef enum {
@@ -155,10 +163,10 @@ typedef struct {
 } CPU;
 
 typedef struct {
-    uint8_t z;
-    uint8_t n;
-    uint8_t h;
-    uint8_t c;
+    int8_t z;
+    int8_t n;
+    int8_t h;
+    int8_t c;
 } CPU_FLAGS;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);

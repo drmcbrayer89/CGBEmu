@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "gbemu::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-gbemu-Debug-1c74f2b78a681767fcb6.json",
+					"jsonFile" : "target-gbemu-Debug-896cdb5d6701a2612d32.json",
 					"name" : "gbemu",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/ryanm/dev/CGBEmu/build",
-		"source" : "/home/ryanm/dev/CGBEmu/src"
+		"build" : "/home/ryanm/repos/CGBEmu/build",
+		"source" : "/home/ryanm/repos/CGBEmu/src"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 8
+		"minor" : 7
 	}
 }
