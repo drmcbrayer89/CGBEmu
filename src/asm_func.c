@@ -501,6 +501,8 @@ void asmCb(void) {
         case I_CB_RLC: // RLC
         case I_CB_RRC: // RRC
         case I_CB_RL: // RL
+            printf("hi");
+            return;
         case I_CB_RR: // RR
         case I_CB_SLA: // SLA
         case I_CB_SRA: // SRA
