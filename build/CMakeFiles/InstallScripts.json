@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/ryanm/dev/CGBEmu/build/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

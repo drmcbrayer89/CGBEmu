@@ -1,3 +1,0 @@
-/home/ryanm/repos/CGBEmu/build/CMakeFiles/gbemu.dir
-/home/ryanm/repos/CGBEmu/build/CMakeFiles/edit_cache.dir
-/home/ryanm/repos/CGBEmu/build/CMakeFiles/rebuild_cache.dir
