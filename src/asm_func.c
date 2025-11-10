@@ -504,6 +504,19 @@ void asmCb(void) {
             printf("hi");
             return;
         case I_CB_RR: // RR
+            uint8_t val = cpuReadRegCb(cb_reg);
+            uint8_t msb = (val >> 7) & 1;
+            uint8_t carry_flag = msb;
+            val = (val << 1) | flag_c;
+            
+            flags.z = (val == 0) ? 1 : 0;
+            flags.n = 0;
+            flags.h = 0;
+            flags.c = carry_flag;            
+            
+            cpuWriteRegCb(cb_reg, val);
+            cpuSetFlags(flags);
+            return;
         case I_CB_SLA: // SLA
         case I_CB_SRA: // SRA
         case I_CB_SWAP: // SWAP
