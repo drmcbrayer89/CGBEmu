@@ -495,13 +495,14 @@ void asmCb(void) {
             return;
     }
 
+    uint8_t val, msb, lsb, cf_new;
+    bool cf = cpuGetFlag(CARRY_FLAG);
     switch(bit) {
         case I_CB_RLC: // RLC
             /* Rotate Left Circular -- MSB goes to carry & LSB */
-            bool cf = cpuGetFlag(CARRY_FLAG);
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t msb = (val >> 7) & 1;
-            uint8_t cf_new = msb;
+            val = cpuReadRegCb(cb_reg);
+            msb = (val >> 7) & 1;
+            cf_new = msb;
             val = (val << 1) | msb;
 
             flags.z = (val == 0) ? 1 : 0;
@@ -513,10 +514,9 @@ void asmCb(void) {
             return;
         case I_CB_RRC: // RRC
             /* Rotate Right Circular -- lsb goes to carry & MSB */
-            bool cf = cpuGetFlag(CARRY_FLAG);
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t lsb = val & 0x01;
-            uint8_t cf_new = lsb;
+            val = cpuReadRegCb(cb_reg);
+            lsb = val & 0x01;
+            cf_new = lsb;
             val = (val >> 1) | (lsb << 7);
 
             flags.z = (val == 0) ? 1 : 0;
@@ -528,10 +528,9 @@ void asmCb(void) {
             return;
         case I_CB_RL: // RL
             /* Rotate Left through Carry */
-            bool cf = cpuGetFlag(CARRY_FLAG);
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t msb = (val >> 7) & 1;
-            uint8_t cf_new = msb;
+            val = cpuReadRegCb(cb_reg);
+            msb = (val >> 7) & 1;
+            cf_new = msb;
             val = (val << 1) | cf;
 
             flags.z = (val == 0) ? 1 : 0;
@@ -543,10 +542,9 @@ void asmCb(void) {
             return;
         case I_CB_RR: // RR
             /* Rotate right through carry */
-            bool cf = cpuGetFlag(CARRY_FLAG);
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t lsb = val & 0x01;
-            uint8_t cf_new = lsb;
+            val = cpuReadRegCb(cb_reg);
+            lsb = val & 0x01;
+            cf_new = lsb;
             val = (val >> 1) | (cf << 7);
             
             flags.z = (val == 0) ? 1 : 0;
@@ -558,9 +556,9 @@ void asmCb(void) {
             return;
         case I_CB_SLA: // SLA
             /* Shift left arithmetically */
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t msb = (val >> 7) & 1;
-            uint8_t cf_new = msb;
+            val = cpuReadRegCb(cb_reg);
+            msb = (val >> 7) & 1;
+            cf_new = msb;
             val = val << 1;
 
             flags.z = (val == 0) ? 1 : 0;
@@ -572,9 +570,9 @@ void asmCb(void) {
             return;
         case I_CB_SRA: // SRA
             /* Shift right arithmetically */
-            uint8_t val = cpuReadRegCb(cb_reg);
-            uint8_t lsb = val & 1;
-            uint8_t cf_new = lsb;
+            val = cpuReadRegCb(cb_reg);
+            lsb = val & 1;
+            cf_new = lsb;
             val = val >> 1;
 
             flags.z = (val == 0) ? 1 : 0;
@@ -584,7 +582,24 @@ void asmCb(void) {
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
         case I_CB_SWAP: // SWAP
+            val = cpuReadRegCb(cb_reg);
+            val = ((val & 0x0F) << 4) | ((val & 0xF0) >> 4);
+
+            flags.z = (val == 0) ? 1 : 0;
+            flags.n = 0;
+            flags.h = 0;
+            flags.c = 0;
+            cpuSetFlags(flags);
+            cpuWriteRegCb(cb_reg, val);
+            return;
         case I_CB_SRL: // SRL
+            //TODO Finish this
+            val = cpuReadRegCb(cb_reg);
+            lsb = val & 1;
+            cf_new = lsb;
+            val = (val >> 1) | (0 << 7);
+
+            return;
         default:
             printf("\t\t$CB%02X instruction not valid\n", xx);
             return;
