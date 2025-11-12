@@ -495,11 +495,14 @@ static void cpuGetInstruction(void) {
     uint16_t pc = cpu.regs.pc;
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
+
+    /*
     printf("PC: 0x%04X %-4s %-4s %-4s\n\tA: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
                                                                                                             cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
-                                                                                                            cpu.regs.l);                                                                                                   
+                                                                                                            cpu.regs.l);
+    */                                                                                            
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -716,7 +719,7 @@ static void cpuExec(void) {
 
 bool cpuStep(void) {
     // Hacky but quick
-    cpu.halted = false;
+    //cpu.halted = false;
     if(cpu.halted == false) {
         cpuGetInstruction();
         cpuGetData();

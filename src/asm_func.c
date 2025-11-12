@@ -497,6 +497,7 @@ void asmCb(void) {
 
     uint8_t val, msb, lsb, cf_new;
     bool cf = cpuGetFlag(CARRY_FLAG);
+    
     switch(bit) {
         case I_CB_RLC: // RLC
             /* Rotate Left Circular -- MSB goes to carry & LSB */
@@ -572,8 +573,10 @@ void asmCb(void) {
             /* Shift right arithmetically */
             val = cpuReadRegCb(cb_reg);
             lsb = val & 1;
+            msb = (val >> 7) & 1;
             cf_new = lsb;
-            val = val >> 1;
+            /* msb must be added back into b7 */
+            val = (val >> 1) | (msb << 7);
 
             flags.z = (val == 0) ? 1 : 0;
             flags.n = 0;
@@ -597,8 +600,15 @@ void asmCb(void) {
             val = cpuReadRegCb(cb_reg);
             lsb = val & 1;
             cf_new = lsb;
-            val = (val >> 1) | (0 << 7);
+            /* msb should always be 0 in this case? */
+            val = (val >> 1) & (0 << 7);
 
+            flags.z = (val == 0) ? 1 : 0;
+            flags.n = 0;
+            flags.h = 0;
+            flags.c = cf_new;
+            cpuSetFlags(flags);
+            cpuWriteRegCb(cb_reg, val);
             return;
         default:
             printf("\t\t$CB%02X instruction not valid\n", xx);
