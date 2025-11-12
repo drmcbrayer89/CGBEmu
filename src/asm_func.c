@@ -66,13 +66,15 @@ void asmNop(void) {
 }
 
 void asmLd(void) { 
+    CPU_FLAGS flags = {-1,-1,-1,-1};
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
     if(p_cpu->to_memory == false) {
-        /* Default (easiest option) */
+        /* Default (easiest option) (value to register)*/
         cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
         return;
     }
     else if(p_cpu->to_memory == true) {
+        /* Write to memory address */
         if(is_16bit == true) {
             busWriteAddr16(p_cpu->memory_destination, p_cpu->data);
             gbTick(1);
@@ -83,9 +85,24 @@ void asmLd(void) {
         gbTick(1);
         return;
     }
-    else if(p_cpu->instruction->addr_mode == M_HL_SPR) {
-        // Do this later...
+    /* Special case to load stack pointer & e8 offset into HL */
+    if(p_cpu->instruction->addr_mode == M_HL_SPR) {
+        uint8_t h_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xF) + (p_cpu->data & 0xF) >= 0x10;
+        uint8_t c_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xFF) + (p_cpu->data &0xFF) >= 0x100;
+        
+        // z n h c
+        flags.h = h_flag;
+        flags.c = c_flag;
+        cpuSetFlags(flags);
+        
+        // this is the stack ptr
+        uint16_t r2_val = cpuReadReg(p_cpu->instruction->r2);
+        // write stack ptr + e8 (signed int8) to r1
+        cpuWriteReg(p_cpu->instruction->r1, r2_val + (int8_t)p_cpu->data);
+        return;
     }
+    /* Shouldn't get here! */
+    exit(-1);
 }
 
 void asmInc(void) {
