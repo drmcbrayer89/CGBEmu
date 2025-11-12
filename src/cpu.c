@@ -718,16 +718,16 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-    // Hacky but quick
-    //cpu.halted = false;
-    if(cpu.halted == false) {
+
+    if(!cpu.halted) {
         cpuGetInstruction();
+        /* Implied ticks from grabbing instr */
+        gbTick(1);
         cpuGetData();
         cpuExec();
-        return true;
     }
 
-    return false;
+    return true;
 }
 
 void cpuInit(void) {

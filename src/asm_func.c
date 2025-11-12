@@ -497,7 +497,7 @@ void asmCb(void) {
 
     uint8_t val, msb, lsb, cf_new;
     bool cf = cpuGetFlag(CARRY_FLAG);
-    
+
     switch(bit) {
         case I_CB_RLC: // RLC
             /* Rotate Left Circular -- MSB goes to carry & LSB */
@@ -560,7 +560,7 @@ void asmCb(void) {
             val = cpuReadRegCb(cb_reg);
             msb = (val >> 7) & 1;
             cf_new = msb;
-            val = val << 1;
+            val = (val << 1);
 
             flags.z = (val == 0) ? 1 : 0;
             flags.n = 0;
