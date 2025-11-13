@@ -99,6 +99,7 @@ void asmLd(void) {
         uint16_t r2_val = cpuReadReg(p_cpu->instruction->r2);
         // write stack ptr + e8 (signed int8) to r1
         cpuWriteReg(p_cpu->instruction->r1, r2_val + (int8_t)p_cpu->data);
+        printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
         return;
     }
     /* Shouldn't get here! */
@@ -425,26 +426,23 @@ void asmSbc(void) {
 }
 
 void asmPop(void) {
-    /* These are only used for 16 bit values*/
-    /*
     uint16_t lo = stackPop8();
     uint16_t hi = stackPop8();
-    uint16_t result = (hi << 8) | lo;
-    */
-    uint16_t result = stackPop16();
-    gbTick(2);
-    /* Register AF is a bit different */
+    uint16_t val = (hi << 8) | lo;
+
+    cpuWriteReg(p_cpu->instruction->r1, val);
     if(p_cpu->instruction->r1 == R_AF) {
-        cpuWriteReg(p_cpu->instruction->r1, result & 0xFFF0);
-    }
-    else {
-        cpuWriteReg(p_cpu->instruction->r1, result);
+        cpuWriteReg(p_cpu->instruction->r1, val & 0xFFF0);
     }
 }
 
 void asmPush(void) {
-    stackPush16(p_cpu->data);
-    gbTick(4);
+    uint16_t hi = (cpuReadReg(p_cpu->instruction->r1) >> 8) & 0xFF;
+    uint16_t lo = (cpuReadReg(p_cpu->instruction->r1) & 0xFF);
+
+    stackPush8(hi);
+    stackPush8(lo);
+    gbTick(3);
 }
 
 void asmRet(void) {

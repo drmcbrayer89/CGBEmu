@@ -496,13 +496,15 @@ static void cpuGetInstruction(void) {
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 
+    printf("0x%02X\n", cpu.op_code);
+
     /*
-    printf("PC: 0x%04X %-4s %-4s %-4s\n\tA: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
+    printf("PC: 0x%04X %-4s %-4s %-4s (0x%02X)\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
-                                                                                                            cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
+                                                                                                            cpu.op_code, cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
                                                                                                             cpu.regs.l);
-    */                                                                                            
+                                                                                               */
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -582,8 +584,9 @@ static void cpuGetData(void) {
             return;
         
         case M_REG_A8:
-            cpu.data = busReadAddr(cpu.regs.pc++);
+            cpu.data = busReadAddr(cpu.regs.pc);
             gbTick(1);
+            cpu.regs.pc++;
             return;
             
         case M_HLI_R:
@@ -684,6 +687,13 @@ bool cpuGetFlag(uint32_t flag) {
     return BIT_CHECK(cpu.regs.f, flag);
 }
 
+bool cpuGetIE(void) {
+    return cpu.int_enable;
+}
+
+void cpuSetIE(bool enable) {
+    cpu.int_enable = enable;
+}
 //void cpuSetFlags(byte z, byte n, byte h, byte c) {
 void cpuSetFlags(CPU_FLAGS flags){
     if(flags.z != -1) {
@@ -709,7 +719,8 @@ static void cpuExec(void) {
         printf("\tAFTER  A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  cpu.regs.a, cpu.regs.b, cpu.regs.c,
                                                                                     cpu.regs.d, cpu.regs.e, cpu.regs.h,
                                                                                     cpu.regs.l);
-                                                                                    */
+        */
+
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);
@@ -718,20 +729,19 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-
     if(!cpu.halted) {
         cpuGetInstruction();
-        /* Implied ticks from grabbing instr */
         gbTick(1);
         cpuGetData();
         cpuExec();
     }
-
+    
     return true;
 }
 
 void cpuInit(void) {
     cpu.regs.pc = 0x0100;
+    cpu.regs.sp = 0xFFFE;
     asmSetCpuPtr(&cpu);
 }
 
