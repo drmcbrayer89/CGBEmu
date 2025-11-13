@@ -496,7 +496,7 @@ static void cpuGetInstruction(void) {
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 
-    printf("0x%02X\n", cpu.op_code);
+    printf("PC: 0x%04X (0x%02X)\n", pc, cpu.op_code);
 
     /*
     printf("PC: 0x%04X %-4s %-4s %-4s (0x%02X)\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
