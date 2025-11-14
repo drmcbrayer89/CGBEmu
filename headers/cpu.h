@@ -181,4 +181,5 @@ void cpuShowInstruction(uint32_t i);
 char * cpuGetInsString(uint32_t i);
 char * cpuGetRegString(uint32_t i);
 bool cpuStep(void);
-
+bool cpuGetIE(void);
+void cpuSetIE(bool enable);

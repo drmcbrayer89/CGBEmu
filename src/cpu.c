@@ -728,34 +728,6 @@ static void cpuExec(void) {
     }
 }
 
-static void cpuPrintPreExec(void) {
-    uint8_t pc = cpu.regs.pc - 1;
-    printf("PC: %04X OP: 0x%02X 0x%02X 0x%02X 0x%02X ", pc, 
-                                                  cpu.op_code,
-                                                busReadAddr(pc),
-                                                busReadAddr(pc+1),
-                                                busReadAddr(pc+2));
-    
-    printf("[A: 0x%02X BC: 0x%04X DE: 0x%04X HL: 0x%04X]\n",  cpuReadReg(R_A),
-                                                            cpuReadReg(R_BC),
-                                                            cpuReadReg(R_DE),
-                                                            cpuReadReg(R_HL));
-}
-
-static void cpuPrintPostExec(void) {
-    uint8_t pc = cpu.regs.pc;
-    printf("PC: %04X OP: 0x%02X 0x%02X 0x%02X 0x%02X ", pc, 
-                                                  cpu.op_code,
-                                                busReadAddr(pc),
-                                                busReadAddr(pc+1),
-                                                busReadAddr(pc+2));
-
-    printf("[A: 0x%02X BC: 0x%04X DE: 0x%04X HL: 0x%04X]\n",  cpuReadReg(R_A),
-                                                            cpuReadReg(R_BC),
-                                                            cpuReadReg(R_DE),
-                                                            cpuReadReg(R_HL));
-}
-
 bool cpuStep(void) {
     if(!cpu.halted) {
         
@@ -763,9 +735,7 @@ bool cpuStep(void) {
         gbTick(1);
         cpuGetData();
         
-        //cpuPrintPreExec();
         cpuExec();
-        //cpuPrintPostExec();
 
         /*
         printf("0x%04X\n", busReadAddr(cpu.regs.pc));
@@ -779,6 +749,7 @@ bool cpuStep(void) {
 void cpuInit(void) {
     cpu.regs.pc = 0x0100;
     cpu.regs.sp = 0xFFFE;
+    cpu.regs.a = 0x35;
     asmSetCpuPtr(&cpu);
 }
 
