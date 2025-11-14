@@ -69,7 +69,7 @@ void gbStart(void) {
                 gameboy.running = false;
             }
         }
-        delay(50);
+        delay(0);
         if(cpuStep() == false) {
             gameboy.running = false;
         }

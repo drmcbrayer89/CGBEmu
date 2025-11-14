@@ -384,10 +384,10 @@ void asmOr(void) {
 
 void asmXor(void) {
     CPU_FLAGS flags = {0,0,0,0};
-    p_cpu->regs.a ^= p_cpu->data & 0xFF;
-    if(p_cpu->regs.a == 0x00) {
-        cpuSetFlags(flags);
-    }
+    uint8_t val = p_cpu->regs.a ^ (p_cpu->data & 0xFF);
+    flags.z = (p_cpu->regs.a == 0) ? 1 : 0;
+    cpuSetFlags(flags);
+    cpuWriteReg(p_cpu->instruction->r1, val);
 }
 
 void asmAdc(void) {
@@ -475,13 +475,18 @@ void asmCb(void) {
     $CB $xx, where xx is how the instruction is found. read as next byte after CB op code */
     uint8_t xx = p_cpu->data;
     /* the registers cycle starting from b->a and go from 0 to 7 (0 to 111)*/
-    CPU_REGISTER_ENUM cb_reg = (xx > 0b111) ? R_NONE : cb_reg_order_lookup[xx & 0b111];
+    CPU_REGISTER_ENUM cb_reg = ((xx & 0b111) > 0b111) ? R_NONE : cb_reg_order_lookup[xx & 0b111];
+    
     /* the bit being changes is from the middle 3 bits */
     uint8_t bit = (xx >> 3) & 0b111;
+    
     /* the operation is from the highest 2 bits */
     uint8_t op = (xx >> 6) & 0b11;
+    
     /* get the current value in the register */
     uint8_t reg_val = cpuReadRegCb(cb_reg);
+
+    printf("\t\t0xCB%02X bit: %i op: %i register: %i\n", xx, bit, op, cb_reg);
 
     if(cb_reg == R_HL) {
         gbTick(3);
@@ -498,15 +503,14 @@ void asmCb(void) {
             cpuSetFlags(flags);
             return;
         case I_CB_RES:
+            printf("\t\t%i %i\n", cb_reg, reg_val);
             reg_val &= ~(1 << bit);
+            printf("\t\t%i %i\n", cb_reg, reg_val);
             cpuWriteRegCb(cb_reg, reg_val);
             return;
         case I_CB_SET:
             reg_val |= (1 << bit);
             cpuWriteRegCb(cb_reg, reg_val);
-            return;
-        default:
-            printf("\t\t$CB%02X instruction not valid\n", xx);
             return;
     }
 
@@ -625,11 +629,7 @@ void asmCb(void) {
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
-        default:
-            printf("\t\t$CB%02X instruction not valid\n", xx);
-            return;
     }
-
 }
 
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {

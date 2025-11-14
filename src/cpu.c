@@ -492,19 +492,19 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
 }
 
 static void cpuGetInstruction(void) {
-    uint16_t pc = cpu.regs.pc;
+    uint16_t pc = cpuReadReg(R_PC);
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 
-    printf("PC: 0x%04X (0x%02X)\n", pc, cpu.op_code);
+    //printf("PC: 0x%04X (0x%02X) 0x%02X 0x%02X\n", pc, cpu.op_code, busReadAddr(pc + 1), busReadAddr(pc + 2));
 
-    /*
+    
     printf("PC: 0x%04X %-4s %-4s %-4s (0x%02X)\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
                                                                                                             cpu.op_code, cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
                                                                                                             cpu.regs.l);
-                                                                                               */
+                                                                                               
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -715,11 +715,11 @@ static void cpuExec(void) {
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
         p_func();
-        /*
+        
         printf("\tAFTER  A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  cpu.regs.a, cpu.regs.b, cpu.regs.c,
                                                                                     cpu.regs.d, cpu.regs.e, cpu.regs.h,
                                                                                     cpu.regs.l);
-        */
+        
 
     }
     else {
@@ -728,12 +728,49 @@ static void cpuExec(void) {
     }
 }
 
+static void cpuPrintPreExec(void) {
+    uint8_t pc = cpu.regs.pc - 1;
+    printf("PC: %04X OP: 0x%02X 0x%02X 0x%02X 0x%02X ", pc, 
+                                                  cpu.op_code,
+                                                busReadAddr(pc),
+                                                busReadAddr(pc+1),
+                                                busReadAddr(pc+2));
+    
+    printf("[A: 0x%02X BC: 0x%04X DE: 0x%04X HL: 0x%04X]\n",  cpuReadReg(R_A),
+                                                            cpuReadReg(R_BC),
+                                                            cpuReadReg(R_DE),
+                                                            cpuReadReg(R_HL));
+}
+
+static void cpuPrintPostExec(void) {
+    uint8_t pc = cpu.regs.pc;
+    printf("PC: %04X OP: 0x%02X 0x%02X 0x%02X 0x%02X ", pc, 
+                                                  cpu.op_code,
+                                                busReadAddr(pc),
+                                                busReadAddr(pc+1),
+                                                busReadAddr(pc+2));
+
+    printf("[A: 0x%02X BC: 0x%04X DE: 0x%04X HL: 0x%04X]\n",  cpuReadReg(R_A),
+                                                            cpuReadReg(R_BC),
+                                                            cpuReadReg(R_DE),
+                                                            cpuReadReg(R_HL));
+}
+
 bool cpuStep(void) {
     if(!cpu.halted) {
+        
         cpuGetInstruction();
         gbTick(1);
         cpuGetData();
+        
+        //cpuPrintPreExec();
         cpuExec();
+        //cpuPrintPostExec();
+
+        /*
+        printf("0x%04X\n", busReadAddr(cpu.regs.pc));
+        cpu.regs.pc++;
+        */
     }
     
     return true;
