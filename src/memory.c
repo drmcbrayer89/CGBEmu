@@ -4,7 +4,6 @@
 static MEMORY mem[0xFFFF];
 
 uint8_t memReadWRam(uint16_t addr) {
-    //printf("nothing here\n");
     printf("0x%02X", mem[addr]);
     return mem[addr];
 }

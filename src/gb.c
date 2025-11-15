@@ -2,16 +2,12 @@
 #include "cpu.h"
 #include "gui.h"
 #include "pthread.h"
-#include "SDL3/SDL.h"
-#include "SDL3_ttf/SDL_ttf.h"
 
-// Start doing SDL shit here
 GB gameboy;
-
 pthread_t t_cpu;
 
-static void delay(uint32_t t) {
-    SDL_Delay(t);
+void gbGetGbPtr(GB * p_gb) {
+    p_gb = &gameboy;
 }
 
 void gbTick(uint8_t cycles) {
@@ -36,9 +32,16 @@ void * thread_cpu(void *) {
 
 void gbStart(void) {
     /* start gui */
-    guiInit();
+    if(guiInit()) {
+        printf("GUI Initialized\n");
+    }
     /* start cpu */
     pthread_create(&t_cpu, NULL, thread_cpu, NULL);
+
+    while(!gameboy.stop_emu) {
+        gameboy.stop_emu = guiRun();
+    }
+
     printf("CGBEmu Stopped!\n");
 }
 
@@ -46,4 +49,5 @@ void gbInit(void) {
     /* Setup SDL & shit later */
     gameboy.running = true;
     gameboy.halted = false;
+    gameboy.stop_emu = false;
 }

@@ -4,9 +4,11 @@
 typedef struct {
     bool halted;
     bool running;
+    bool stop_emu;
     uint64_t ticks;
 } GB;
 
 void gbTick(uint8_t cycles);
 void gbInit(void);
 void gbStart(void);
+void gbGetGbPtr(GB * gb);
