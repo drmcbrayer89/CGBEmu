@@ -304,6 +304,7 @@ void asmRrca(void) {
     cpuWriteReg(R_A, a_reg);
     cpuSetFlags(flags);
 }
+
 /* This is just a NOT operator for register A */
 void asmCpl(void) {
     CPU_FLAGS flags = {-1, 1, 1, -1};
@@ -692,7 +693,9 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_PUSH] = asmPush,
     [I_RET] = asmRet,
     [I_CB] = asmCb,
-    [I_DAA] = asmDaa
+    [I_DAA] = asmDaa,
+    [I_CCF] = asmCcf,
+    [I_CPL] = asmCpl
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
