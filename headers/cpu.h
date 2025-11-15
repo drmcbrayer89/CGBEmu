@@ -170,6 +170,7 @@ typedef struct {
 } CPU_FLAGS;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
+void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c);
 void cpuSetFlags(CPU_FLAGS flags);
 bool cpuGetFlag(uint32_t flag);
 uint8_t cpuReadRegCb(CPU_REGISTER_ENUM reg);

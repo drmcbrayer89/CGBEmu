@@ -632,6 +632,36 @@ void asmCb(void) {
     }
 }
 
+void asmDaa(void) {
+    CPU_FLAGS flags = {0};
+    // initialize adjustment to zero (both cases)
+    int8_t adj = 0;
+    uint8_t a = cpuReadReg(R_A);
+    cpuGetFlags(&flags.z, &flags.n, &flags.h, &flags.c);
+
+    // if subtract flag is set
+    if(flags.n) {
+        // add $6 if half carry is set, add $60 if carry is set
+        adj = (flags.h * 0x6) + (flags.c * 0x60);
+        a = a - adj;
+    }
+    else if(flags.n == 0) {
+        if(flags.h || ((a & 0xF) > 0x9)) {
+            adj = adj + 0x6;
+        }
+        if(flags.c || a > 0x99) {
+            adj = adj + 0x60;
+        }
+        a = a + adj;
+        flags.c = (a > 0x99) ? 1 : 0;
+    }
+
+    flags.z = (a == 0) ? 1 : 0;
+    flags.h = 0;
+    cpuSetFlags(flags);
+    cpuWriteReg(R_A, a);
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -661,7 +691,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_POP] = asmPop,
     [I_PUSH] = asmPush,
     [I_RET] = asmRet,
-    [I_CB] = asmCb
+    [I_CB] = asmCb,
+    [I_DAA] = asmDaa
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

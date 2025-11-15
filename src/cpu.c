@@ -694,7 +694,14 @@ bool cpuGetIE(void) {
 void cpuSetIE(bool enable) {
     cpu.int_enable = enable;
 }
-//void cpuSetFlags(byte z, byte n, byte h, byte c) {
+
+void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c) {
+    *z = BIT_CHECK(cpu.regs.f, ZERO_FLAG);
+    *n = BIT_CHECK(cpu.regs.f, SUBTRACTION_FLAG);
+    *h = BIT_CHECK(cpu.regs.f, HALF_CARRY_FLAG);
+    *z = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
+}
+
 void cpuSetFlags(CPU_FLAGS flags){
     if(flags.z != -1) {
         BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
@@ -736,11 +743,6 @@ bool cpuStep(void) {
         cpuGetData();
         
         cpuExec();
-
-        /*
-        printf("0x%04X\n", busReadAddr(cpu.regs.pc));
-        cpu.regs.pc++;
-        */
     }
     
     return true;
