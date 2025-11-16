@@ -2,9 +2,20 @@
 #include "bus.h"
 #include "gb.h"
 #include "memory.h"
+#include "stack.h"
 #include "asm_func.h"
 
+#define CPU_NUM_INT 5
+
 static CPU cpu;
+
+static CPU_INTERRUPTS cpu_interrupts[CPU_NUM_INT] = {
+    {INT_VBLANK, 0x40},
+    {INT_LCD_STAT, 0x48},
+    {INT_TIMER, 0x50},
+    {INT_SERIAL, 0x58},
+    {INT_JOYPAD, 0x60}
+};
 
 static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     /* First Row */
@@ -683,37 +694,26 @@ static void cpuGetData(void) {
     }
 }
 
-bool cpuGetFlag(uint32_t flag) {
-    return BIT_CHECK(cpu.regs.f, flag);
+void cpuIntProc(uint16_t addr) {
+    /* push current addr to stack
+       set pc to input addr      */
+    stackPush16(cpu.regs.pc);
+    cpu.regs.pc = addr;   
 }
 
-bool cpuGetIE(void) {
-    return cpu.int_enable;
-}
+void cpuIntHandler() {
+    uint32_t i;
 
-void cpuSetIE(bool enable) {
-    cpu.int_enable = enable;
-}
+    // Cycle through the possible cpu interrupts, return after processing the first one enabled
+    for(i = 0; i < CPU_NUM_INT; i++) {
+        if(cpu.int_flags & cpu_interrupts[i].type && cpu.ie_reg & cpu_interrupts[i].type) {
+            cpuIntHandler(cpu_interrupts[i].addr);
+            cpu.int_flags &= ~cpu_interrupts[i].type;
+            cpu.halted = false;
+            cpu.int_enable = false;
 
-void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c) {
-    *z = BIT_CHECK(cpu.regs.f, ZERO_FLAG);
-    *n = BIT_CHECK(cpu.regs.f, SUBTRACTION_FLAG);
-    *h = BIT_CHECK(cpu.regs.f, HALF_CARRY_FLAG);
-    *z = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
-}
-
-void cpuSetFlags(CPU_FLAGS flags){
-    if(flags.z != -1) {
-        BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
-    }
-    if(flags.n != -1) {
-        BIT_SET(cpu.regs.f, SUBTRACTION_FLAG, flags.n);
-    }
-    if(flags.h != -1){
-        BIT_SET(cpu.regs.f, HALF_CARRY_FLAG, flags.h);
-    }
-    if(flags.c != -1){
-        BIT_SET(cpu.regs.f, CARRY_FLAG, flags.c);
+            return;
+        }
     }
 }
 
@@ -741,8 +741,23 @@ bool cpuStep(void) {
         cpuGetInstruction();
         gbTick(1);
         cpuGetData();
-        
         cpuExec();
+    }
+    else {
+        gbTick(1);
+        if(cpu.int_flags > 0) {
+            cpu.halted = false;
+        }
+    }
+
+    // Handle interrupts :D
+    if(cpu.int_enable) {
+        cpuIntHandler();
+        cpu.enabling_ime = false;
+    }
+
+    if(cpu.enabling_ime) {
+        cpu.int_enable = true;
     }
     
     return true;
@@ -765,5 +780,46 @@ char * cpuGetInsString(uint32_t i) {
 
 char * cpuGetRegString(uint32_t i) {
     return registers_s[i];
+}
+
+uint8_t cpuGetIntFlags() {
+    return cpu.int_flags;
+}
+void cpuSetIntFlags(uint8_t val) {
+    cpu.int_flags = val;
+}
+
+bool cpuGetFlag(uint32_t flag) {
+    return BIT_CHECK(cpu.regs.f, flag);
+}
+
+uint8_t cpuGetIE(void) {
+    return cpu.ie_reg;
+}
+
+void cpuSetIE(uint8_t val) {
+    cpu.ie_reg = val;
+}
+
+void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c) {
+    *z = BIT_CHECK(cpu.regs.f, ZERO_FLAG);
+    *n = BIT_CHECK(cpu.regs.f, SUBTRACTION_FLAG);
+    *h = BIT_CHECK(cpu.regs.f, HALF_CARRY_FLAG);
+    *z = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
+}
+
+void cpuSetFlags(CPU_FLAGS flags){
+    if(flags.z != -1) {
+        BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
+    }
+    if(flags.n != -1) {
+        BIT_SET(cpu.regs.f, SUBTRACTION_FLAG, flags.n);
+    }
+    if(flags.h != -1){
+        BIT_SET(cpu.regs.f, HALF_CARRY_FLAG, flags.h);
+    }
+    if(flags.c != -1){
+        BIT_SET(cpu.regs.f, CARRY_FLAG, flags.c);
+    }
 }
 

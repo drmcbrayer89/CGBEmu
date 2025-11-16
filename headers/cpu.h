@@ -160,6 +160,9 @@ typedef struct {
     bool halted;
     bool stepping;
     bool int_enable;
+    bool enabling_ime;
+    uint8_t int_flags;
+    uint8_t ie_reg;
 } CPU;
 
 typedef struct {
@@ -168,6 +171,19 @@ typedef struct {
     int8_t h;
     int8_t c;
 } CPU_FLAGS;
+
+typedef enum {
+    INT_VBLANK = 1,
+    INT_LCD_STAT = 2,
+    INT_TIMER = 4,
+    INT_SERIAL = 8,
+    INT_JOYPAD = 16
+} CPU_INTERRUPT_TYPES;
+
+typedef struct {
+    CPU_INTERRUPT_TYPES type;
+    uint16_t addr;
+} CPU_INTERRUPTS;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
 void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c);
@@ -182,5 +198,7 @@ void cpuShowInstruction(uint32_t i);
 char * cpuGetInsString(uint32_t i);
 char * cpuGetRegString(uint32_t i);
 bool cpuStep(void);
-bool cpuGetIE(void);
-void cpuSetIE(bool enable);
+uint8_t cpuGetIE(void);
+void cpuSetIE(uint8_t val);
+uint8_t cpuGetIntFlags();
+void cpuSetIntFlags(uint8_t val);

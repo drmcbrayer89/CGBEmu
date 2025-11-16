@@ -9,8 +9,10 @@ int32_t main(int32_t argc, char * argv[])
         cartOpen(argv[1]);
         gbStart();
     }
+    /* Remove this after done... */
     else {
-        printf("Pass .gb file into program\n");
+        cartOpen("Tetris.gb");
+        gbStart();
     }
 
     return 0;

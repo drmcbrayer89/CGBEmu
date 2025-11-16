@@ -353,7 +353,7 @@ void asmCp(void) {
 }
 
 void asmEi(void) {
-    p_cpu->int_enable = true;
+    p_cpu->enabling_ime = true;
 }
 
 void asmDi() {
@@ -663,6 +663,15 @@ void asmDaa(void) {
     cpuWriteReg(R_A, a);
 }
 
+void asmReti(void) {
+    // enable interrupts
+    p_cpu->int_enable = true;
+    // return from subroutine
+    p_cpu->regs.pc = stackPop16();
+    // No need to check for cc, just do 3 cycles
+    gbTick(3);
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -692,6 +701,7 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_POP] = asmPop,
     [I_PUSH] = asmPush,
     [I_RET] = asmRet,
+    [I_RETI] = asmReti,
     [I_CB] = asmCb,
     [I_DAA] = asmDaa,
     [I_CCF] = asmCcf,

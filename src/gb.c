@@ -2,6 +2,7 @@
 #include "cpu.h"
 #include "gui.h"
 #include "pthread.h"
+#include "unistd.h"
 
 GB gameboy;
 pthread_t t_cpu;
@@ -27,6 +28,7 @@ void * thread_cpu(void *) {
     while(gameboy.running){
         gameboy.running = cpuStep();
         gameboy.ticks++;
+        usleep(10000);
     }
 }
 
@@ -35,8 +37,12 @@ void gbStart(void) {
     if(guiInit()) {
         printf("GUI Initialized\n");
     }
+    
     /* start cpu */
-    pthread_create(&t_cpu, NULL, thread_cpu, NULL);
+    if(pthread_create(&t_cpu, NULL, thread_cpu, NULL)) {
+        printf("CPU thread failed to start\n");
+        exit(-1);
+    }
 
     while(!gameboy.stop_emu) {
         gameboy.stop_emu = guiRun();

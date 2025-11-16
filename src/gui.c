@@ -40,7 +40,8 @@ void guiRun() {
 
     while(SDL_PollEvent(&e) > 0){
         SDL_RenderPresent(p_renderer);
-        if(e.type == SDL_EVENT_QUIT) {
+
+        if(e.type == SDL_EVENT_KEY_DOWN && e.key.key == SDLK_ESCAPE){
             p_gb->stop_emu = true;
         }
     }
