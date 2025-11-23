@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "stack.h"
 #include "asm_func.h"
+#include "debug_blarg.h"
 
 #define CPU_NUM_INT 5
 
@@ -509,13 +510,13 @@ static void cpuGetInstruction(void) {
 
     //printf("PC: 0x%04X (0x%02X) 0x%02X 0x%02X\n", pc, cpu.op_code, busReadAddr(pc + 1), busReadAddr(pc + 2));
 
-    
+    /*
     printf("PC: 0x%04X %-4s %-4s %-4s (0x%02X)\n\tBEFORE A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  pc, 
                                                                                                             instruction_set_s[cpu.instruction->type], 
                                                                                                             registers_s[cpu.instruction->r1], registers_s[cpu.instruction->r2],
                                                                                                             cpu.op_code, cpu.regs.a, cpu.regs.b, cpu.regs.c, cpu.regs.d, cpu.regs.e, cpu.regs.h, 
                                                                                                             cpu.regs.l);
-                                                                                               
+      */                                                                                         
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -696,7 +697,7 @@ static void cpuGetData(void) {
 
 void cpuIntProc(uint16_t addr) {
     /* push current addr to stack
-       set pc to input addr      */
+       set pc to interrupt addr      */
     stackPush16(cpu.regs.pc);
     cpu.regs.pc = addr;   
 }
@@ -707,7 +708,7 @@ void cpuIntHandler() {
     // Cycle through the possible cpu interrupts, return after processing the first one enabled
     for(i = 0; i < CPU_NUM_INT; i++) {
         if(cpu.int_flags & cpu_interrupts[i].type && cpu.ie_reg & cpu_interrupts[i].type) {
-            cpuIntHandler(cpu_interrupts[i].addr);
+            cpuIntProc(cpu_interrupts[i].addr);
             cpu.int_flags &= ~cpu_interrupts[i].type;
             cpu.halted = false;
             cpu.int_enable = false;
@@ -722,12 +723,12 @@ static void cpuExec(void) {
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
         p_func();
-        
+        /*
         printf("\tAFTER  A: 0x%02X BC: 0x%02X%02X DE: 0x%02X%02X HL: 0x%02X%02X\n",  cpu.regs.a, cpu.regs.b, cpu.regs.c,
                                                                                     cpu.regs.d, cpu.regs.e, cpu.regs.h,
                                                                                     cpu.regs.l);
         
-
+        */
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);
@@ -741,6 +742,9 @@ bool cpuStep(void) {
         cpuGetInstruction();
         gbTick(1);
         cpuGetData();
+
+        debugUpdate();
+        debugShow();
         cpuExec();
     }
     else {

@@ -2,6 +2,7 @@
 #include "cart.h"
 #include "memory.h"
 #include "cpu.h"
+#include "io.h"
 
 /* Pulled the memory map from the pan docs website */
 uint8_t busReadAddr(uint16_t addr) {
@@ -11,7 +12,6 @@ uint8_t busReadAddr(uint16_t addr) {
     } 
     // char/map
     else if(addr < 0xA000) {
-        exit(-1);
     }
     else if(addr < 0xC0000) {
         return cartReadAddr(addr);
@@ -30,8 +30,7 @@ uint8_t busReadAddr(uint16_t addr) {
         return 0;
     }
     else if(addr < 0xFF80) {
-        printf("I/O Read\n");
-        exit(-1);
+        return ioRead(addr);
     }
     else if(addr == 0xFFFF) {
         //TODO
@@ -49,25 +48,23 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
     } 
     // char/map
     else if(addr < 0xA000) {
-        exit(-1);
     } // cartridge ram
-    else if(addr < 0xC0000) {
+    else if(addr < 0xC000) {
         return cartWriteAddr(addr,val);
     } // working ram
-    else if(addr < 0xE0000) {
+    else if(addr < 0xE000) {
         return memWriteWRam(addr, val);
     } // reserved 
     else if(addr < 0xFE00) {
     } // do not enter
     else if(addr < 0xFEA0) {
         //TODO
-        exit(-1);
     } // do not enter
     else if(addr < 0xFF00) {
 
     } // i/o
     else if(addr < 0xFF80) {
-        printf("I/O Registers\n");
+        ioWrite(addr, val);
     } // enable interrupt register
     else if(addr == 0xFFFF) {
         //TODO
