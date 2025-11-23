@@ -12,6 +12,7 @@ void debugUpdate(void) {
        this is where 0x81 comes from 
     */
     if(busReadAddr(0xFF02) == 0x81) {
+        printf("debugUpdate\n");
         char c = busReadAddr(0xFF01);
         msg[msg_size++] = c;
         busWriteAddr(0xFF02, 0);

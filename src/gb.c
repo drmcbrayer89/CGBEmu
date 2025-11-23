@@ -28,7 +28,6 @@ void * thread_cpu(void *) {
     while(gameboy.running){
         gameboy.running = cpuStep();
         gameboy.ticks++;
-        usleep(10000);
     }
 }
 

@@ -361,25 +361,24 @@ void asmDi() {
 }
 
 void asmAnd(void) {
-    CPU_FLAGS flags = {0,0,0,0};
-    p_cpu->regs.a = (p_cpu->regs.a & p_cpu->data);
+    CPU_FLAGS flags = {-1,0,1,0};
+    uint8_t val = (p_cpu->regs.a & p_cpu->data);
 
-    if(p_cpu->regs.a == 0x00) {
+    if(val == 0x00) {
         flags.z = 1;
     }
-
-    flags.h = 1;
+    cpuWriteReg(p_cpu->instruction->r1, val);
     cpuSetFlags(flags);
 }
 
 void asmOr(void) {
     CPU_FLAGS flags = {0,0,0,0};
-    p_cpu->regs.a = (p_cpu->regs.a | p_cpu->data);
+    uint8_t val = (p_cpu->regs.a | p_cpu->data);
 
-    if(p_cpu->regs.a == 0x00) {
+    if(val == 0x00) {
         flags.z = 1;
     }
-
+    cpuWriteReg(p_cpu->instruction->r1, val);
     cpuSetFlags(flags);
 }
 
@@ -453,10 +452,16 @@ void asmRet(void) {
     if(p_cpu->instruction->condition != C_NONE) {
         gbTick(1);
     }
+    // This is prob what's wrong.
+    //uint16_t pc = stackPop16();
+    if(asmCheckCondition()) {
+        uint16_t lo = stackPop8();
+        uint16_t hi = stackPop8();
 
-    uint16_t pc = stackPop16();
-    p_cpu->regs.pc = pc;
-    gbTick(3);
+        uint16_t val = (hi << 8) | lo;
+        p_cpu->regs.pc = val;
+        gbTick(3);
+    }
 }
 
 CPU_REGISTER_ENUM cb_reg_order_lookup[] = {
