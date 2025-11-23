@@ -53,6 +53,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         return cartWriteAddr(addr,val);
     } // working ram
     else if(addr < 0xE000) {
+        //printf("WRITING (0x%04X): 0x%04X\n", addr, val);
         return memWriteWRam(addr, val);
     } // reserved 
     else if(addr < 0xFE00) {

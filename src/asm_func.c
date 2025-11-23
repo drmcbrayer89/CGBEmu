@@ -430,10 +430,11 @@ void asmPop(void) {
     uint16_t hi = stackPop8();
     uint16_t val = (hi << 8) | lo;
 
-    cpuWriteReg(p_cpu->instruction->r1, val);
     if(p_cpu->instruction->r1 == R_AF) {
-        cpuWriteReg(p_cpu->instruction->r1, val & 0xFFF0);
+        val = val & 0xFFF0;
     }
+    
+    cpuWriteReg(p_cpu->instruction->r1, val);
 }
 
 void asmPush(void) {
@@ -457,7 +458,7 @@ void asmRet(void) {
     if(asmCheckCondition()) {
         uint16_t lo = stackPop8();
         uint16_t hi = stackPop8();
-
+        //printf("lo: 0x%02X hi: 0x%02X\n", lo, hi);
         uint16_t val = (hi << 8) | lo;
         p_cpu->regs.pc = val;
         gbTick(3);
@@ -697,7 +698,6 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_AND] = asmAnd,
     [I_ADC] = asmAdc,
     [I_SUB] = asmSub,
-    [I_LDH] = asmLdh,
     [I_RLCA] = asmRlca,
     [I_RRCA] = asmRrca,
     [I_RLA] = asmRla,
