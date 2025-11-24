@@ -11,7 +11,7 @@ int32_t main(int32_t argc, char * argv[])
     }
     /* Remove this after done... */
     else {
-        cartOpen("Tetris.gb");
+        cartOpen("gb-test-roms/cpu_instrs/cpu_instrs.gb");
         gbStart();
     }
 

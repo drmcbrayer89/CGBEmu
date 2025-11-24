@@ -741,7 +741,7 @@ bool cpuStep(void) {
         debugUpdate();
         debugShow();
         
-        printf("0x%04X (0x%04X) %-4s %-4s, %-4s FLAGS: 0x%02X\n", cpu.regs.pc, cpu.op_code, 
+        printf("0x%04X (0x%04X) [%-4s %-4s, %-4s] [FLAGS: 0x%02X]\n", cpu.regs.pc, cpu.op_code, 
                                                               instruction_set_s[cpu.instruction->type],
                                                               registers_s[cpu.instruction->r1],
                                                               registers_s[cpu.instruction->r2],
@@ -771,6 +771,14 @@ bool cpuStep(void) {
 
 void cpuInit(void) {
     cpu.regs.pc = 0x0100;
+    cpu.regs.a = 0x01;
+    cpu.regs.f = 0xB0;
+    cpu.regs.b = 0x00;
+    cpu.regs.c = 0x13;
+    cpu.regs.d = 0x00;
+    cpu.regs.e = 0xD8;
+    cpu.regs.h = 0x01;
+    cpu.regs.l = 0x4D;
     cpu.regs.sp = 0xFFFE;
     cpu.ie_reg = 0;
     cpu.int_flags = 0;
