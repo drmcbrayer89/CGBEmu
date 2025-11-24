@@ -4,8 +4,8 @@
 #include "pthread.h"
 #include "unistd.h"
 
-GB gameboy;
-pthread_t t_cpu;
+static GB gameboy;
+static pthread_t t_cpu;
 
 void gbGetGbPtr(GB * p_gb) {
     p_gb = &gameboy;

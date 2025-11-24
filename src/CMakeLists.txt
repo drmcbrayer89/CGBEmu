@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_BUILD_TYPE Debug)
 project(GBEMU)
 
 set(CMAKE_C_COMPILER "/usr/bin/gcc")

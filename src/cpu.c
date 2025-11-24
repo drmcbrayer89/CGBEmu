@@ -368,10 +368,13 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
             return cpu.regs.h;
         case R_L:
             return cpu.regs.l;
-        case R_PC:
-            return cpu.regs.pc;
         case R_SP:
+            //printf("0x%04X\n", cpu.regs.sp);
+            //return cpuSwapEndian(cpu.regs.sp);
             return cpu.regs.sp;
+        case R_PC:
+            //return cpuSwapEndian(cpu.regs.pc);
+            return cpu.regs.pc;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
             return cpuReadReg16(cpu.regs.a, cpu.regs.f);
@@ -443,7 +446,7 @@ void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val) {
     }
 }
 
-static uint16_t cpuSwapEndian(uint16_t val) {
+uint16_t cpuSwapEndian(uint16_t val) {
     return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
 }
 
@@ -453,6 +456,9 @@ static void cpuWriteReg16(uint16_t val, uint8_t * r1, uint8_t * r2) {
 }
 
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
+    if(reg < R_AF) {
+        val = val & 0xFF;
+    }
     switch(reg) {
         /* 8 bit registers */
         case R_A:
@@ -766,7 +772,10 @@ bool cpuStep(void) {
 void cpuInit(void) {
     cpu.regs.pc = 0x0100;
     cpu.regs.sp = 0xFFFE;
-    cpu.regs.a = 0x35;
+    cpu.ie_reg = 0;
+    cpu.int_flags = 0;
+    cpu.int_enable = false;
+    cpu.enabling_ime = false;
     asmSetCpuPtr(&cpu);
 }
 

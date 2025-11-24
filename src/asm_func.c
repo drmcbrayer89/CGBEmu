@@ -461,7 +461,8 @@ void asmRet(void) {
         //printf("lo: 0x%02X hi: 0x%02X\n", lo, hi);
         uint16_t val = (hi << 8) | lo;
         //printf("\t0x%04X\n", val);
-        p_cpu->regs.pc = val;
+        //p_cpu->regs.pc = val;
+        cpuWriteReg(R_PC, val);
         gbTick(3);
     }
 }

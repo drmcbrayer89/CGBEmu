@@ -202,3 +202,4 @@ uint8_t cpuGetIE(void);
 void cpuSetIE(uint8_t val);
 uint8_t cpuGetIntFlags();
 void cpuSetIntFlags(uint8_t val);
+uint16_t cpuSwapEndian(uint16_t val);
