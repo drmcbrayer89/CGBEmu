@@ -57,6 +57,10 @@ void asmCall(void) {
     gotoAddr(p_cpu->data, true);
 }
 
+void asmRst(void) {
+    gotoAddr(p_cpu->instruction->parameter, true);
+}
+
 void asmNone(void) {
     return;
 }
@@ -712,7 +716,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_CB] = asmCb,
     [I_DAA] = asmDaa,
     [I_CCF] = asmCcf,
-    [I_CPL] = asmCpl
+    [I_CPL] = asmCpl,
+    [I_RST] = asmRst
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

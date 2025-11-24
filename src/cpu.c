@@ -262,7 +262,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0XE1] = {I_POP, M_REG, R_HL},
     [0XE2] = {I_LD, M_MEMREG_REG, R_C, R_A},
     [0XE5] = {I_PUSH, M_REG, R_HL},
-    [0XE6] = {I_AND, M_REG_D8, R_SP},
+    [0XE6] = {I_AND, M_REG_D8, R_A},
     [0XE7] = {I_RST, M_NONE, R_NONE, R_NONE, C_NONE, 0x20},
     [0XE8] = {I_ADD, M_REG_D8, R_SP},
     [0XE9] = {I_JP, M_REG, R_HL},
@@ -740,13 +740,13 @@ bool cpuStep(void) {
 
         debugUpdate();
         debugShow();
-        /*
+        
         printf("0x%04X (0x%04X) %-4s %-4s, %-4s FLAGS: 0x%02X\n", cpu.regs.pc, cpu.op_code, 
                                                               instruction_set_s[cpu.instruction->type],
                                                               registers_s[cpu.instruction->r1],
                                                               registers_s[cpu.instruction->r2],
                                                               cpu.regs.f);
-        */
+        
         cpuExec();
     }
     else {
