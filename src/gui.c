@@ -8,8 +8,6 @@ SDL_Renderer * p_renderer;
 SDL_Surface * p_surface;
 SDL_Window * p_debug_window;
 
-GB * p_gb;
-
 static void guiInitDebugWindow(void) {
     if(SDL_Init(SDL_INIT_VIDEO)) {
         printf("SDL Debug Window Init Successful\n");
@@ -42,12 +40,11 @@ void guiRun() {
         SDL_RenderPresent(p_renderer);
 
         if(e.type == SDL_EVENT_KEY_DOWN && e.key.key == SDLK_ESCAPE){
-            p_gb->stop_emu = true;
+            gbStopEmu();
         }
     }
 }
 
 bool guiInit(void) {
-    gbGetGbPtr(p_gb);
     return guiInitWindow();
 }

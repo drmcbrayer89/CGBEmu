@@ -28,6 +28,7 @@ void * thread_cpu(void *) {
     while(gameboy.running){
         gameboy.running = cpuStep();
         gameboy.ticks++;
+        usleep(100);
     }
 }
 
@@ -44,7 +45,7 @@ void gbStart(void) {
     }
 
     while(!gameboy.stop_emu) {
-        gameboy.stop_emu = guiRun();
+        guiRun();
     }
 
     printf("CGBEmu Stopped!\n");
@@ -55,4 +56,8 @@ void gbInit(void) {
     gameboy.running = true;
     gameboy.halted = false;
     gameboy.stop_emu = false;
+}
+
+void gbStopEmu(void) {
+    gameboy.stop_emu = true;
 }

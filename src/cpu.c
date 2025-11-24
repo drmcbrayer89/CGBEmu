@@ -324,7 +324,7 @@ static char * instruction_set_s[I_SET_SIZE] = {
 };
 
 static char * registers_s[R_PC + 1] = {
-    "R_NONE",
+    "NONE",
     "A",
     "F",
     "B",
@@ -734,8 +734,13 @@ bool cpuStep(void) {
 
         debugUpdate();
         debugShow();
-
-        //printf("0x%04X (0x%04X)\n", cpu.regs.pc, cpu.op_code);
+        /*
+        printf("0x%04X (0x%04X) %-4s %-4s, %-4s FLAGS: 0x%02X\n", cpu.regs.pc, cpu.op_code, 
+                                                              instruction_set_s[cpu.instruction->type],
+                                                              registers_s[cpu.instruction->r1],
+                                                              registers_s[cpu.instruction->r2],
+                                                              cpu.regs.f);
+        */
         cpuExec();
     }
     else {
@@ -803,7 +808,8 @@ void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c) {
     *z = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
 }
 
-void cpuSetFlags(CPU_FLAGS flags){
+void cpuSetFlags(CPU_FLAGS flags) {
+    //printf("FLIP: %i %i %i %i\n", flags.z, flags.n, flags.h, flags.c);
     if(flags.z != -1) {
         BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
     }

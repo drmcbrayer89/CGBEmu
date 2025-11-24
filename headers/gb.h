@@ -12,3 +12,4 @@ void gbTick(uint8_t cycles);
 void gbInit(void);
 void gbStart(void);
 void gbGetGbPtr(GB * gb);
+void gbStopEmu(void);
