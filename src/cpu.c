@@ -750,7 +750,7 @@ bool cpuStep(void) {
     }
     else {
         gbTick(1);
-        if(cpu.int_flags > 0) {
+        if(cpu.int_flags) {
             cpu.halted = false;
         }
     }

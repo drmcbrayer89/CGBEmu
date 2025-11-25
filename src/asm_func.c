@@ -72,23 +72,20 @@ void asmNop(void) {
 void asmLd(void) { 
     CPU_FLAGS flags = {-1,-1,-1,-1};
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
-    if(p_cpu->to_memory == false) {
-        /* Default (easiest option) (value to register)*/
-        cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
-        return;
-    }
-    else if(p_cpu->to_memory == true) {
-        /* Write to memory address */
-        if(is_16bit == true) {
-            busWriteAddr16(p_cpu->memory_destination, p_cpu->data);
+
+    if(p_cpu->to_memory) {
+        if(is_16bit) {
             gbTick(1);
+            busWriteAddr16(p_cpu->memory_destination, p_cpu->data);
         }
-        else{
+        else {
             busWriteAddr(p_cpu->memory_destination, p_cpu->data);
         }
+
         gbTick(1);
         return;
     }
+
     /* Special case to load stack pointer & e8 offset into HL */
     if(p_cpu->instruction->addr_mode == M_HL_SPR) {
         uint8_t h_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xF) + (p_cpu->data & 0xF) >= 0x10;
@@ -106,8 +103,8 @@ void asmLd(void) {
         printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
         return;
     }
-    /* Shouldn't get here! */
-    exit(-1);
+
+    cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
 }
 
 void asmInc(void) {
@@ -118,13 +115,13 @@ void asmInc(void) {
     /* INC r8 */
     if(is_16bit == false) {
         //val = p_cpu->data + 1;
-        val = cpuReadReg(p_cpu->instruction->r1) + 1;
-        cpuWriteReg(p_cpu->instruction->r1, val & 0xF);
+        val = cpuReadReg(p_cpu->instruction->r1);
+        cpuWriteReg(p_cpu->instruction->r1, (val + 1) & 0xFF);
 
-        if(val == 0x0) {
+        if(((val + 1) & 0xFF) == 0x0) {
             flags.z = 1;
         }
-        if(val >= 0x10) {
+        if((val & 0x0F) == 0x0F) {
             flags.h = 1;
         }
         cpuSetFlags(flags);
@@ -134,17 +131,17 @@ void asmInc(void) {
         gbTick(1);
         /* INC [HL] */
         if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
-            val = busReadAddr(cpuReadReg(R_HL)) + 1;
+            val = busReadAddr(cpuReadReg(R_HL));
             val = val & 0xFF;
-            busWriteAddr(cpuReadReg(R_HL), val);
+            busWriteAddr(cpuReadReg(R_HL), val + 1);
 
             /* 3 total cycles for INC [HL] */
             gbTick(1);
 
-            if(val == 0x00) {
+            if((val + 1) == 0x00) {
                 flags.z = 1;
             }
-            if(val >= 0x10) {
+            if((val & 0x0F) == 0x0F) {
                 flags.h = 1;
             }
             cpuSetFlags(flags);
@@ -152,8 +149,6 @@ void asmInc(void) {
         /* INC r16 */
         else {
             val = p_cpu->data + 1;
-            val = val & 0xFF;
-
             cpuWriteReg(p_cpu->instruction->r1, val);
         }
     }
@@ -166,13 +161,13 @@ void asmDec(void) {
 
     /* DEC r8 */
     if(is_16bit == false) {
-        val = p_cpu->data - 1;
-        cpuWriteReg(p_cpu->instruction->r1, val & 0xF);
+        val = cpuReadReg(p_cpu->instruction->r1) & 0xFF;
+        cpuWriteReg(p_cpu->instruction->r1, (val - 1) & 0xFF);
 
-        if(val == 0x0) {
+        if((val - 1) == 0x0) {
             flags.z = 1;
         }
-        if(val >= 0x10) {
+        if((val & 0x0F) == 0x00) {
             flags.h = 1;
         }
         cpuSetFlags(flags);
@@ -182,27 +177,24 @@ void asmDec(void) {
         gbTick(1);
         /* DEC [HL] */
         if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
-            val = busReadAddr(cpuReadReg(R_HL)) - 1;
-            val = val & 0xFF;
-            busWriteAddr(cpuReadReg(R_HL), val);
+            val = busReadAddr(cpuReadReg(R_HL)) & 0xFF;
+            busWriteAddr(cpuReadReg(R_HL), val - 1);
 
             /* 3 total cycles for INC [HL] */
             gbTick(1);
 
-            if(val == 0x00) {
+            if((val - 1) == 0x00) {
                 flags.z = 1;
             }
-            if((val & 0x0F) == 0x0F) {
+            if((val & 0x0F) == 0x00) {
                 flags.h = 1;
             }
             cpuSetFlags(flags);
         }
         /* DEC r16 */
         else {
-            val = p_cpu->data - 1;
-            val = val & 0xFF;
-
-            cpuWriteReg(p_cpu->instruction->r1, val);
+            val = cpuReadReg(p_cpu->instruction->r1);
+            cpuWriteReg(p_cpu->instruction->r1, val - 1);
         }
     }
 }
@@ -246,40 +238,46 @@ void asmRlca(void) {
 void asmAdd(void) {
     CPU_FLAGS flags = {-1,0,-1,-1};
     uint16_t val = 0;
-    bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true: false;
+    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true: false;
 
     if(p_cpu->instruction->r1 != R_SP){
-        val = cpuReadReg(p_cpu->instruction->r1) + p_cpu->data;
+        val = cpuReadReg(p_cpu->instruction->r1);
 
         if(is_16bit == false) {
-            if(val == 0x00) {
+            if(((val + p_cpu->data) & 0xFF) == 0x00) {
                 flags.z = 1;
             }
             /* These are checking if bits 3 or 7 are exceeded by the sum */
-            flags.h = ((val & 0xF)  >= 0x10)  ? true : false;
-            flags.c = ((val & 0xFF) >= 0x100) ? true : false;
+            flags.h = ((val & 0xF) + (p_cpu->data & 0xF)) > 0xF ? true : false;
+            flags.c = ((val + p_cpu->data) > 0xFF) ? true : false;
+            cpuWriteReg(p_cpu->instruction->r1, (val + p_cpu->data) & 0xFF);
         }
         /* 16 bit register ...*/
         else {
             /* Checking if bits 11 or 15 are exceeded by the sum */
-            uint32_t temp_sum = 0; 
-            flags.h = ((val & 0xFFF) >= 0x1000) ? true: false;
-            temp_sum = (uint32_t)(cpuReadReg(p_cpu->instruction->r1)) + (uint32_t)p_cpu->data;
-            flags.c = (temp_sum >= 0x10000) ? true: false;
+            uint32_t tmp = (uint32_t)val + (uint32_t)p_cpu->data;
+            flags.h = ((val & 0x0FFF) + (p_cpu->data & 0x0FFF)) > 0x0FFF ? 1 : 0;
+            flags.c = (tmp > 0xFFFF) ? 1 : 0;
+
+            cpuWriteReg(p_cpu->instruction->r1, tmp & 0xFFFF);
             /* Needs more ticks */
             gbTick(1);
         }
     }
     else {
         /* ADD SP, e8 is a special case with signed val (e8) */
-        val = cpuReadReg(p_cpu->instruction->r1) + (int8_t)p_cpu->data;
+        uint16_t sp = cpuReadReg(p_cpu->instruction->r1);
+        int8_t signed_data = p_cpu->data;
+        uint16_t sp_new = sp + signed_data;
         /* These are checking if bits 3 or 7 are exceeded by the sum */
         flags.z = 0;
-        flags.h = ((val & 0xF)  >= 0x10)  ? true : false;
-        flags.c = ((val & 0xFF) >= 0x100) ? true : false;
+        flags.h = ((sp & 0x0F) + (signed_data & 0x0F)) > 0x0F ? 1 : 0;
+        flags.c = ((sp & 0xFF) + (signed_data & 0xFF)) > 0xFF ? 1 : 0;
+
+        cpuWriteReg(p_cpu->instruction->r1, sp_new);
     }
 
-    cpuWriteReg(p_cpu->instruction->r1, val & 0xFFFF);
+    //cpuWriteReg(p_cpu->instruction->r1, val & 0xFFFF);
     cpuSetFlags(flags);
 }
 
