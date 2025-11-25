@@ -16,7 +16,7 @@ void stackPush16(uint16_t val) {
 }
 uint8_t stackPop8(void) {
     uint16_t sp = cpuReadReg(R_SP);
-    uint8_t val = busReadAddr(sp + 1);
+    uint8_t val = busReadAddr(sp);
     cpuWriteReg(R_SP, (sp + 1));
     return val;
 }

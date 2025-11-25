@@ -1,6 +1,8 @@
 #include "io.h"
 #include "serial.h"
 #include "bus.h"
+#include "cpu.h"
+#include "timer.h"
 
 void ioWrite(uint16_t addr, uint8_t val) {
     //printf("0x%04X 0x%02X\n", addr, val);
@@ -13,7 +15,13 @@ void ioWrite(uint16_t addr, uint8_t val) {
             //printf("WRITE: 0xFF02\n");
             serialWrite(1, val);
             return;
+        case 0xFF04:
+        case 0xFF05:
+        case 0XFF06:
+        case 0xFF07:
+            timerWrite(addr, val);
         case 0xFF0F:
+            cpuSetIntFlags(val);
             return;
         default:
             //printf("incorrect addr\n");
@@ -29,8 +37,13 @@ uint8_t ioRead(uint16_t addr) {
         case 0xFF02:
             //printf("READ 0xFF02\n");
             return serialRead(1);
+        case 0xFF04:
+        case 0xFF05:
+        case 0XFF06:
+        case 0xFF07:
+            return timerRead(addr);
         case 0xFF0F:
-            return 1;
+            return cpuGetIntFlags();
         default:
             //printf("Incorrect addr\n");
             return 0;

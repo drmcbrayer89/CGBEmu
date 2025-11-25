@@ -61,7 +61,7 @@ typedef enum {
     I_AND,
     I_CB,
     I_RETI,
-    I_SET_SIZE,
+    I_RRA,
     /* CB PREFIX */
     I_RLC,
     I_RRC,
@@ -73,7 +73,8 @@ typedef enum {
     I_SCF,
     I_BIT,
     I_RES,
-    I_SET
+    I_SET,
+    I_SET_SIZE
 } CPU_INSTRUCTION_ENUM;
 
 typedef enum {

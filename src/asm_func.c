@@ -92,6 +92,8 @@ void asmLd(void) {
         uint8_t c_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xFF) + (p_cpu->data &0xFF) >= 0x100;
         
         // z n h c
+        flags.z = 0;
+        flags.n = 0;
         flags.h = h_flag;
         flags.c = c_flag;
         cpuSetFlags(flags);
@@ -100,7 +102,8 @@ void asmLd(void) {
         uint16_t r2_val = cpuReadReg(p_cpu->instruction->r2);
         // write stack ptr + e8 (signed int8) to r1
         cpuWriteReg(p_cpu->instruction->r1, r2_val + (int8_t)p_cpu->data);
-        printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
+        gbTick(2);
+        //printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
         return;
     }
 
@@ -286,11 +289,11 @@ void asmSub(void) {
 
     uint8_t result = p_cpu->regs.a - p_cpu->data;
 
-    flags.c = (result == 0) ? 1 : 0;
-    flags.h = ((result & 0x0F) == 0x0F) ? 1 : 0;
+    flags.z = (result == 0) ? 1 : 0;
+    flags.h = ((p_cpu->regs.a & 0x0F) < (p_cpu->data & 0x0F)) ? 1 : 0;
     flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
 
-    cpuWriteReg(p_cpu->instruction->r1, result);
+    cpuWriteReg(R_A, result);
     cpuSetFlags(flags);
 }
 
@@ -329,7 +332,7 @@ void asmHalt(void) {
 }
 
 void asmStop(void) {
-    
+    exit(-1);
 }
 
 void asmLdh(void) {
@@ -396,16 +399,15 @@ void asmXor(void) {
 void asmAdc(void) {
     CPU_FLAGS flags = {-1, 0, -1, cpuGetFlag(CARRY_FLAG)};
 
-    uint16_t a = p_cpu->regs.a;
+    uint16_t a = cpuReadReg(R_A);
     uint16_t r8 = p_cpu->data;
     uint16_t val = a + r8 + flags.c;
 
-    p_cpu->regs.a = val & 0xFF;
-
-    flags.z = (val == 0x00) ? 1 : 0;
-    flags.h = ((val & 0x0F) > 0x0F) ? 1 : 0;
+    flags.z = ((val & 0xFF) == 0x00) ? 1 : 0;
+    flags.h = ((a & 0x0F) + (r8 & 0x0F) + flags.c) > 0x0F ? 1 : 0;
     flags.c = (val > 0xFF) ? 1 : 0;
 
+    cpuWriteReg(R_A, val & 0xFF);
     cpuSetFlags(flags);
 }
 
@@ -683,6 +685,17 @@ void asmReti(void) {
     gbTick(3);
 }
 
+void asmRra(void) {
+    CPU_FLAGS flags = {0,0,0,-1};
+    uint8_t a = cpuReadReg(R_A);
+    uint8_t new_c = a & 0x01;
+    uint8_t c = cpuGetFlag(CARRY_FLAG);
+    a = (a >> 1) | (c << 7);
+    cpuWriteReg(R_A, a);
+    flags.c = new_c;
+    cpuSetFlags(flags);
+}
+
 static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_NONE] = asmNone,
     [I_NOP] = asmNop,
@@ -705,6 +718,7 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_SUB] = asmSub,
     [I_RLCA] = asmRlca,
     [I_RRCA] = asmRrca,
+    [I_RRA] = asmRra,
     [I_RLA] = asmRla,
     [I_HALT] = asmHalt,
     [I_SBC] = asmSbc,

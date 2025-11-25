@@ -52,7 +52,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x1C] = {I_INC,  M_REG,          R_E         },
     [0x1D] = {I_DEC,  M_REG,          R_E         },
     [0x1E] = {I_LD,   M_REG_D8,       R_E         },
-    [0x1F] = {I_SRA                               },
+    [0x1F] = {I_RRA                               },
     /* Third Row */
     [0x20] = {I_JR, M_D8, R_NONE, R_NONE, C_NZ},
     [0x21] = {I_LD, M_REG_D16, R_HL},
@@ -320,7 +320,19 @@ static char * instruction_set_s[I_SET_SIZE] = {
     "STOP",
     "AND",
     "CB",
-    "RETI"
+    "RETI",
+    "RRA",
+    "RLC",
+    "RRC",
+    "RR",
+    "SLA",
+    "SRA",
+    "SWAP",
+    "SRL",
+    "SCF",
+    "BIT",
+    "RES",
+    "SET"
 };
 
 static char * registers_s[R_PC + 1] = {
