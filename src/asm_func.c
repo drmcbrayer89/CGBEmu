@@ -117,7 +117,8 @@ void asmInc(void) {
 
     /* INC r8 */
     if(is_16bit == false) {
-        val = p_cpu->data + 1;
+        //val = p_cpu->data + 1;
+        val = cpuReadReg(p_cpu->instruction->r1) + 1;
         cpuWriteReg(p_cpu->instruction->r1, val & 0xF);
 
         if(val == 0x0) {

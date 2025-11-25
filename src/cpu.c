@@ -345,6 +345,10 @@ CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instruction_set[op_code];
 }
 
+uint16_t cpuSwapEndian(uint16_t val) {
+    return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
+}
+
 uint16_t cpuReadReg16(uint8_t r1, uint8_t r2) {
     uint16_t reg16 = r1 | (r2 << 8);
     return reg16;
@@ -369,21 +373,18 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
         case R_L:
             return cpu.regs.l;
         case R_SP:
-            //printf("0x%04X\n", cpu.regs.sp);
-            //return cpuSwapEndian(cpu.regs.sp);
             return cpu.regs.sp;
         case R_PC:
-            //return cpuSwapEndian(cpu.regs.pc);
             return cpu.regs.pc;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
-            return cpuReadReg16(cpu.regs.a, cpu.regs.f);
+            return cpuSwapEndian(*((uint16_t *)&cpu.regs.a));
         case R_BC:
-            return cpuReadReg16(cpu.regs.b, cpu.regs.c);
+            return cpuSwapEndian(*((uint16_t *)&cpu.regs.b));
         case R_DE:
-            return cpuReadReg16(cpu.regs.d, cpu.regs.e);
+            return cpuSwapEndian(*((uint16_t *)&cpu.regs.d));
         case R_HL:
-            return cpuReadReg16(cpu.regs.h, cpu.regs.l);
+            return cpuSwapEndian(*((uint16_t *)&cpu.regs.h));
 
         default:
             bool r1_undef = false;
@@ -446,9 +447,7 @@ void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val) {
     }
 }
 
-uint16_t cpuSwapEndian(uint16_t val) {
-    return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
-}
+
 
 static void cpuWriteReg16(uint16_t val, uint8_t * r1, uint8_t * r2) {
     *r1 = ((val & 0x00FF) << 8) >> 8;

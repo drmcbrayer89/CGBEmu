@@ -12,6 +12,7 @@ uint8_t busReadAddr(uint16_t addr) {
     } 
     // char/map
     else if(addr < 0xA000) {
+        exit(-1);
     }
     else if(addr < 0xC0000) {
         return cartReadAddr(addr);
@@ -36,9 +37,8 @@ uint8_t busReadAddr(uint16_t addr) {
         //TODO
         return cpuGetIE();
     }
-    else {
-        return memReadHRam(addr);
-    }
+
+    return memReadHRam(addr);
 }
 
 void busWriteAddr(uint16_t addr, uint8_t val) {
