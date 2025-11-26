@@ -1,6 +1,7 @@
 #include "gb.h"
 #include "cpu.h"
 #include "gui.h"
+#include "timer.h"
 #include "pthread.h"
 #include "unistd.h"
 
@@ -24,6 +25,7 @@ void gbTick(uint8_t cycles) {
 }
 
 void * thread_cpu(void *) {
+    timerInit();
     cpuInit();
     while(gameboy.running){
         gameboy.running = cpuStep();

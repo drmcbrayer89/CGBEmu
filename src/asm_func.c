@@ -113,6 +113,7 @@ void asmLd(void) {
 void asmInc(void) {
     CPU_FLAGS flags = {-1, 0, -1, -1};
     uint16_t val = 0;
+    uint16_t val_new = 0;
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
 
     /* INC r8 */
@@ -136,6 +137,7 @@ void asmInc(void) {
         if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
             val = busReadAddr(cpuReadReg(R_HL));
             val = val & 0xFF;
+            val_new = (val + 1) & 0xFF;
             busWriteAddr(cpuReadReg(R_HL), val + 1);
 
             /* 3 total cycles for INC [HL] */
