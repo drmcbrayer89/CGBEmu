@@ -19,6 +19,7 @@ void gbTick(uint8_t cycles) {
     for(i; i < cycles; i++){
         for(j; j < CYCLES_PER_BYTE; j++) {
             gameboy.ticks++;
+            timerTick();
             // sync with PPU later :)
         }
     }

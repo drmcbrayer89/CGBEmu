@@ -3,6 +3,9 @@
 
 static TIMER timer = {0};
 
+void timerSetDiv(uint16_t div) {
+    timer.div = div;
+}
 void timerInit(void) {
     // This is apparently just common practice.
     timer.div = 0xAC00;

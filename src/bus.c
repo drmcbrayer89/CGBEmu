@@ -6,6 +6,8 @@
 
 /* Pulled the memory map from the pan docs website */
 uint8_t busReadAddr(uint16_t addr) {
+    uint8_t val = 0;
+    //printf("READ ADDR: 0x%04X\n", addr);
     /* Cartridge */
     if(addr < 0x8000) {
         return cartReadAddr(addr);
@@ -42,19 +44,23 @@ uint8_t busReadAddr(uint16_t addr) {
 }
 
 void busWriteAddr(uint16_t addr, uint8_t val) {
+    //printf("WRITE ADDR: 0x%04X 0x%02X\n", addr, val);
         /* Cartridge */
     if(addr < 0x8000) {
-        return cartWriteAddr(addr, val);
+        cartWriteAddr(addr, val);
+        return;
     } 
     // char/map
     else if(addr < 0xA000) {
     } // cartridge ram
     else if(addr < 0xC000) {
-        return cartWriteAddr(addr,val);
+        cartWriteAddr(addr,val);
+        return;
     } // working ram
     else if(addr < 0xE000) {
         //printf("WRITING (0x%04X): 0x%04X\n", addr, val);
-        return memWriteWRam(addr, val);
+        memWriteWRam(addr, val);
+        return;
     } // reserved 
     else if(addr < 0xFE00) {
     } // do not enter
@@ -69,7 +75,8 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
     } // enable interrupt register
     else if(addr == 0xFFFF) {
         //TODO
-        return cpuSetIE(val);
+        cpuSetIE(val);
+        return;
     } // anything else goes to hram
     else {
         memWriteHRam(addr, val);

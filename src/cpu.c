@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "stack.h"
 #include "asm_func.h"
+#include "timer.h"
 #include "debug_blarg.h"
 
 #define CPU_NUM_INT 5
@@ -43,7 +44,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x13] = {I_INC,  M_REG,          R_DE        },
     [0x14] = {I_INC,  M_REG,          R_D         },
     [0x15] = {I_DEC,  M_REG,          R_D         },
-    [0x16] = {I_LD,   M_REG,          R_D         },
+    [0x16] = {I_LD,   M_REG_D8,       R_D         },
     [0x17] = {I_RLA                               },
     [0x18] = {I_JR,   M_D8                       },
     [0x19] = {I_ADD,  M_REG_REG,      R_HL,   R_DE},
@@ -62,7 +63,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x25] = {I_DEC, M_REG, R_H},
     [0x26] = {I_LD, M_REG_D8, R_H},
     [0x27] = {I_DAA},
-    [0x28] = {I_JR, M_D8, R_NONE, R_NONE, C_NZ},
+    [0x28] = {I_JR, M_D8, R_NONE, R_NONE, C_Z},
     [0x29] = {I_ADD, M_REG_REG, R_HL, R_HL},
     [0x2A] = {I_LD, M_REG_HLI, R_A, R_HL},
     [0x2B] = {I_DEC, M_REG, R_HL},
@@ -115,7 +116,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x57] = {I_LD, M_REG_REG, R_D, R_A},
     [0x58] = {I_LD, M_REG_REG, R_E, R_B},
     [0x59] = {I_LD, M_REG_REG, R_E, R_C},
-    [0x5A] = {I_LD, M_REG_REG, R_E, R_C},
+    [0x5A] = {I_LD, M_REG_REG, R_E, R_D},
     [0x5B] = {I_LD, M_REG_REG, R_E, R_E},
     [0x5C] = {I_LD, M_REG_REG, R_E, R_H},
     [0x5D] = {I_LD, M_REG_REG, R_E, R_L},
@@ -151,7 +152,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x79] = {I_LD, M_REG_REG, R_A, R_C},
     [0x7A] = {I_LD, M_REG_REG, R_A, R_D},
     [0x7B] = {I_LD, M_REG_REG, R_A, R_E},
-    [0x7C] = {I_LD, M_REG_REG, R_A, R_L},
+    [0x7C] = {I_LD, M_REG_REG, R_A, R_H},
     [0x7D] = {I_LD, M_REG_REG, R_A, R_L},
     [0x7E] = {I_LD, M_REG_MEMREG, R_A, R_HL},
     [0x7F] = {I_LD, M_REG_REG, R_A, R_A},
@@ -162,7 +163,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x83] = {I_ADD, M_REG_REG, R_A, R_E},
     [0x84] = {I_ADD, M_REG_REG, R_A, R_H},
     [0x85] = {I_ADD, M_REG_REG, R_A, R_L},
-    [0x86] = {I_ADD, M_REG_MEMREG, R_A, R_H},
+    [0x86] = {I_ADD, M_REG_MEMREG, R_A, R_HL},
     [0x87] = {I_ADD, M_REG_REG, R_A, R_A},
     [0x88] = {I_ADC, M_REG_REG, R_A, R_B},
     [0x89] = {I_ADC, M_REG_REG, R_A, R_C},
@@ -170,7 +171,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x8B] = {I_ADC, M_REG_REG, R_A, R_E},
     [0x8C] = {I_ADC, M_REG_REG, R_A, R_H},
     [0x8D] = {I_ADC, M_REG_REG, R_A, R_L},
-    [0x8E] = {I_ADC, M_REG_REG, R_A, R_HL},
+    [0x8E] = {I_ADC, M_REG_MEMREG, R_A, R_HL},
     [0x8F] = {I_ADC, M_REG_REG, R_A, R_A},
     /* TENTH ROW */
     [0x90] = {I_SUB, M_REG_REG, R_A, R_B},
@@ -459,8 +460,6 @@ void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val) {
     }
 }
 
-
-
 static void cpuWriteReg16(uint16_t val, uint8_t * r1, uint8_t * r2) {
     *r1 = ((val & 0x00FF) << 8) >> 8;
     *r2 = (val & 0xFF00) >> 8;
@@ -473,41 +472,43 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
     switch(reg) {
         /* 8 bit registers */
         case R_A:
-            cpu.regs.a = val;
+            cpu.regs.a = val & 0xFF;
             return;
         case R_F:
-            cpu.regs.f = val;
+            cpu.regs.f = val & 0xFF;
             return;
         case R_B:
-            cpu.regs.b = val;
+            cpu.regs.b = val & 0xFF;
             return;
         case R_C:
-            cpu.regs.c = val;
+            cpu.regs.c = val & 0xFF;
             return;
         case R_D:
-            cpu.regs.d = val;
+            cpu.regs.d = val & 0xFF;
             return;
         case R_E:
-            cpu.regs.e = val;
+            cpu.regs.e = val & 0xFF;
             return;
         case R_H:
-            cpu.regs.h = val;
+            cpu.regs.h = val & 0xFF;
             return;
         case R_L:
-            cpu.regs.l = val;
+            cpu.regs.l = val & 0xFF;
             return;
         /* Begin 16 bit registers */
         case R_AF:
-            cpuWriteReg16(val, &cpu.regs.a, &cpu.regs.f);
+            *((uint16_t *)&cpu.regs.a) = BYTE_SWAP(val);
             return;
         case R_BC:
-            cpuWriteReg16(val, &cpu.regs.b, &cpu.regs.c);
+            *((uint16_t *)&cpu.regs.b) = BYTE_SWAP(val);
+            
             return;
         case R_DE:
-            cpuWriteReg16(val, &cpu.regs.d, &cpu.regs.e);
+            *((uint16_t *)&cpu.regs.d) = BYTE_SWAP(val);
+            
             return;
         case R_HL:
-            cpuWriteReg16(val, &cpu.regs.h, &cpu.regs.l);
+            *((uint16_t *)&cpu.regs.h) = BYTE_SWAP(val);
             return;
         case R_SP:
             cpu.regs.sp = val;
@@ -523,7 +524,6 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
 }
 
 static void cpuGetInstruction(void) {
-    uint16_t pc = cpuReadReg(R_PC);
     cpu.op_code = busReadAddr(cpu.regs.pc++);
     cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
 
@@ -708,9 +708,11 @@ static void cpuGetData(void) {
 }
 
 void cpuIntProc(uint16_t addr) {
+    gbTick(5);
     /* push current addr to stack
        set pc to interrupt addr      */
     stackPush16(cpu.regs.pc);
+    cpu.int_enable = false;
     cpu.regs.pc = addr;   
 }
 
@@ -723,7 +725,7 @@ void cpuIntHandler() {
             cpuIntProc(cpu_interrupts[i].addr);
             cpu.int_flags &= ~cpu_interrupts[i].type;
             cpu.halted = false;
-            cpu.int_enable = false;
+
 
             return;
         }
@@ -795,6 +797,7 @@ void cpuInit(void) {
     cpu.int_flags = 0;
     cpu.int_enable = false;
     cpu.enabling_ime = false;
+    timerSetDiv(0xABCC);
     asmSetCpuPtr(&cpu);
 }
 

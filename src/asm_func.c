@@ -58,7 +58,11 @@ void asmCall(void) {
 }
 
 void asmRst(void) {
-    gotoAddr(p_cpu->instruction->parameter, true);
+    stackPush16(p_cpu->regs.pc + 1);
+
+    gbTick(2);
+
+    p_cpu->regs.pc = p_cpu->instruction->parameter;
 }
 
 void asmNone(void) {
@@ -111,51 +115,45 @@ void asmLd(void) {
 }
 
 void asmInc(void) {
-    CPU_FLAGS flags = {-1, 0, -1, -1};
-    uint16_t val = 0;
-    uint16_t val_new = 0;
-    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
+    uint16_t val;
+    bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? 1 : 0;
 
     /* INC r8 */
-    if(is_16bit == false) {
-        //val = p_cpu->data + 1;
-        val = cpuReadReg(p_cpu->instruction->r1);
-        cpuWriteReg(p_cpu->instruction->r1, (val + 1) & 0xFF);
+    if(is_16bit == false && p_cpu->instruction->addr_mode != M_MEMREG) {
+        CPU_FLAGS flags = { -1, 0, -1, -1};
 
-        if(((val + 1) & 0xFF) == 0x0) {
-            flags.z = 1;
-        }
-        if((val & 0x0F) == 0x0F) {
-            flags.h = 1;
-        }
+        val = cpuReadReg(p_cpu->instruction->r1);
+        uint8_t val8 = val & 0xFF;
+        uint8_t val8_inc = (val8 + 1) & 0xFF;
+
+        cpuWriteReg(p_cpu->instruction->r1, val8_inc);
+
+        flags.z = (val8_inc == 0x00) ? 1 : 0;
+        flags.h = ((val8 & 0x0F) == 0x0F) ? 1 : 0;
+
         cpuSetFlags(flags);
     }
+    /* INC [HL] */
+    else if(p_cpu->instruction->addr_mode == M_MEMREG && p_cpu->instruction->r1 == R_HL) {
+        CPU_FLAGS flags = {-1, 0, -1, -1};
+
+        uint16_t addr = cpuReadReg(R_HL);
+        uint8_t val8 = busReadAddr(addr);
+        uint8_t val8_inc = (val8 + 1) & 0xFF;
+
+        busWriteAddr(addr, val8_inc);
+
+        gbTick(2);
+
+        flags.z = (val8_inc == 0x00) ? 1 : 0;
+        flags.h = ((val8 & 0x0F) == 0x0F) ? 1 : 0;
+        cpuSetFlags(flags);
+    }
+    /* INC r16 */
     else {
-        /* Cycle for extra byte */
+        val = cpuReadReg(p_cpu->instruction->r1);
+        cpuWriteReg(p_cpu->instruction->r1, val + 1);
         gbTick(1);
-        /* INC [HL] */
-        if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
-            val = busReadAddr(cpuReadReg(R_HL));
-            val = val & 0xFF;
-            val_new = (val + 1) & 0xFF;
-            busWriteAddr(cpuReadReg(R_HL), val + 1);
-
-            /* 3 total cycles for INC [HL] */
-            gbTick(1);
-
-            if((val + 1) == 0x00) {
-                flags.z = 1;
-            }
-            if((val & 0x0F) == 0x0F) {
-                flags.h = 1;
-            }
-            cpuSetFlags(flags);
-        }
-        /* INC r16 */
-        else {
-            val = p_cpu->data + 1;
-            cpuWriteReg(p_cpu->instruction->r1, val);
-        }
     }
 }
 
@@ -212,7 +210,7 @@ void asmRla(void) {
     /* Grab MSB & store as new carry flag */
     uint8_t carry_temp = (a_reg >> 7) & 1;
     /* Shift bits to the left, add carry flag as LSB */
-    a_reg = (a_reg << 1) | carry_temp;
+    a_reg = (a_reg << 1) | carry_flag;
 
     flags.c = carry_temp;
     /* Store rotated register back into A */
@@ -321,11 +319,8 @@ void asmCpl(void) {
 }
 
 void asmCcf(void) {
-    /* Complement Carry Flag */
-    CPU_FLAGS flags = {-1, 0, 0, 0};
-
-    flags.c = !cpuGetFlag(CARRY_FLAG);
-
+    uint8_t c = !cpuGetFlag(CARRY_FLAG);
+    CPU_FLAGS flags = {-1, 0, 0, c};
     cpuSetFlags(flags);
 }
 
@@ -334,28 +329,33 @@ void asmHalt(void) {
 }
 
 void asmStop(void) {
-    exit(-1);
+    //return;
+    cpuWriteReg(R_PC, (p_cpu->regs.pc+2));
+    //exit(-1);
 }
 
 void asmLdh(void) {
     /* Copy the byte at address $FF00 + C into register A */
     if(p_cpu->instruction->r1 == R_A) {
-        cpuWriteReg(R_A, busReadAddr(0xFF00 + p_cpu->data));
+        cpuWriteReg(R_A, busReadAddr(0xFF00 | p_cpu->data));
     }
     /* Copy value in register A into the byte pointed by R1 */
     else {
         busWriteAddr(p_cpu->memory_destination, p_cpu->regs.a);
     }
+
+    gbTick(1);
 }
 
 void asmCp(void) {
     CPU_FLAGS flags = {-1, 1, -1, -1};
-
-    int32_t compare = (int32_t)p_cpu->regs.a - (int32_t)p_cpu->data;
+    uint8_t reg = p_cpu->regs.a;
+    uint8_t data = p_cpu->data;
+    int32_t compare = (int32_t)reg - (int32_t)data;
 
     flags.z = (compare == 0) ? 1 : 0;
-    flags.h = ((compare & 0x0F) == 0x0F) ? 1 : 0;
-    flags.c = (p_cpu->data > p_cpu->regs.a) ? 1 : 0;
+    flags.h = ((reg & 0x0F) < (data & 0x0F)) ? 1 : 0;
+    flags.c = (data > reg) ? 1 : 0;
 
     cpuSetFlags(flags);
 }
@@ -375,7 +375,7 @@ void asmAnd(void) {
     if(val == 0x00) {
         flags.z = 1;
     }
-    cpuWriteReg(p_cpu->instruction->r1, val);
+    cpuWriteReg(R_A, val);
     cpuSetFlags(flags);
 }
 
@@ -386,16 +386,17 @@ void asmOr(void) {
     if(val == 0x00) {
         flags.z = 1;
     }
-    cpuWriteReg(p_cpu->instruction->r1, val);
+    cpuWriteReg(R_A, val);
     cpuSetFlags(flags);
 }
 
 void asmXor(void) {
     CPU_FLAGS flags = {0,0,0,0};
     uint8_t val = p_cpu->regs.a ^ (p_cpu->data & 0xFF);
-    flags.z = (p_cpu->regs.a == 0) ? 1 : 0;
+
+    flags.z = (val == 0) ? 1 : 0;
+    cpuWriteReg(R_A, val);
     cpuSetFlags(flags);
-    cpuWriteReg(p_cpu->instruction->r1, val);
 }
 
 void asmAdc(void) {
@@ -416,17 +417,18 @@ void asmAdc(void) {
 void asmSbc(void) {
     CPU_FLAGS flags = {-1, 1, -1, cpuGetFlag(CARRY_FLAG)};
     uint8_t reg_a = cpuReadReg(R_A);
+    uint8_t result = 0;
     if(p_cpu->instruction->r2 == R_HL || p_cpu->instruction->r2 == R_NONE) {
         // SBC A [HL] & SBC A n8 require additional cycles
         gbTick(1);
     }
 
     // Subtract value in r8/[hl]/n8 and the carry flag from A
-    reg_a = reg_a - (flags.c + p_cpu->data);
-    cpuWriteReg(R_A, reg_a);
+    result = reg_a - (flags.c + p_cpu->data);
+    cpuWriteReg(R_A, result);
 
     // Flags...
-    flags.z = (reg_a == 0) ? 1 : 0;
+    flags.z = (result == 0) ? 1 : 0;
     flags.h = ((reg_a & 0xF) < ((p_cpu->data & 0xF) + flags.c)) ? 1 : 0;
     flags.c = ((p_cpu->data + flags.c) > reg_a) ? 1 : 0;
     cpuSetFlags(flags);
@@ -649,33 +651,40 @@ void asmCb(void) {
 }
 
 void asmDaa(void) {
-    CPU_FLAGS flags = {0};
-    // initialize adjustment to zero (both cases)
-    int8_t adj = 0;
-    uint8_t a = cpuReadReg(R_A);
+    CPU_FLAGS flags = {-1, -1, -1, -1};
     cpuGetFlags(&flags.z, &flags.n, &flags.h, &flags.c);
+    uint8_t reg = cpuReadReg(R_A);
+    uint16_t adjustment = 0;
+    uint8_t new_c = flags.c;
 
-    // if subtract flag is set
+    // if flags.n == 1, adjustments are based on h & c 
     if(flags.n) {
-        // add $6 if half carry is set, add $60 if carry is set
-        adj = (flags.h * 0x6) + (flags.c * 0x60);
-        a = a - adj;
+        if(flags.h) {
+            adjustment |= 0x06;
+        }
+        if(flags.c) {
+            adjustment |= 0x60;
+        }
+        reg = reg - adjustment;
     }
-    else if(flags.n == 0) {
-        if(flags.h || ((a & 0xF) > 0x9)) {
-            adj = adj + 0x6;
+    // if flags.n == 0, we are doing addition.
+    else {
+        if(flags.h || ((reg & 0x0F) > 0x09)) {
+            adjustment |= 0x06;
         }
-        if(flags.c || a > 0x99) {
-            adj = adj + 0x60;
+        if(flags.c || (reg > 0x99)) {
+            adjustment |= 0x60;
+            new_c = 1;
         }
-        a = a + adj;
-        flags.c = (a > 0x99) ? 1 : 0;
+        reg = reg + adjustment;
     }
 
-    flags.z = (a == 0) ? 1 : 0;
+    flags.z = (reg == 0) ? 1 : 0;
     flags.h = 0;
+    flags.c = new_c;
+
+    cpuWriteReg(R_A, reg);
     cpuSetFlags(flags);
-    cpuWriteReg(R_A, a);
 }
 
 void asmReti(void) {
@@ -688,7 +697,7 @@ void asmReti(void) {
 }
 
 void asmRra(void) {
-    CPU_FLAGS flags = {0,0,0,-1};
+    CPU_FLAGS flags = {0,0,0,0};
     uint8_t a = cpuReadReg(R_A);
     uint8_t new_c = a & 0x01;
     uint8_t c = cpuGetFlag(CARRY_FLAG);
