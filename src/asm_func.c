@@ -46,11 +46,9 @@ void asmJp(void) {
 }
 
 void asmJr(void) {
-    byte relative_addr = (byte)(p_cpu->data & 0xFF);
+    int8_t relative_addr = (int8_t)(p_cpu->data & 0xFF);
     uint16_t new_addr = relative_addr + p_cpu->regs.pc;
-    //printf("PC: 0x%04X REL: 0x%04X NEW: 0x%04X BEFORE\n", p_cpu->regs.pc, relative_addr, new_addr);
     gotoAddr(new_addr, false);
-    //printf("PC: 0x%04X AFTER\n", p_cpu->regs.pc);
 }
 
 void asmCall(void) {
@@ -59,7 +57,6 @@ void asmCall(void) {
 
 void asmRst(void) {
     stackPush16(p_cpu->regs.pc + 1);
-
     gbTick(2);
 
     p_cpu->regs.pc = p_cpu->instruction->parameter;
@@ -74,7 +71,6 @@ void asmNop(void) {
 }
 
 void asmLd(void) { 
-    CPU_FLAGS flags = {-1,-1,-1,-1};
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
 
     if(p_cpu->to_memory) {
@@ -92,8 +88,10 @@ void asmLd(void) {
 
     /* Special case to load stack pointer & e8 offset into HL */
     if(p_cpu->instruction->addr_mode == M_HL_SPR) {
-        uint8_t h_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xF) + (p_cpu->data & 0xF) >= 0x10;
-        uint8_t c_flag = (cpuReadReg(p_cpu->instruction->r2) & 0xFF) + (p_cpu->data &0xFF) >= 0x100;
+        CPU_FLAGS flags = {-1,-1,-1,-1};
+        uint16_t sp = cpuReadReg(p_cpu->instruction->r2);
+        uint8_t h_flag = ((sp & 0xF) + (p_cpu->data & 0xF)) > 0x0F;
+        uint8_t c_flag = ((sp & 0xFF) + (p_cpu->data &0xFF)) > 0xFF;
         
         // z n h c
         flags.z = 0;
@@ -101,105 +99,113 @@ void asmLd(void) {
         flags.h = h_flag;
         flags.c = c_flag;
         cpuSetFlags(flags);
-        
-        // this is the stack ptr
-        uint16_t r2_val = cpuReadReg(p_cpu->instruction->r2);
+    
         // write stack ptr + e8 (signed int8) to r1
-        cpuWriteReg(p_cpu->instruction->r1, r2_val + (int8_t)p_cpu->data);
-        gbTick(2);
+        cpuWriteReg(p_cpu->instruction->r1, sp + (uint8_t)p_cpu->data);
         //printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
         return;
     }
 
     cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
+    printf("\t\t%i 0x%04X %i 0x%04X\n", p_cpu->instruction->r1, cpuReadReg(p_cpu->instruction->r1), p_cpu->instruction->r2, p_cpu->data);
 }
 
 void asmInc(void) {
-    uint16_t val;
+    //uint16_t val;
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? 1 : 0;
-
+    
     /* INC r8 */
-    if(is_16bit == false && p_cpu->instruction->addr_mode != M_MEMREG) {
-        CPU_FLAGS flags = { -1, 0, -1, -1};
-
-        val = cpuReadReg(p_cpu->instruction->r1);
-        uint8_t val8 = val & 0xFF;
-        uint8_t val8_inc = (val8 + 1) & 0xFF;
-
+    if(!is_16bit) {
+        uint8_t val8 = cpuReadReg(p_cpu->instruction->r1);
+        uint8_t val8_inc = val8 + 1;
         cpuWriteReg(p_cpu->instruction->r1, val8_inc);
 
-        flags.z = (val8_inc == 0x00) ? 1 : 0;
-        flags.h = ((val8 & 0x0F) == 0x0F) ? 1 : 0;
-
+        CPU_FLAGS flags = {-1,-1,-1,-1};
+        if(val8_inc == 0x00) {
+            flags.z = 1;
+        }
+        //flags.z = (val8_inc == 0x0) ? 1 : 0;
+        //flags.z = (val8_inc == 0x00);
+        flags.n = 0;
+        flags.h = ((val8_inc & 0x0F) == 0) ? 1 : 0;
+        flags.c = -1;
         cpuSetFlags(flags);
+        
+        return;
     }
     /* INC [HL] */
-    else if(p_cpu->instruction->addr_mode == M_MEMREG && p_cpu->instruction->r1 == R_HL) {
-        CPU_FLAGS flags = {-1, 0, -1, -1};
-
-        uint16_t addr = cpuReadReg(R_HL);
-        uint8_t val8 = busReadAddr(addr);
-        uint8_t val8_inc = (val8 + 1) & 0xFF;
-
-        busWriteAddr(addr, val8_inc);
-
-        gbTick(2);
-
-        flags.z = (val8_inc == 0x00) ? 1 : 0;
-        flags.h = ((val8 & 0x0F) == 0x0F) ? 1 : 0;
-        cpuSetFlags(flags);
-    }
-    /* INC r16 */
-    else {
-        val = cpuReadReg(p_cpu->instruction->r1);
-        cpuWriteReg(p_cpu->instruction->r1, val + 1);
+    if(p_cpu->instruction->r1 == R_HL && p_cpu->instruction->addr_mode == M_MEMREG) {
         gbTick(1);
+        uint16_t hl_addr = cpuReadReg(R_HL);
+        uint8_t val8 = busReadAddr(hl_addr);
+        uint8_t val8_inc = val8 + 1;
+        busWriteAddr(hl_addr, val8_inc);
+        
+        CPU_FLAGS flags = {-1,-1,-1,-1};
+        flags.z = (val8_inc == 0) ? 1 : 0;
+        flags.n = 0;
+        flags.h = ((val8_inc & 0x0F) == 0) ? 1 : 0;
+        flags.c = -1;
+        cpuSetFlags(flags);
+        
+        return;
+    }
+
+    /* INC r16 / sp */
+    if(is_16bit) {
+        gbTick(1);
+        uint16_t val16 = cpuReadReg(p_cpu->instruction->r1);
+        uint16_t val16_inc = val16 + 1;
+        cpuWriteReg(p_cpu->instruction->r1, val16_inc);
+        return;
     }
 }
 
 void asmDec(void) {
-    CPU_FLAGS flags = {-1, 1, -1, -1};
-    uint16_t val = 0;
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
+    if(is_16bit) gbTick(1);
 
     /* DEC r8 */
-    if(is_16bit == false) {
-        val = cpuReadReg(p_cpu->instruction->r1) & 0xFF;
-        cpuWriteReg(p_cpu->instruction->r1, (val - 1) & 0xFF);
+    if(!is_16bit) {
+        uint8_t val8 = cpuReadReg(p_cpu->instruction->r1);
+        uint8_t val8_dec =val8 - 1;
+        cpuWriteReg(p_cpu->instruction->r1, val8_dec);
 
-        if((val - 1) == 0x0) {
-            flags.z = 1;
-        }
-        if((val & 0x0F) == 0x00) {
-            flags.h = 1;
-        }
+        CPU_FLAGS flags = {-1, -1, -1, -1};
+        flags.z = (val8_dec == 0x00) ? 1 : 0;
+        flags.n = 1;
+        flags.h = ((val8_dec & 0x0F) == 0x0F) ? 1 : 0;
+        flags.c = -1;
         cpuSetFlags(flags);
+        
+        return;
     }
-    else {
-        /* Cycle for extra byte */
-        gbTick(1);
-        /* DEC [HL] */
-        if(p_cpu->instruction->r1 == R_HL && p_cpu->to_memory == true) {
-            val = busReadAddr(cpuReadReg(R_HL)) & 0xFF;
-            busWriteAddr(cpuReadReg(R_HL), val - 1);
 
-            /* 3 total cycles for INC [HL] */
-            gbTick(1);
+    /* DEC [HL] */
+    if(p_cpu->instruction->r1 == R_HL && p_cpu->instruction->addr_mode == M_MEMREG) {
+        uint16_t hl_addr = cpuReadReg(R_HL);
+        uint8_t val8 = busReadAddr(hl_addr);
+        uint8_t val8_dec = val8 - 1;
+        busWriteAddr(hl_addr, val8_dec);
 
-            if((val - 1) == 0x00) {
-                flags.z = 1;
-            }
-            if((val & 0x0F) == 0x00) {
-                flags.h = 1;
-            }
-            cpuSetFlags(flags);
-        }
-        /* DEC r16 */
-        else {
-            val = cpuReadReg(p_cpu->instruction->r1);
-            cpuWriteReg(p_cpu->instruction->r1, val - 1);
-        }
+        CPU_FLAGS flags = {-1, -1, -1, -1};
+        flags.z = (val8_dec == 0) ? 1 : 0;
+        flags.n = 1;
+        flags.h = ((val8_dec & 0x0F) == 0x0F) ? 1 : 0;
+        flags.c = -1;
+        cpuSetFlags(flags);
+
+        return;
     }
+
+    /* DEC r16 / DEC sp*/
+    if(is_16bit) {
+        uint16_t val16 = cpuReadReg(p_cpu->instruction->r1);
+        uint16_t val16_dec = val16 - 1;
+        cpuWriteReg(p_cpu->instruction->r1, val16_dec);
+        return;
+    }
+
 }
 
 void asmRla(void) {
@@ -270,7 +276,7 @@ void asmAdd(void) {
     else {
         /* ADD SP, e8 is a special case with signed val (e8) */
         uint16_t sp = cpuReadReg(p_cpu->instruction->r1);
-        int8_t signed_data = p_cpu->data;
+        int8_t signed_data = (int8_t)p_cpu->data;
         uint16_t sp_new = sp + signed_data;
         /* These are checking if bits 3 or 7 are exceeded by the sum */
         flags.z = 0;
@@ -330,8 +336,8 @@ void asmHalt(void) {
 
 void asmStop(void) {
     //return;
-    cpuWriteReg(R_PC, (p_cpu->regs.pc+2));
-    //exit(-1);
+    //cpuWriteReg(R_PC, (p_cpu->regs.pc+2));
+    exit(-1);
 }
 
 void asmLdh(void) {
@@ -436,9 +442,11 @@ void asmSbc(void) {
 
 void asmPop(void) {
     uint16_t lo = stackPop8();
+    gbTick(1);
     uint16_t hi = stackPop8();
-    uint16_t val = (hi << 8) | lo;
+    gbTick(1);
 
+    uint16_t val = (hi << 8) | lo;
     if(p_cpu->instruction->r1 == R_AF) {
         val = val & 0xFFF0;
     }
@@ -448,11 +456,14 @@ void asmPop(void) {
 
 void asmPush(void) {
     uint16_t hi = (cpuReadReg(p_cpu->instruction->r1) >> 8) & 0xFF;
-    uint16_t lo = (cpuReadReg(p_cpu->instruction->r1) & 0xFF);
-
+    gbTick(1);
     stackPush8(hi);
+    
+    uint16_t lo = (cpuReadReg(p_cpu->instruction->r1) & 0xFF);
+    gbTick(1);
     stackPush8(lo);
-    gbTick(3);
+
+    gbTick(1);
 }
 
 void asmRet(void) {
@@ -474,6 +485,11 @@ void asmRet(void) {
         cpuWriteReg(R_PC, val);
         gbTick(3);
     }
+}
+
+void asmScf(void) {
+    CPU_FLAGS flags = {-1, 0, 0, 1};
+    cpuSetFlags(flags);
 }
 
 CPU_REGISTER_ENUM cb_reg_order_lookup[] = {
@@ -690,10 +706,7 @@ void asmDaa(void) {
 void asmReti(void) {
     // enable interrupts
     p_cpu->int_enable = true;
-    // return from subroutine
-    p_cpu->regs.pc = stackPop16();
-    // No need to check for cc, just do 3 cycles
-    gbTick(3);
+    asmRet();
 }
 
 void asmRra(void) {
@@ -741,7 +754,8 @@ static ASM_FUNC_PTR asm_functions[I_SET_SIZE] = {
     [I_DAA] = asmDaa,
     [I_CCF] = asmCcf,
     [I_CPL] = asmCpl,
-    [I_RST] = asmRst
+    [I_RST] = asmRst,
+    [I_SCF] = asmScf
 };
 
 ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {

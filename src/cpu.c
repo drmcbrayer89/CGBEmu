@@ -38,7 +38,7 @@ static CPU_INSTRUCTION instruction_set[0xFF + 0x01] = {
     [0x0E] = {I_LD,   M_REG_D8,       R_C         },
     [0x0F] = {I_RRCA                              },
     /* Second Row */
-    [0x10] = {I_STOP, M_D8                        },
+    [0x10] = {I_STOP, M_NONE                      },
     [0x11] = {I_LD,   M_REG_D16,      R_DE        },
     [0x12] = {I_LD,   M_MEMREG_REG,   R_DE,    R_A},
     [0x13] = {I_INC,  M_REG,          R_DE        },
@@ -391,13 +391,13 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
             return cpu.regs.pc;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
-            return cpuSwapEndian(*((uint16_t *)&cpu.regs.a));
+            return BYTE_SWAP(*((uint16_t *)&cpu.regs.a));
         case R_BC:
-            return cpuSwapEndian(*((uint16_t *)&cpu.regs.b));
+            return BYTE_SWAP(*((uint16_t *)&cpu.regs.b));
         case R_DE:
-            return cpuSwapEndian(*((uint16_t *)&cpu.regs.d));
+            return BYTE_SWAP(*((uint16_t *)&cpu.regs.d));
         case R_HL:
-            return cpuSwapEndian(*((uint16_t *)&cpu.regs.h));
+            return BYTE_SWAP(*((uint16_t *)&cpu.regs.h));
 
         default:
             bool r1_undef = false;
@@ -525,10 +525,7 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
 
 static void cpuGetInstruction(void) {
     cpu.op_code = busReadAddr(cpu.regs.pc++);
-    cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);
-
-    //printf("PC: 0x%04X (0x%02X) 0x%02X 0x%02X\n", pc, cpu.op_code, busReadAddr(pc + 1), busReadAddr(pc + 2));
-                                                                                            
+    cpu.instruction = cpuGetInstructionByOpCode(cpu.op_code);                                                                                            
 }
 
 /* NOTE: Reads/Writes are 4 T-cycles / 1 M-cycle per byte.*/
@@ -708,7 +705,6 @@ static void cpuGetData(void) {
 }
 
 void cpuIntProc(uint16_t addr) {
-    gbTick(5);
     /* push current addr to stack
        set pc to interrupt addr      */
     stackPush16(cpu.regs.pc);
@@ -716,7 +712,7 @@ void cpuIntProc(uint16_t addr) {
     cpu.regs.pc = addr;   
 }
 
-void cpuIntHandler() {
+bool cpuIntHandler() {
     uint32_t i;
 
     // Cycle through the possible cpu interrupts, return after processing the first one enabled
@@ -725,11 +721,11 @@ void cpuIntHandler() {
             cpuIntProc(cpu_interrupts[i].addr);
             cpu.int_flags &= ~cpu_interrupts[i].type;
             cpu.halted = false;
-
-
-            return;
+            return true;
         }
     }
+
+    return false;
 }
 
 static void cpuExec(void) {
@@ -745,22 +741,33 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
+    char flags[4] = {0};
+    static uint16_t cycles = 0;
     if(!cpu.halted) {
-        
+        if(cycles++ > 100) exit(-1);
         cpuGetInstruction();
         gbTick(1);
         cpuGetData();
 
         debugUpdate();
         debugShow();
-        
-        printf("0x%04X (0x%04X) [%-4s %-4s, %-4s] [FLAGS: 0x%02X]\n", cpu.regs.pc, cpu.op_code, 
+
+
+        cpuExec();
+
+        cpuGetFlag(ZERO_FLAG) ? strcat(flags, "Z") : strcat(flags, "-");
+        cpuGetFlag(SUBTRACTION_FLAG) ? strcat(flags, "N") : strcat(flags, "-");
+        cpuGetFlag(HALF_CARRY_FLAG) ? strcat(flags, "H") : strcat(flags, "-");
+        cpuGetFlag(CARRY_FLAG) ? strcat(flags, "C") : strcat(flags, "-");
+
+        printf("0x%04X (0x%04X) [%-4s %-4s, %-4s] [FLAGS: %s]\n", cpu.regs.pc, cpu.op_code, 
                                                               instruction_set_s[cpu.instruction->type],
                                                               registers_s[cpu.instruction->r1],
                                                               registers_s[cpu.instruction->r2],
-                                                              cpu.regs.f);
-        
-        cpuExec();
+                                                              flags);
+                                                      
+        //if(cpu.instruction->r1 != R_NONE) printf("\t\t%s 0x%04X ", registers_s[cpu.instruction->r1], cpuReadReg(cpu.instruction->r1));                                             
+        //if(cpu.instruction->r2 != R_NONE) printf("\t\t%s 0x%04X\n", registers_s[cpu.instruction->r2], cpuReadReg(cpu.instruction->r2));
     }
     else {
         gbTick(1);

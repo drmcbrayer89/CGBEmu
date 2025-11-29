@@ -11,8 +11,9 @@ int32_t main(int32_t argc, char * argv[])
     }
     /* Remove this after done... */
     else {
-        cartOpen("gb-test-roms/cpu_instrs/cpu_instrs.gb");
-        gbStart();
+        if(cartOpen("./gb-test-roms/cpu_instrs/individual/06-ld r,r.gb")){
+            gbStart();
+        }
     }
 
     return 0;
