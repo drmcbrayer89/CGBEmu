@@ -30,9 +30,9 @@ void * thread_cpu(void *) {
     cpuInit();
     while(gameboy.running){
         gameboy.running = cpuStep();
-        gameboy.ticks++;
         usleep(100);
     }
+    pthread_exit(NULL);
 }
 
 void gbStart(void) {

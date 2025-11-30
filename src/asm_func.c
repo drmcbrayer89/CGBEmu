@@ -1,13 +1,12 @@
 #include "common.h"
 #include "gb.h"
-#include "cpu.h"
 #include "asm_func.h"
 #include "bus.h"
 #include "stack.h"
 
 static CPU * p_cpu;
 /* Consider just passing a pointer to the CPU with an init function. this is stupid. */
-static bool asmCheckCondition() {
+static bool asmCheckCondition(CPU * p_cpu) {
     bool c_flag = BIT_CHECK(p_cpu->regs.f, CARRY_FLAG);
     bool z_flag = BIT_CHECK(p_cpu->regs.f, ZERO_FLAG);
 
@@ -28,8 +27,8 @@ static bool asmCheckCondition() {
     }
 }
 
-void gotoAddr(uint16_t addr, bool push) {
-    if(asmCheckCondition() == true) {
+void gotoAddr(CPU * p_cpu, uint16_t addr, bool push) {
+    if(asmCheckCondition(p_cpu) == true) {
         if(push == true) {
             stackPush16(p_cpu->regs.pc);
             gbTick(2);
@@ -40,37 +39,37 @@ void gotoAddr(uint16_t addr, bool push) {
     }
 }
 
-void asmJp(void) {
+void asmJp(CPU * p_cpu) {
     // JP does not push the program counter
-    gotoAddr(p_cpu->data, false);
+    gotoAddr(p_cpu, p_cpu->data, false);
 }
 
-void asmJr(void) {
-    int8_t relative_addr = (int8_t)(p_cpu->data & 0xFF);
+void asmJr(CPU * p_cpu) {
+    int8_t relative_addr = (byte)(p_cpu->data & 0xFF);
     uint16_t new_addr = relative_addr + p_cpu->regs.pc;
-    gotoAddr(new_addr, false);
+    gotoAddr(p_cpu, new_addr, false);
 }
 
-void asmCall(void) {
-    gotoAddr(p_cpu->data, true);
+void asmCall(CPU * p_cpu) {
+    gotoAddr(p_cpu, p_cpu->data, true);
 }
 
-void asmRst(void) {
+void asmRst(CPU * p_cpu) {
     stackPush16(p_cpu->regs.pc + 1);
     gbTick(2);
 
     p_cpu->regs.pc = p_cpu->instruction->parameter;
 }
 
-void asmNone(void) {
+void asmNone(CPU * p_cpu) {
     return;
 }
 
-void asmNop(void) {
+void asmNop(CPU * p_cpu) {
     return;
 }
 
-void asmLd(void) { 
+void asmLd(CPU * p_cpu) { 
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
 
     if(p_cpu->to_memory) {
@@ -102,15 +101,13 @@ void asmLd(void) {
     
         // write stack ptr + e8 (signed int8) to r1
         cpuWriteReg(p_cpu->instruction->r1, sp + (uint8_t)p_cpu->data);
-        //printf("WRITING 0x%04X\n", r2_val + (int8_t)p_cpu->data);
         return;
     }
 
     cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
-    printf("\t\t%i 0x%04X %i 0x%04X\n", p_cpu->instruction->r1, cpuReadReg(p_cpu->instruction->r1), p_cpu->instruction->r2, p_cpu->data);
 }
 
-void asmInc(void) {
+void asmInc(CPU * p_cpu) {
     //uint16_t val;
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? 1 : 0;
     
@@ -161,7 +158,7 @@ void asmInc(void) {
     }
 }
 
-void asmDec(void) {
+void asmDec(CPU * p_cpu) {
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true : false;
     if(is_16bit) gbTick(1);
 
@@ -208,7 +205,7 @@ void asmDec(void) {
 
 }
 
-void asmRla(void) {
+void asmRla(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
 
     uint8_t a_reg = cpuReadReg(R_A);
@@ -224,7 +221,7 @@ void asmRla(void) {
     cpuSetFlags(flags);
 }
 
-void asmRlca(void) {
+void asmRlca(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
 
     uint8_t a_reg = cpuReadReg(R_A);
@@ -244,7 +241,7 @@ void asmRlca(void) {
     gbTick(1);
 }
 
-void asmAdd(void) {
+void asmAdd(CPU * p_cpu) {
     CPU_FLAGS flags = {-1,0,-1,-1};
     uint16_t val = 0;
     bool is_16bit = (p_cpu->instruction->r1 >= R_AF) ? true: false;
@@ -290,7 +287,7 @@ void asmAdd(void) {
     cpuSetFlags(flags);
 }
 
-void asmSub(void) {
+void asmSub(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 1, -1, -1};
 
     uint8_t result = p_cpu->regs.a - p_cpu->data;
@@ -303,7 +300,7 @@ void asmSub(void) {
     cpuSetFlags(flags);
 }
 
-void asmRrca(void) {
+void asmRrca(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
 
     uint8_t a_reg = cpuReadReg(R_A);
@@ -318,29 +315,29 @@ void asmRrca(void) {
 }
 
 /* This is just a NOT operator for register A */
-void asmCpl(void) {
+void asmCpl(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 1, 1, -1};
     p_cpu->regs.a = ~p_cpu->regs.a;
     cpuSetFlags(flags);
 }
 
-void asmCcf(void) {
+void asmCcf(CPU * p_cpu) {
     uint8_t c = !cpuGetFlag(CARRY_FLAG);
     CPU_FLAGS flags = {-1, 0, 0, c};
     cpuSetFlags(flags);
 }
 
-void asmHalt(void) {
+void asmHalt(CPU * p_cpu) {
     p_cpu->halted = true;
 }
 
-void asmStop(void) {
+void asmStop(CPU * p_cpu) {
     //return;
     //cpuWriteReg(R_PC, (p_cpu->regs.pc+2));
     exit(-1);
 }
 
-void asmLdh(void) {
+void asmLdh(CPU * p_cpu) {
     /* Copy the byte at address $FF00 + C into register A */
     if(p_cpu->instruction->r1 == R_A) {
         cpuWriteReg(R_A, busReadAddr(0xFF00 | p_cpu->data));
@@ -353,7 +350,7 @@ void asmLdh(void) {
     gbTick(1);
 }
 
-void asmCp(void) {
+void asmCp(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 1, -1, -1};
     uint8_t reg = p_cpu->regs.a;
     uint8_t data = p_cpu->data;
@@ -366,15 +363,15 @@ void asmCp(void) {
     cpuSetFlags(flags);
 }
 
-void asmEi(void) {
+void asmEi(CPU * p_cpu) {
     p_cpu->enabling_ime = true;
 }
 
-void asmDi() {
+void asmDi(CPU * p_cpu) {
     p_cpu->int_enable = false;
 }
 
-void asmAnd(void) {
+void asmAnd(CPU * p_cpu) {
     CPU_FLAGS flags = {-1,0,1,0};
     uint8_t val = (p_cpu->regs.a & p_cpu->data);
 
@@ -385,7 +382,7 @@ void asmAnd(void) {
     cpuSetFlags(flags);
 }
 
-void asmOr(void) {
+void asmOr(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
     uint8_t val = (p_cpu->regs.a | p_cpu->data);
 
@@ -396,7 +393,7 @@ void asmOr(void) {
     cpuSetFlags(flags);
 }
 
-void asmXor(void) {
+void asmXor(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
     uint8_t val = p_cpu->regs.a ^ (p_cpu->data & 0xFF);
 
@@ -405,7 +402,7 @@ void asmXor(void) {
     cpuSetFlags(flags);
 }
 
-void asmAdc(void) {
+void asmAdc(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 0, -1, cpuGetFlag(CARRY_FLAG)};
 
     uint16_t a = cpuReadReg(R_A);
@@ -420,7 +417,7 @@ void asmAdc(void) {
     cpuSetFlags(flags);
 }
 
-void asmSbc(void) {
+void asmSbc(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 1, -1, cpuGetFlag(CARRY_FLAG)};
     uint8_t reg_a = cpuReadReg(R_A);
     uint8_t result = 0;
@@ -440,7 +437,7 @@ void asmSbc(void) {
     cpuSetFlags(flags);
 }
 
-void asmPop(void) {
+void asmPop(CPU * p_cpu) {
     uint16_t lo = stackPop8();
     gbTick(1);
     uint16_t hi = stackPop8();
@@ -454,7 +451,7 @@ void asmPop(void) {
     cpuWriteReg(p_cpu->instruction->r1, val);
 }
 
-void asmPush(void) {
+void asmPush(CPU * p_cpu) {
     uint16_t hi = (cpuReadReg(p_cpu->instruction->r1) >> 8) & 0xFF;
     gbTick(1);
     stackPush8(hi);
@@ -466,7 +463,7 @@ void asmPush(void) {
     gbTick(1);
 }
 
-void asmRet(void) {
+void asmRet(CPU * p_cpu) {
     /* RET is similar to a POP PC.
        POP value from stack, assign to pc register 
     */
@@ -475,7 +472,7 @@ void asmRet(void) {
     }
     // This is prob what's wrong.
     //uint16_t pc = stackPop16();
-    if(asmCheckCondition()) {
+    if(asmCheckCondition(p_cpu)) {
         uint16_t lo = stackPop8();
         uint16_t hi = stackPop8();
         //printf("lo: 0x%02X hi: 0x%02X\n", lo, hi);
@@ -487,7 +484,7 @@ void asmRet(void) {
     }
 }
 
-void asmScf(void) {
+void asmScf(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, 0, 0, 1};
     cpuSetFlags(flags);
 }
@@ -503,7 +500,7 @@ CPU_REGISTER_ENUM cb_reg_order_lookup[] = {
     R_A
 };
 
-void asmCb(void) {
+void asmCb(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, -1. -1. -1};
     /* This is annoying. Extends zilog z80 instr set 
     $CB $xx, where xx is how the instruction is found. read as next byte after CB op code */
@@ -666,7 +663,7 @@ void asmCb(void) {
     }
 }
 
-void asmDaa(void) {
+void asmDaa(CPU * p_cpu) {
     CPU_FLAGS flags = {-1, -1, -1, -1};
     cpuGetFlags(&flags.z, &flags.n, &flags.h, &flags.c);
     uint8_t reg = cpuReadReg(R_A);
@@ -703,13 +700,13 @@ void asmDaa(void) {
     cpuSetFlags(flags);
 }
 
-void asmReti(void) {
+void asmReti(CPU * p_cpu) {
     // enable interrupts
     p_cpu->int_enable = true;
-    asmRet();
+    asmRet(p_cpu);
 }
 
-void asmRra(void) {
+void asmRra(CPU * p_cpu) {
     CPU_FLAGS flags = {0,0,0,0};
     uint8_t a = cpuReadReg(R_A);
     uint8_t new_c = a & 0x01;
@@ -763,7 +760,7 @@ ASM_FUNC_PTR asmGetFunction(CPU_INSTRUCTION_ENUM i) {
 }
 
 void asmSetCpuPtr(CPU * cpu) {
-    p_cpu = cpu;
+    //p_cpu = cpu;
 
-    printf("\t\t\tcheck: 0x%02X\n", p_cpu->regs.a);
+    //printf("\t\t\tcheck: 0x%02X\n", p_cpu->regs.a);
 }

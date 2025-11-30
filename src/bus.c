@@ -36,7 +36,6 @@ uint8_t busReadAddr(uint16_t addr) {
         return ioRead(addr);
     }
     else if(addr == 0xFFFF) {
-        //TODO
         return cpuGetIE();
     }
 
@@ -74,7 +73,6 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         ioWrite(addr, val);
     } // enable interrupt register
     else if(addr == 0xFFFF) {
-        //TODO
         cpuSetIE(val);
         return;
     } // anything else goes to hram

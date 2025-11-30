@@ -732,7 +732,7 @@ static void cpuExec(void) {
     /* Grab asm function & execute */
     ASM_FUNC_PTR p_func = asmGetFunction(cpu.instruction->type);
     if(p_func != NULL) {
-        p_func();
+        p_func(&cpu);
     }
     else {
         printf("ASM function not defined: %s\n", instruction_set_s[cpu.instruction->type]);
@@ -742,17 +742,14 @@ static void cpuExec(void) {
 
 bool cpuStep(void) {
     char flags[4] = {0};
-    static uint16_t cycles = 0;
     if(!cpu.halted) {
-        if(cycles++ > 100) exit(-1);
         cpuGetInstruction();
         gbTick(1);
         cpuGetData();
 
         debugUpdate();
         debugShow();
-
-
+        
         cpuExec();
 
         cpuGetFlag(ZERO_FLAG) ? strcat(flags, "Z") : strcat(flags, "-");
@@ -765,9 +762,6 @@ bool cpuStep(void) {
                                                               registers_s[cpu.instruction->r1],
                                                               registers_s[cpu.instruction->r2],
                                                               flags);
-                                                      
-        //if(cpu.instruction->r1 != R_NONE) printf("\t\t%s 0x%04X ", registers_s[cpu.instruction->r1], cpuReadReg(cpu.instruction->r1));                                             
-        //if(cpu.instruction->r2 != R_NONE) printf("\t\t%s 0x%04X\n", registers_s[cpu.instruction->r2], cpuReadReg(cpu.instruction->r2));
     }
     else {
         gbTick(1);
@@ -790,22 +784,17 @@ bool cpuStep(void) {
 }
 
 void cpuInit(void) {
-    cpu.regs.pc = 0x0100;
-    cpu.regs.a = 0x01;
-    cpu.regs.f = 0xB0;
-    cpu.regs.b = 0x00;
-    cpu.regs.c = 0x13;
-    cpu.regs.d = 0x00;
-    cpu.regs.e = 0xD8;
-    cpu.regs.h = 0x01;
-    cpu.regs.l = 0x4D;
+    cpu.regs.pc = 0x100;
     cpu.regs.sp = 0xFFFE;
+    *((uint16_t *)&cpu.regs.a) = 0xB001;
+    *((uint16_t *)&cpu.regs.b) = 0x1300;
+    *((uint16_t *)&cpu.regs.d) = 0xD800;
+    *((uint16_t *)&cpu.regs.h) = 0x4D01;
     cpu.ie_reg = 0;
     cpu.int_flags = 0;
     cpu.int_enable = false;
     cpu.enabling_ime = false;
     timerSetDiv(0xABCC);
-    asmSetCpuPtr(&cpu);
 }
 
 void cpuShowInstruction(uint32_t i) {
