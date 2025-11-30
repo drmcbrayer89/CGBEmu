@@ -6,8 +6,6 @@
 
 /* Pulled the memory map from the pan docs website */
 uint8_t busReadAddr(uint16_t addr) {
-    uint8_t val = 0;
-    //printf("READ ADDR: 0x%04X\n", addr);
     /* Cartridge */
     if(addr < 0x8000) {
         return cartReadAddr(addr);
@@ -33,7 +31,12 @@ uint8_t busReadAddr(uint16_t addr) {
         return 0;
     }
     else if(addr < 0xFF80) {
-        return ioRead(addr);
+        if(addr == 0xFF44) {
+            return 0x90;
+        }
+        else {
+            return ioRead(addr);
+        }
     }
     else if(addr == 0xFFFF) {
         return cpuGetIE();

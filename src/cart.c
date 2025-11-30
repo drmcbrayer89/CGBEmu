@@ -44,7 +44,7 @@ CARTRIDGE * cartGetCartridge(void) {
 static void cartGetRomTitle(void) {
     char title[CART_TITLE_BYTES] = {0};
     memcpy(title, &cart.rom_data[CART_TITLE], CART_TITLE_BYTES);
-    printf("\tTitle: %s\n", title);
+    //printf("\tTitle: %s\n", title);
 }
 
 static void cartGetHeader(void) {
@@ -67,18 +67,18 @@ uint8_t cartOpen(char * filename) {
     p_file = fopen(filename, "rw+");
     
     if(p_file == NULL) {
-        printf("\tError opening ROM file\n");
+        //printf("\tError opening ROM file\n");
         return 0;
     }
     else {
-        printf("Loading ROM into memory...\n");
+        //printf("Loading ROM into memory...\n");
         /* Load rom data into memory */
         fseek(p_file, 0, SEEK_END);
         cart.rom_size = ftell(p_file);
         rewind(p_file);
         
         cart.rom_data = malloc(cart.rom_size);
-        printf("Allocated %i bytes\n", cart.rom_size);
+        //printf("Allocated %i bytes\n", cart.rom_size);
         fread(cart.rom_data, cart.rom_size, 1, p_file);
         fclose(p_file);
 
@@ -86,15 +86,14 @@ uint8_t cartOpen(char * filename) {
         cartGetHeader();
         cartGetRomTitle();
         /* Check checksum */
-        (cartGetChecksum()) ? printf("\tPassed Checksum!\n") : printf("\tFailed Checksum!\n");
+        //(cartGetChecksum()) ? printf("\tPassed Checksum!\n") : printf("\tFailed Checksum!\n");
     }
-
     return 1;
 }
 
 /* Read from ROM loaded into RAM */
 uint8_t cartReadAddr(uint16_t addr) {
-    return cart.rom_data[addr];
+    return (uint8_t)cart.rom_data[addr];
 }
 
 void cartWriteAddr(uint16_t addr, uint8_t val) {

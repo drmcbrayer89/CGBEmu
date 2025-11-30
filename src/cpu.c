@@ -5,6 +5,7 @@
 #include "stack.h"
 #include "asm_func.h"
 #include "timer.h"
+#include "cart.h"
 #include "debug_blarg.h"
 
 #define CPU_NUM_INT 5
@@ -358,8 +359,8 @@ CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code) {
     return &instruction_set[op_code];
 }
 
-uint16_t cpuSwapEndian(uint16_t val) {
-    return ((val & 0x00FF) << 8) | ((val & 0xFF00) >> 8);
+static uint16_t cpuByteSwap(uint16_t val) {
+    return ((val & 0xFF00) >> 8) | ((val & 0x00FF) << 8);
 }
 
 uint16_t cpuReadReg16(uint8_t r1, uint8_t r2) {
@@ -391,13 +392,13 @@ uint16_t cpuReadReg(CPU_REGISTER_ENUM reg) {
             return cpu.regs.pc;
         /* All of these have to be swapped for endian-ness */
         case R_AF:
-            return BYTE_SWAP(*((uint16_t *)&cpu.regs.a));
+            return cpuByteSwap(*((uint16_t *)&cpu.regs.a));
         case R_BC:
-            return BYTE_SWAP(*((uint16_t *)&cpu.regs.b));
+            return cpuByteSwap(*((uint16_t *)&cpu.regs.b));
         case R_DE:
-            return BYTE_SWAP(*((uint16_t *)&cpu.regs.d));
+            return cpuByteSwap(*((uint16_t *)&cpu.regs.d));
         case R_HL:
-            return BYTE_SWAP(*((uint16_t *)&cpu.regs.h));
+            return cpuByteSwap(*((uint16_t *)&cpu.regs.h));
 
         default:
             bool r1_undef = false;
@@ -466,9 +467,6 @@ static void cpuWriteReg16(uint16_t val, uint8_t * r1, uint8_t * r2) {
 }
 
 void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
-    if(reg < R_AF) {
-        val = val & 0xFF;
-    }
     switch(reg) {
         /* 8 bit registers */
         case R_A:
@@ -497,18 +495,16 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
             return;
         /* Begin 16 bit registers */
         case R_AF:
-            *((uint16_t *)&cpu.regs.a) = BYTE_SWAP(val);
+            *((uint16_t *)&cpu.regs.a) = cpuByteSwap(val);
             return;
         case R_BC:
-            *((uint16_t *)&cpu.regs.b) = BYTE_SWAP(val);
-            
+            *((uint16_t *)&cpu.regs.b) = cpuByteSwap(val);
             return;
         case R_DE:
-            *((uint16_t *)&cpu.regs.d) = BYTE_SWAP(val);
-            
+            *((uint16_t *)&cpu.regs.d) = cpuByteSwap(val);
             return;
         case R_HL:
-            *((uint16_t *)&cpu.regs.h) = BYTE_SWAP(val);
+            *((uint16_t *)&cpu.regs.h) = cpuByteSwap(val);
             return;
         case R_SP:
             cpu.regs.sp = val;
@@ -517,8 +513,6 @@ void cpuWriteReg(CPU_REGISTER_ENUM reg, uint16_t val) {
             cpu.regs.pc = val;
             return;
         default:
-            cpuSwapEndian(val);
-            printf("Incorrect register: %i\n", reg);
             return;
     }
 }
@@ -742,6 +736,8 @@ static void cpuExec(void) {
 
 bool cpuStep(void) {
     char flags[4] = {0};
+    const char * out_msg = "A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n";
+    uint16_t pc = cpuReadReg(R_PC);
     if(!cpu.halted) {
         cpuGetInstruction();
         gbTick(1);
@@ -751,17 +747,28 @@ bool cpuStep(void) {
         debugShow();
         
         cpuExec();
+        // Gameboy doctor logging
+        printf(out_msg, cpu.regs.a, cpu.regs.f, cpu.regs.b, 
+            cpu.regs.c, cpu.regs.d, cpu.regs.e, 
+            cpu.regs.h, cpu.regs.l, cpu.regs.sp, 
+            pc, busReadAddr(pc), busReadAddr(pc+1), busReadAddr(pc+2), busReadAddr(pc+3));
+
 
         cpuGetFlag(ZERO_FLAG) ? strcat(flags, "Z") : strcat(flags, "-");
         cpuGetFlag(SUBTRACTION_FLAG) ? strcat(flags, "N") : strcat(flags, "-");
         cpuGetFlag(HALF_CARRY_FLAG) ? strcat(flags, "H") : strcat(flags, "-");
         cpuGetFlag(CARRY_FLAG) ? strcat(flags, "C") : strcat(flags, "-");
+        
 
+        /*
         printf("0x%04X (0x%04X) [%-4s %-4s, %-4s] [FLAGS: %s]\n", cpu.regs.pc, cpu.op_code, 
                                                               instruction_set_s[cpu.instruction->type],
                                                               registers_s[cpu.instruction->r1],
                                                               registers_s[cpu.instruction->r2],
                                                               flags);
+                                                              }
+                                                              */
+                                                             
     }
     else {
         gbTick(1);
@@ -784,7 +791,7 @@ bool cpuStep(void) {
 }
 
 void cpuInit(void) {
-    cpu.regs.pc = 0x100;
+    cpu.regs.pc = 0x0100;
     cpu.regs.sp = 0xFFFE;
     *((uint16_t *)&cpu.regs.a) = 0xB001;
     *((uint16_t *)&cpu.regs.b) = 0x1300;

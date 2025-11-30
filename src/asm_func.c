@@ -71,7 +71,6 @@ void asmNop(CPU * p_cpu) {
 
 void asmLd(CPU * p_cpu) { 
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
-
     if(p_cpu->to_memory) {
         if(is_16bit) {
             gbTick(1);
@@ -103,7 +102,7 @@ void asmLd(CPU * p_cpu) {
         cpuWriteReg(p_cpu->instruction->r1, sp + (uint8_t)p_cpu->data);
         return;
     }
-
+    printf("(0x%02X %04X\n",p_cpu->op_code, p_cpu->data);
     cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
 }
 

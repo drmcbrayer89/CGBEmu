@@ -38,12 +38,12 @@ void * thread_cpu(void *) {
 void gbStart(void) {
     /* start gui */
     if(guiInit()) {
-        printf("GUI Initialized\n");
+        //printf("GUI Initialized\n");
     }
     
     /* start cpu */
     if(pthread_create(&t_cpu, NULL, thread_cpu, NULL)) {
-        printf("CPU thread failed to start\n");
+        //printf("CPU thread failed to start\n");
         exit(-1);
     }
 
@@ -51,7 +51,7 @@ void gbStart(void) {
         guiRun();
     }
 
-    printf("CGBEmu Stopped!\n");
+    //printf("CGBEmu Stopped!\n");
 }
 
 void gbInit(void) {
