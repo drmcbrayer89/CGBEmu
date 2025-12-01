@@ -535,6 +535,7 @@ static void cpuGetData(void) {
 
     switch(cpu.instruction->addr_mode) {
         case M_NONE:
+            //cpu.regs.pc++;
             return;
 
         case M_REG:
@@ -546,9 +547,9 @@ static void cpuGetData(void) {
             return;
 
         case M_REG_D8:
-            cpu.data = busReadAddr(cpu.regs.pc);
+            // Grab value @ pc, increment pc after.
+            cpu.data = busReadAddr(cpu.regs.pc++);
             gbTick(1);
-            cpu.regs.pc++;
             return;
 
         case M_MEMREG_REG:
@@ -576,6 +577,7 @@ static void cpuGetData(void) {
         /* These do the same thing from a reading standpoint... */
         case M_D16:
         case M_REG_D16:
+            //printf("%04X\n", cpu.regs.pc);
             lower = busReadAddr(cpu.regs.pc);
             gbTick(1);
             
@@ -735,40 +737,25 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-    char flags[4] = {0};
     const char * out_msg = "A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n";
     uint16_t pc = cpuReadReg(R_PC);
     if(!cpu.halted) {
         cpuGetInstruction();
         gbTick(1);
-        cpuGetData();
-
-        debugUpdate();
-        debugShow();
         
-        cpuExec();
         // Gameboy doctor logging
         printf(out_msg, cpu.regs.a, cpu.regs.f, cpu.regs.b, 
             cpu.regs.c, cpu.regs.d, cpu.regs.e, 
             cpu.regs.h, cpu.regs.l, cpu.regs.sp, 
             pc, busReadAddr(pc), busReadAddr(pc+1), busReadAddr(pc+2), busReadAddr(pc+3));
-
-
-        cpuGetFlag(ZERO_FLAG) ? strcat(flags, "Z") : strcat(flags, "-");
-        cpuGetFlag(SUBTRACTION_FLAG) ? strcat(flags, "N") : strcat(flags, "-");
-        cpuGetFlag(HALF_CARRY_FLAG) ? strcat(flags, "H") : strcat(flags, "-");
-        cpuGetFlag(CARRY_FLAG) ? strcat(flags, "C") : strcat(flags, "-");
         
-
-        /*
-        printf("0x%04X (0x%04X) [%-4s %-4s, %-4s] [FLAGS: %s]\n", cpu.regs.pc, cpu.op_code, 
-                                                              instruction_set_s[cpu.instruction->type],
-                                                              registers_s[cpu.instruction->r1],
-                                                              registers_s[cpu.instruction->r2],
-                                                              flags);
-                                                              }
-                                                              */
-                                                             
+            
+        cpuGetData();
+        
+        debugUpdate();
+        debugShow();
+        
+        cpuExec();                                           
     }
     else {
         gbTick(1);
@@ -777,7 +764,6 @@ bool cpuStep(void) {
         }
     }
 
-    // Handle interrupts :D
     if(cpu.int_enable) {
         cpuIntHandler();
         cpu.enabling_ime = false;

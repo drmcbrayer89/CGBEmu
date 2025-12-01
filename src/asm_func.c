@@ -79,8 +79,8 @@ void asmLd(CPU * p_cpu) {
         else {
             busWriteAddr(p_cpu->memory_destination, p_cpu->data);
         }
-
         gbTick(1);
+
         return;
     }
 
@@ -102,7 +102,6 @@ void asmLd(CPU * p_cpu) {
         cpuWriteReg(p_cpu->instruction->r1, sp + (uint8_t)p_cpu->data);
         return;
     }
-    printf("(0x%02X %04X\n",p_cpu->op_code, p_cpu->data);
     cpuWriteReg(p_cpu->instruction->r1, p_cpu->data);
 }
 
@@ -117,11 +116,7 @@ void asmInc(CPU * p_cpu) {
         cpuWriteReg(p_cpu->instruction->r1, val8_inc);
 
         CPU_FLAGS flags = {-1,-1,-1,-1};
-        if(val8_inc == 0x00) {
-            flags.z = 1;
-        }
-        //flags.z = (val8_inc == 0x0) ? 1 : 0;
-        //flags.z = (val8_inc == 0x00);
+        flags.z = (val8_inc == 0x00) ? 1 : 0;
         flags.n = 0;
         flags.h = ((val8_inc & 0x0F) == 0) ? 1 : 0;
         flags.c = -1;
