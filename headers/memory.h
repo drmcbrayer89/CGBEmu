@@ -2,18 +2,11 @@
 
 #define KBYTE 1024
 
-#define ROM_BANK00_END 0x3FFF
-#define ROM_BANK01_END 0x7FFF
-#define VRAM_END 0x9FFF
-#define CART_RAM_END 0xBFFF
-#define WRAM_END 0xDFFF
-#define ECHO_RAM_END 0xFDFF
-#define OAM_END 0xFE9F
-#define NO_ACCESS_END 0xFEFF
-#define IO_END 0xFF7F
-#define HRAM_END 0xFFFE
-
-typedef uint8_t MEMORY;
+//typedef uint8_t MEMORY;
+typedef struct {
+    uint8_t wram[0x1FFF];
+    uint8_t hram[0x73];
+} MEMORY;
 
 uint8_t memReadWRam(uint16_t addr);
 void memWriteWRam(uint16_t addr, uint8_t val);

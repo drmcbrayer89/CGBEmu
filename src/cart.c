@@ -97,5 +97,5 @@ uint8_t cartReadAddr(uint16_t addr) {
 }
 
 void cartWriteAddr(uint16_t addr, uint8_t val) {
-    // Will add later
+    cart.rom_data[addr] = val;
 }

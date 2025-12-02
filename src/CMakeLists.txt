@@ -12,6 +12,6 @@ find_package(SDL3_ttf REQUIRED)
 
 include_directories("../headers")
 
-add_executable(gbemu cart.c main.c bus.c cpu.c gb.c asm_func.c memory.c stack.c gui.c io.c serial.c debug_blarg.c timer.c)
+add_executable(gbemu cart.c main.c bus.c cpu.c gb.c asm_func.c memory.c stack.c gui.c io.c serial.c debug_blarg.c timer.c ppu.c)
 
 target_link_libraries(gbemu PRIVATE SDL3::SDL3 SDL3_ttf::SDL3_ttf)

@@ -739,10 +739,11 @@ static void cpuExec(void) {
 bool cpuStep(void) {
     const char * out_msg = "A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n";
     uint16_t pc = cpuReadReg(R_PC);
+    static uint32_t cycle = 0;
     if(!cpu.halted) {
         cpuGetInstruction();
         gbTick(1);
-        
+
         // Gameboy doctor logging
         printf(out_msg, cpu.regs.a, cpu.regs.f, cpu.regs.b, 
             cpu.regs.c, cpu.regs.d, cpu.regs.e, 

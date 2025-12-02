@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "cpu.h"
 #include "io.h"
+#include "ppu.h"
 
 /* Pulled the memory map from the pan docs website */
 uint8_t busReadAddr(uint16_t addr) {
@@ -12,7 +13,8 @@ uint8_t busReadAddr(uint16_t addr) {
     } 
     // char/map
     else if(addr < 0xA000) {
-        exit(-1);
+        return ppuReadVram(addr);
+        //exit(-1);
     }
     else if(addr < 0xC0000) {
         return cartReadAddr(addr);
@@ -54,6 +56,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
     } 
     // char/map
     else if(addr < 0xA000) {
+        ppuWriteVram(addr, val);
     } // cartridge ram
     else if(addr < 0xC000) {
         cartWriteAddr(addr,val);
