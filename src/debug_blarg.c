@@ -24,3 +24,14 @@ void debugShow(void) {
     }
 }
 
+void debugGbDocOut(CPU * p_cpu) {
+    const char * out_msg = "A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n";
+    uint16_t pc = cpuReadReg(R_PC);
+    pc--;
+    // Gameboy doctor logging
+    printf(out_msg, p_cpu->regs.a, p_cpu->regs.f, p_cpu->regs.b, 
+            p_cpu->regs.c, p_cpu->regs.d, p_cpu->regs.e, 
+            p_cpu->regs.h, p_cpu->regs.l, p_cpu->regs.sp, 
+            pc, busReadAddr(pc), busReadAddr(pc+1), busReadAddr(pc+2), busReadAddr(pc+3));
+        
+}

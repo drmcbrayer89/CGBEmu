@@ -1,7 +1,6 @@
-#include "common.h"
 #include "memory.h"
 
-static MEMORY mem = {0};
+MEMORY mem = {0};
 
 uint8_t memReadWRam(uint16_t addr) {
     addr = addr - 0xC000;

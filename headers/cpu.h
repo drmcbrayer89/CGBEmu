@@ -160,7 +160,7 @@ typedef struct {
 
     bool halted;
     bool stepping;
-    bool int_enable;
+    bool ime;
     bool enabling_ime;
     uint8_t int_flags;
     uint8_t ie_reg;

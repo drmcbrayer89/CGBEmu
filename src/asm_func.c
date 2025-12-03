@@ -362,7 +362,7 @@ void asmEi(CPU * p_cpu) {
 }
 
 void asmDi(CPU * p_cpu) {
-    p_cpu->int_enable = false;
+    p_cpu->ime = false;
 }
 
 void asmAnd(CPU * p_cpu) {
@@ -696,7 +696,7 @@ void asmDaa(CPU * p_cpu) {
 
 void asmReti(CPU * p_cpu) {
     // enable interrupts
-    p_cpu->int_enable = true;
+    p_cpu->ime = true;
     asmRet(p_cpu);
 }
 

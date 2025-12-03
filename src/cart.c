@@ -97,5 +97,6 @@ uint8_t cartReadAddr(uint16_t addr) {
 }
 
 void cartWriteAddr(uint16_t addr, uint8_t val) {
-    cart.rom_data[addr] = val;
+//    printf("cartWriteAddr: 0x%04X\n", addr);
+    //cart.rom_data[addr] = val;
 }

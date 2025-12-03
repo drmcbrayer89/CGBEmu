@@ -704,7 +704,7 @@ void cpuIntProc(uint16_t addr) {
     /* push current addr to stack
        set pc to interrupt addr      */
     stackPush16(cpu.regs.pc);
-    cpu.int_enable = false;
+    cpu.ime = false;
     cpu.regs.pc = addr;   
 }
 
@@ -737,24 +737,19 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-    const char * out_msg = "A:%02X F:%02X B:%02X C:%02X D:%02X E:%02X H:%02X L:%02X SP:%04X PC:%04X PCMEM:%02X,%02X,%02X,%02X\n";
-    uint16_t pc = cpuReadReg(R_PC);
     static uint32_t cycle = 0;
+    bool tmp = false;
     if(!cpu.halted) {
         cpuGetInstruction();
         gbTick(1);
-
-        // Gameboy doctor logging
-        printf(out_msg, cpu.regs.a, cpu.regs.f, cpu.regs.b, 
-            cpu.regs.c, cpu.regs.d, cpu.regs.e, 
-            cpu.regs.h, cpu.regs.l, cpu.regs.sp, 
-            pc, busReadAddr(pc), busReadAddr(pc+1), busReadAddr(pc+2), busReadAddr(pc+3));
         
-            
-        cpuGetData();
-        
+        //debugGbDocOut(&cpu);
         debugUpdate();
-        debugShow();
+        debugShow();    
+        if(++cycle == 16440) {
+            tmp = true;
+        }
+        cpuGetData();
         
         cpuExec();                                           
     }
@@ -765,13 +760,13 @@ bool cpuStep(void) {
         }
     }
 
-    if(cpu.int_enable) {
+    if(cpu.ime) {
         cpuIntHandler();
         cpu.enabling_ime = false;
     }
 
     if(cpu.enabling_ime) {
-        cpu.int_enable = true;
+        cpu.ime = true;
     }
     
     return true;
@@ -786,28 +781,16 @@ void cpuInit(void) {
     *((uint16_t *)&cpu.regs.h) = 0x4D01;
     cpu.ie_reg = 0;
     cpu.int_flags = 0;
-    cpu.int_enable = false;
+    cpu.ime = false;
     cpu.enabling_ime = false;
     timerSetDiv(0xABCC);
-}
-
-void cpuShowInstruction(uint32_t i) {
-    printf("INSTRUCTION: %s\n", instruction_set_s[i]);
-}
-
-char * cpuGetInsString(uint32_t i) {
-    return instruction_set_s[i];
-}
-
-char * cpuGetRegString(uint32_t i) {
-    return registers_s[i];
 }
 
 uint8_t cpuGetIntFlags() {
     return cpu.int_flags;
 }
 void cpuSetIntFlags(uint8_t val) {
-    cpu.int_flags = val;
+    cpu.int_flags = cpu.int_flags | val;
 }
 
 bool cpuGetFlag(uint32_t flag) {
@@ -843,5 +826,17 @@ void cpuSetFlags(CPU_FLAGS flags) {
     if(flags.c != -1){
         BIT_SET(cpu.regs.f, CARRY_FLAG, flags.c);
     }
+}
+
+void cpuShowInstruction(uint32_t i) {
+    printf("INSTRUCTION: %s\n", instruction_set_s[i]);
+}
+
+char * cpuGetInsString(uint32_t i) {
+    return instruction_set_s[i];
+}
+
+char * cpuGetRegString(uint32_t i) {
+    return registers_s[i];
 }
 
