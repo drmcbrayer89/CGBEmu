@@ -659,6 +659,7 @@ void asmCb(CPU * p_cpu) {
             flags.n = 0;
             flags.h = 0;
             flags.c = val & 1;
+            cpuSetFlags(flags);
             return;
     }
 }
