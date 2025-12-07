@@ -16,10 +16,10 @@ uint8_t busReadAddr(uint16_t addr) {
         return ppuReadVram(addr);
         //exit(-1);
     }
-    else if(addr < 0xC0000) {
+    else if(addr < 0xC000) {
         return cartReadAddr(addr);
     }
-    else if(addr < 0xE0000) {
+    else if(addr < 0xE000) {
         return memReadWRam(addr);
     }
     else if(addr < 0xFE00) {
@@ -51,6 +51,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
     //printf("WRITE ADDR: 0x%04X 0x%02X\n", addr, val);
         /* Cartridge */
     if(addr < 0x8000) {
+        //printf("0x%04X\n", addr);
         cartWriteAddr(addr, val);
         return;
     } 
@@ -59,6 +60,7 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
         ppuWriteVram(addr, val);
     } // cartridge ram
     else if(addr < 0xC000) {
+        //printf("0x%04X\n", addr);
         cartWriteAddr(addr,val);
         return;
     } // working ram

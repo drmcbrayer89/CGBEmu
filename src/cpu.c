@@ -440,22 +440,31 @@ void cpuWriteRegCb(CPU_REGISTER_ENUM reg, uint8_t val) {
         switch(reg) {
         case R_A:
             cpu.regs.a = val;
+            break;
         case R_F:
             cpu.regs.f = val;
+            break;
         case R_B:
             cpu.regs.b = val;
+            break;
         case R_C:
             cpu.regs.c = val;
+            break;
         case R_D:
             cpu.regs.d = val;
+            break;
         case R_E:
             cpu.regs.e = val;
+            break;
         case R_H:
             cpu.regs.h = val;
+            break;
         case R_L:
             cpu.regs.l = val;
+            break;
         case R_HL:
             busWriteAddr(cpuReadReg(reg), val);
+            break;
         default:
             exit(-1);
     }
@@ -535,7 +544,6 @@ static void cpuGetData(void) {
 
     switch(cpu.instruction->addr_mode) {
         case M_NONE:
-            //cpu.regs.pc++;
             return;
 
         case M_REG:
@@ -547,9 +555,9 @@ static void cpuGetData(void) {
             return;
 
         case M_REG_D8:
-            // Grab value @ pc, increment pc after.
-            cpu.data = busReadAddr(cpu.regs.pc++);
+            cpu.data = busReadAddr(cpu.regs.pc);
             gbTick(1);
+            cpu.regs.pc++;
             return;
 
         case M_MEMREG_REG:
@@ -574,7 +582,6 @@ static void cpuGetData(void) {
             gbTick(1);
             return;
         
-        /* These do the same thing from a reading standpoint... */
         case M_D16:
         case M_REG_D16:
             //printf("%04X\n", cpu.regs.pc);
@@ -591,13 +598,13 @@ static void cpuGetData(void) {
         case M_REG_HLI:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
             gbTick(1);
-            cpuWriteReg(R_HL, cpuReadReg(R_HL) + 1);
+            cpuWriteReg(R_HL, (cpuReadReg(cpu.instruction->r2) + 1));
             return;
 
         case M_REG_HLD:
             cpu.data = busReadAddr(cpuReadReg(cpu.instruction->r2));
             gbTick(1);
-            cpuWriteReg(R_HL, cpuReadReg(R_HL) - 1);
+            cpuWriteReg(R_HL, (cpuReadReg(cpu.instruction->r2) - 1));
             return;
         
         case M_REG_A8:
@@ -622,8 +629,8 @@ static void cpuGetData(void) {
         
         case M_A8_REG:
             cpu.memory_destination = busReadAddr(cpu.regs.pc) | 0xFF00;
-            gbTick(1);
             cpu.to_memory = true;
+            gbTick(1);
             cpu.regs.pc++;
             return;
         
@@ -661,7 +668,7 @@ static void cpuGetData(void) {
             gbTick(1);
             
             addr16 = lower | (upper << 8);
-            cpu.data = busReadAddr(addr);
+            cpu.data = busReadAddr(addr16);
             gbTick(1);
 
             cpu.regs.pc = cpu.regs.pc + 2;
@@ -737,18 +744,17 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-    static uint32_t cycle = 0;
+    static uint16_t cycle = 0;
     bool tmp = false;
     if(!cpu.halted) {
+        //debugOut(&cpu);
         cpuGetInstruction();
         gbTick(1);
-        
+
         //debugGbDocOut(&cpu);
         debugUpdate();
         debugShow();    
-        if(++cycle == 16440) {
-            tmp = true;
-        }
+        
         cpuGetData();
         
         cpuExec();                                           
@@ -783,7 +789,7 @@ void cpuInit(void) {
     cpu.int_flags = 0;
     cpu.ime = false;
     cpu.enabling_ime = false;
-    timerSetDiv(0xABCC);
+    timerSetDiv(0xAB00);
 }
 
 uint8_t cpuGetIntFlags() {
@@ -791,10 +797,6 @@ uint8_t cpuGetIntFlags() {
 }
 void cpuSetIntFlags(uint8_t val) {
     cpu.int_flags = cpu.int_flags | val;
-}
-
-bool cpuGetFlag(uint32_t flag) {
-    return BIT_CHECK(cpu.regs.f, flag);
 }
 
 uint8_t cpuGetIE(void) {
@@ -805,15 +807,21 @@ void cpuSetIE(uint8_t val) {
     cpu.ie_reg = val;
 }
 
-void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c) {
-    *z = BIT_CHECK(cpu.regs.f, ZERO_FLAG);
-    *n = BIT_CHECK(cpu.regs.f, SUBTRACTION_FLAG);
-    *h = BIT_CHECK(cpu.regs.f, HALF_CARRY_FLAG);
-    *z = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
+bool cpuGetFlag(uint32_t flag) {
+    return BIT_CHECK(cpu.regs.f, flag);
+}
+
+CPU_FLAGS cpuGetFlags(void) {
+    CPU_FLAGS flags;
+    flags.z = BIT_CHECK(cpu.regs.f, ZERO_FLAG);
+    flags.n = BIT_CHECK(cpu.regs.f, SUBTRACTION_FLAG);
+    flags.h = BIT_CHECK(cpu.regs.f, HALF_CARRY_FLAG);
+    flags.c = BIT_CHECK(cpu.regs.f, CARRY_FLAG);
+
+    return flags;
 }
 
 void cpuSetFlags(CPU_FLAGS flags) {
-    //printf("FLIP: %i %i %i %i\n", flags.z, flags.n, flags.h, flags.c);
     if(flags.z != -1) {
         BIT_SET(cpu.regs.f, ZERO_FLAG, flags.z);
     }

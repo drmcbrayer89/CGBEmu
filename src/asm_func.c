@@ -55,10 +55,7 @@ void asmCall(CPU * p_cpu) {
 }
 
 void asmRst(CPU * p_cpu) {
-    stackPush16(p_cpu->regs.pc + 1);
-    gbTick(2);
-
-    p_cpu->regs.pc = p_cpu->instruction->parameter;
+    gotoAddr(p_cpu, p_cpu->instruction->parameter, true);
 }
 
 void asmNone(CPU * p_cpu) {
@@ -71,6 +68,11 @@ void asmNop(CPU * p_cpu) {
 
 void asmLd(CPU * p_cpu) { 
     bool is_16bit = (p_cpu->instruction->r2 >= R_AF) ? true : false;
+    
+    if(p_cpu->instruction->addr_mode == M_REG_HLI) {
+        uint16_t asldfkaj = 5;
+    }
+
     if(p_cpu->to_memory) {
         if(is_16bit) {
             gbTick(1);
@@ -310,8 +312,11 @@ void asmRrca(CPU * p_cpu) {
 
 /* This is just a NOT operator for register A */
 void asmCpl(CPU * p_cpu) {
-    CPU_FLAGS flags = {-1, 1, 1, -1};
+    CPU_FLAGS flags = cpuGetFlags();
     p_cpu->regs.a = ~p_cpu->regs.a;
+    
+    flags.n = 1;
+    flags.h = 1;
     cpuSetFlags(flags);
 }
 
@@ -469,10 +474,8 @@ void asmRet(CPU * p_cpu) {
     if(asmCheckCondition(p_cpu)) {
         uint16_t lo = stackPop8();
         uint16_t hi = stackPop8();
-        //printf("lo: 0x%02X hi: 0x%02X\n", lo, hi);
         uint16_t val = (hi << 8) | lo;
-        //printf("\t0x%04X\n", val);
-        //p_cpu->regs.pc = val;
+
         cpuWriteReg(R_PC, val);
         gbTick(3);
     }
@@ -511,7 +514,9 @@ void asmCb(CPU * p_cpu) {
     /* get the current value in the register */
     uint8_t reg_val = cpuReadRegCb(cb_reg);
 
-    printf("\t\t0xCB%02X bit: %i op: %i register: %i\n", xx, bit, op, cb_reg);
+    uint8_t tmp = 0;
+
+    //printf("\t\t0xCB%02X bit: %i op: %i register: %i\n", xx, bit, op, cb_reg);
 
     if(cb_reg == R_HL) {
         gbTick(3);
@@ -528,9 +533,9 @@ void asmCb(CPU * p_cpu) {
             cpuSetFlags(flags);
             return;
         case I_CB_RES:
-            printf("\t\t%i %i\n", cb_reg, reg_val);
+            //printf("\t\t%i %i\n", cb_reg, reg_val);
             reg_val &= ~(1 << bit);
-            printf("\t\t%i %i\n", cb_reg, reg_val);
+            //printf("\t\t%i %i\n", cb_reg, reg_val);
             cpuWriteRegCb(cb_reg, reg_val);
             return;
         case I_CB_SET:
@@ -546,93 +551,99 @@ void asmCb(CPU * p_cpu) {
         case I_CB_RLC: // RLC
             /* Rotate Left Circular -- MSB goes to carry & LSB */
             val = cpuReadRegCb(cb_reg);
-            msb = (val >> 7) & 1;
-            cf_new = msb;
-            val = (val << 1) | msb;
+            tmp = val;
+            uint8_t c_new = 0;
 
-            flags.z = (val == 0) ? 1 : 0;
+            val = (val << 1) & 0xFF;
+
+            if((tmp & (1 << 7)) != 0) {
+                tmp |= 1;
+                c_new = 1;
+            }
+
+            flags.z = (tmp == 0);
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
+            flags.c = c_new;
+
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_RRC: // RRC
             /* Rotate Right Circular -- lsb goes to carry & MSB */
             val = cpuReadRegCb(cb_reg);
-            lsb = val & 0x01;
-            cf_new = lsb;
-            val = (val >> 1) | (lsb << 7);
+            tmp = val;
+            val = val >> 1;
 
-            flags.z = (val == 0) ? 1 : 0;
+            val |= (tmp << 7);
+
+            flags.z = (val == 0);
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
+            flags.c = tmp & 1;
+
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_RL: // RL
             /* Rotate Left through Carry */
             val = cpuReadRegCb(cb_reg);
-            msb = (val >> 7) & 1;
-            cf_new = msb;
-            val = (val << 1) | cf;
+            tmp = val;
+            val = val << 1;
 
-            flags.z = (val == 0) ? 1 : 0;
+            val |= cpuGetFlag(CARRY_FLAG);
+
+            flags.z = !val;
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
+            flags.c = !!(tmp & 0x80);
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_RR: // RR
             /* Rotate right through carry */
             val = cpuReadRegCb(cb_reg);
-            lsb = val & 0x01;
-            cf_new = lsb;
-            val = (val >> 1) | (cf << 7);
+            tmp = val;
+            val = val >> 1;
+
+            val |= (cpuGetFlag(CARRY_FLAG) << 7);
             
-            flags.z = (val == 0) ? 1 : 0;
+            flags.z = !val;
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;            
+            flags.c = tmp & 1;            
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_SLA: // SLA
             /* Shift left arithmetically */
             val = cpuReadRegCb(cb_reg);
-            msb = (val >> 7) & 1;
-            cf_new = msb;
-            val = (val << 1);
+            tmp = val;
+            val = val << 1;
 
-            flags.z = (val == 0) ? 1 : 0;
+            flags.z = !val;
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
+            flags.c = !!(tmp & 0x80);
             cpuSetFlags(flags);
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_SRA: // SRA
             /* Shift right arithmetically */
             val = cpuReadRegCb(cb_reg);
-            lsb = val & 1;
-            msb = (val >> 7) & 1;
-            cf_new = lsb;
-            /* msb must be added back into b7 */
-            val = (val >> 1) | (msb << 7);
-
-            flags.z = (val == 0) ? 1 : 0;
+            tmp = val >> 1;
+            
+            flags.z = !tmp;
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
+            flags.c = val & 1;
             cpuSetFlags(flags);
-            cpuWriteRegCb(cb_reg, val);
+            cpuWriteRegCb(cb_reg, tmp);
         case I_CB_SWAP: // SWAP
             val = cpuReadRegCb(cb_reg);
             val = ((val & 0x0F) << 4) | ((val & 0xF0) >> 4);
 
-            flags.z = (val == 0) ? 1 : 0;
+            flags.z = (val == 0);
             flags.n = 0;
             flags.h = 0;
             flags.c = 0;
@@ -640,57 +651,51 @@ void asmCb(CPU * p_cpu) {
             cpuWriteRegCb(cb_reg, val);
             return;
         case I_CB_SRL: // SRL
-            //TODO Finish this
             val = cpuReadRegCb(cb_reg);
-            lsb = val & 1;
-            cf_new = lsb;
-            /* msb should always be 0 in this case? */
-            val = (val >> 1) & (0 << 7);
+            tmp = val >> 1;
+            cpuWriteRegCb(cb_reg, tmp);
 
-            flags.z = (val == 0) ? 1 : 0;
+            flags.z = !tmp;
             flags.n = 0;
             flags.h = 0;
-            flags.c = cf_new;
-            cpuSetFlags(flags);
-            cpuWriteRegCb(cb_reg, val);
+            flags.c = val & 1;
             return;
     }
 }
 
 void asmDaa(CPU * p_cpu) {
-    CPU_FLAGS flags = {-1, -1, -1, -1};
-    cpuGetFlags(&flags.z, &flags.n, &flags.h, &flags.c);
-    uint8_t reg = cpuReadReg(R_A);
+    CPU_FLAGS flags = cpuGetFlags();
+    uint8_t a = cpuReadReg(R_A);
     uint16_t adjustment = 0;
-    uint8_t new_c = flags.c;
+    uint8_t new_c = 0;
 
-    // if flags.n == 1, adjustments are based on h & c 
+    // subtract flag set
     if(flags.n) {
         if(flags.h) {
-            adjustment |= 0x06;
+            adjustment += 0x6;
         }
         if(flags.c) {
-            adjustment |= 0x60;
+            adjustment += 0x60;
         }
-        reg = reg - adjustment;
-    }
-    // if flags.n == 0, we are doing addition.
-    else {
-        if(flags.h || ((reg & 0x0F) > 0x09)) {
-            adjustment |= 0x06;
+        a = a - adjustment;
+    } // subtract flag NOT set 
+    else if(flags.n == 0) {
+        if(flags.h || (a & 0xF > 0x9)) {
+            adjustment += 0x6;
         }
-        if(flags.c || (reg > 0x99)) {
-            adjustment |= 0x60;
-            new_c = 1;
+        if(flags.c || (a > 0x99)) {
+            adjustment += 0x60;
         }
-        reg = reg + adjustment;
+        a = a + adjustment;
+        new_c = 1;
     }
 
-    flags.z = (reg == 0) ? 1 : 0;
+    flags.z = (a == 0);
+    flags.n = -1;
     flags.h = 0;
     flags.c = new_c;
 
-    cpuWriteReg(R_A, reg);
+    cpuWriteReg(R_A, a);
     cpuSetFlags(flags);
 }
 

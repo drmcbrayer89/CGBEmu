@@ -102,7 +102,7 @@ typedef enum {
 } CPU_ADDR_MODE_ENUM;
 
 typedef enum {
-    C_NONE,
+    C_NONE = 0,
     C_Z,
     C_C,
     C_NZ,
@@ -110,7 +110,7 @@ typedef enum {
 } CPU_CONDITION_ENUM;
 
 typedef enum {
-    R_NONE,
+    R_NONE = 0,
     R_A,
     R_F,
     R_B,
@@ -187,7 +187,7 @@ typedef struct {
 } CPU_INTERRUPTS;
 
 CPU_INSTRUCTION * cpuGetInstructionByOpCode(uint16_t op_code);
-void cpuGetFlags(int8_t * z, int8_t * n, int8_t * h, int8_t * c);
+CPU_FLAGS cpuGetFlags(void);
 void cpuSetFlags(CPU_FLAGS flags);
 bool cpuGetFlag(uint32_t flag);
 uint8_t cpuReadRegCb(CPU_REGISTER_ENUM reg);
