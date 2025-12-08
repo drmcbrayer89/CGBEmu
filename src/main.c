@@ -11,7 +11,7 @@ int32_t main(int32_t argc, char * argv[])
     }
     /* Remove this after done... */
     else {
-        if(cartOpen("01-special.gb")){
+        if(cartOpen("06-ldrr.gb")){
             gbStart();
         }
     }

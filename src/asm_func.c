@@ -246,9 +246,7 @@ void asmAdd(CPU * p_cpu) {
         val = cpuReadReg(p_cpu->instruction->r1);
 
         if(is_16bit == false) {
-            if(((val + p_cpu->data) & 0xFF) == 0x00) {
-                flags.z = 1;
-            }
+            flags.z = (((val + p_cpu->data) & 0xFF) == 0x00);
             /* These are checking if bits 3 or 7 are exceeded by the sum */
             flags.h = ((val & 0xF) + (p_cpu->data & 0xF)) > 0xF ? true : false;
             flags.c = ((val + p_cpu->data) > 0xFF) ? true : false;
@@ -374,9 +372,7 @@ void asmAnd(CPU * p_cpu) {
     CPU_FLAGS flags = {-1,0,1,0};
     uint8_t val = (p_cpu->regs.a & p_cpu->data);
 
-    if(val == 0x00) {
-        flags.z = 1;
-    }
+    flags.z = (val == 0x00);
     cpuWriteReg(R_A, val);
     cpuSetFlags(flags);
 }
@@ -673,22 +669,23 @@ void asmDaa(CPU * p_cpu) {
     // subtract flag set
     if(flags.n) {
         if(flags.h) {
-            adjustment += 0x6;
+            adjustment += 0x06;
         }
         if(flags.c) {
             adjustment += 0x60;
+            new_c = 1;
         }
         a = a - adjustment;
     } // subtract flag NOT set 
     else if(flags.n == 0) {
-        if(flags.h || (a & 0xF > 0x9)) {
-            adjustment += 0x6;
+        if(flags.h || ((a & 0xF) > 0x9)) {
+            adjustment += 0x06;
         }
         if(flags.c || (a > 0x99)) {
             adjustment += 0x60;
+            new_c = 1;
         }
         a = a + adjustment;
-        new_c = 1;
     }
 
     flags.z = (a == 0);

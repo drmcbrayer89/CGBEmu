@@ -744,17 +744,19 @@ static void cpuExec(void) {
 }
 
 bool cpuStep(void) {
-    static uint16_t cycle = 0;
+    static uint32_t cycle = 0;
     bool tmp = false;
     if(!cpu.halted) {
-        //debugOut(&cpu);
+        debugOut(&cpu);
         cpuGetInstruction();
         gbTick(1);
 
         //debugGbDocOut(&cpu);
         debugUpdate();
         debugShow();    
-        
+        if(++cycle == 493589) {
+            tmp = true;
+        }
         cpuGetData();
         
         cpuExec();                                           
