@@ -2,22 +2,42 @@
 
 PPU ppu = {0};
 
+
+void ppuTick(void) {
+    ppu.ticks++;
+}
+
+void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
+    uint8_t bit_index = 15;
+    /* This gets an entire line worth of pixel color id's */
+    for(bit_index; bit_index >= 0; bit_index--) {
+        uint8_t b1_msb = (line & (1 << bit_index) >> bit_index);
+        uint8_t b2_msb = (line & (1 << bit_index - 8) >> (bit_index - 8));
+        color_id_out[bit_index] = (b2_msb << 1) | b1_msb;
+    }
+}
+
 void ppuWriteOam(uint16_t addr, uint8_t val) {
-    addr = addr - 0xFE00;
+    addr = addr - OAM_START;
     ppu.oam[addr] = val;
 }
 
 uint8_t ppuReadOam(uint16_t addr) {
-    addr = addr - 0xFE00;
+    addr = addr - OAM_START;
     return ppu.oam[addr];
 }
 
 void ppuWriteVram(uint16_t addr, uint8_t val) {
-    addr = addr - 0x8000;
+    addr = addr - VRAM_START;
     ppu.vram[addr] = val;
 }
 
 uint8_t ppuReadVram(uint16_t addr) {
-    addr = addr - 0x8000;
+    addr = addr - VRAM_START;
     return ppu.vram[addr];
+}
+
+void ppuInit(void) {
+    ppu.oam_locked = false;
+    ppu.ticks = 0;
 }
