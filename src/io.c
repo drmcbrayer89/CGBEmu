@@ -3,6 +3,7 @@
 #include "bus.h"
 #include "cpu.h"
 #include "timer.h"
+#include "lcd.h"
 
 void ioWrite(uint16_t addr, uint8_t val) {
     //printf("0x%04X 0x%02X\n", addr, val);
@@ -22,6 +23,9 @@ void ioWrite(uint16_t addr, uint8_t val) {
             timerWrite(addr, val);
         case 0xFF0F:
             cpuSetIntFlags(val);
+            return;
+        case 0xFF40 ... 0xFF45:
+            lcdWrite(addr, val);
             return;
         default:
             //printf("incorrect addr\n");
@@ -44,6 +48,8 @@ uint8_t ioRead(uint16_t addr) {
             return timerRead(addr);
         case 0xFF0F:
             return cpuGetIntFlags();
+        case 0xFF40 ... 0xFF45:
+            return lcdRead(addr);
         default:
             //printf("Incorrect addr\n");
             return 0;

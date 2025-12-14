@@ -1,10 +1,42 @@
 #include "ppu.h"
+#include "lcd.h"
 
 PPU ppu = {0};
 
+void ppuStateMachine(void) {
+    switch(ppu.mode) {
+        case MODE_0:
+            break;
+        case MODE_1:
+            break;
+        case MODE_2:
+            if(ppu.dots <= 80) {
+                // OAM scan
+                ppu.oam_locked = true;
+            }
+            else {
+                ppu.mode = MODE_3;
+                ppu.oam_locked = true;
+            }
+            break;
+        case MODE_3:
+            if(ppu.dots <= 289) {
+                ppu.vram_locked = true;
+            }
+            else {
+                ppu.oam_locked = false;
+            }
+            break;
+        default: 
+            break;
+    }
+    // Clear after 456 always
+    if(ppu.dots == 456) ppu.dots = 0;
+}
 
 void ppuTick(void) {
-    ppu.ticks++;
+    ppuStateMachine();
+    ppu.dots++;
 }
 
 void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
@@ -38,6 +70,6 @@ uint8_t ppuReadVram(uint16_t addr) {
 }
 
 void ppuInit(void) {
-    ppu.oam_locked = false;
-    ppu.ticks = 0;
+    ppu.oam_locked = true;
+    ppu.dots = 0;
 }

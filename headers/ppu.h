@@ -2,17 +2,21 @@
 
 #define VRAM_START 0x8000
 #define OAM_START  0xFE00
-#define MODE_2 80
-#define MODE_3 172
-#define MODE_0 204
-#define MODE_1 4560
+
+typedef enum {
+    MODE_0,
+    MODE_1,
+    MODE_2,
+    MODE_3
+} PPU_MODES;
 
 typedef struct {
     uint8_t vram[0x1FFF];
     uint8_t oam[0x9F];
-    uint32_t ticks;
+    uint32_t dots;
     bool oam_locked;
-    uint32_t mode;
+    bool vram_locked;
+    PPU_MODES mode;
 } PPU;
 
 void ppuTick(void);
