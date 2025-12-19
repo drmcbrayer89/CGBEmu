@@ -4,10 +4,10 @@
 #define OAM_START  0xFE00
 
 typedef enum {
-    MODE_0,
-    MODE_1,
-    MODE_2,
-    MODE_3
+    HBLANK,
+    VBLANK,
+    DRAWING,
+    OAM_SEARCH
 } PPU_MODES;
 
 typedef struct {
@@ -17,6 +17,7 @@ typedef struct {
     bool oam_locked;
     bool vram_locked;
     PPU_MODES mode;
+    uint8_t ly;
 } PPU;
 
 void ppuTick(void);

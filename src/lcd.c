@@ -10,11 +10,11 @@ void lcdWrite(uint16_t addr, uint8_t val) {
 
 uint8_t lcdRead(uint16_t addr) {
     switch(addr) {
+        case 0xFF41:
+            break;
         case 0xFF44:
             break;
         case 0xFF45:
-            break;
-        case 0xFF41:
             break;
         default:
             return 0;

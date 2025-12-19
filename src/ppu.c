@@ -4,39 +4,40 @@
 PPU ppu = {0};
 
 void ppuStateMachine(void) {
-    switch(ppu.mode) {
-        case MODE_0:
-            break;
-        case MODE_1:
-            break;
-        case MODE_2:
-            if(ppu.dots <= 80) {
-                // OAM scan
-                ppu.oam_locked = true;
-            }
-            else {
-                ppu.mode = MODE_3;
-                ppu.oam_locked = true;
-            }
-            break;
-        case MODE_3:
-            if(ppu.dots <= 289) {
-                ppu.vram_locked = true;
-            }
-            else {
-                ppu.oam_locked = false;
-            }
-            break;
-        default: 
-            break;
-    }
-    // Clear after 456 always
-    if(ppu.dots == 456) ppu.dots = 0;
+
 }
 
+// Just get this cycling for now.
 void ppuTick(void) {
-    ppuStateMachine();
     ppu.dots++;
+    switch (ppu.mode) {
+        case OAM_SEARCH:
+            ppu.mode = (ppu.dots == 80) ? DRAWING : OAM_SEARCH;
+            break;
+        case DRAWING:
+            ppu.mode = (ppu.dots == (289 + 80)) ? HBLANK : DRAWING;
+            break;
+        case HBLANK:
+            if(ppu.dots == (289 + 80 + 204)) {
+                if(ppu.ly++ == 145) {
+                    ppu.mode = VBLANK;
+                }
+            }
+            break;
+        case VBLANK:
+            if(ppu.dots == 289 + 80 + 204) {
+                ppu.ly++;
+            }
+            if(ppu.ly == 154) {
+                ppu.ly = 0;
+            }
+            break;
+        default:
+            break;
+            
+    }
+    if(ppu.dots == 80) ppu.mode = DRAWING;
+
 }
 
 void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
@@ -72,4 +73,5 @@ uint8_t ppuReadVram(uint16_t addr) {
 void ppuInit(void) {
     ppu.oam_locked = true;
     ppu.dots = 0;
+    ppu.mode = OAM_SEARCH;
 }
