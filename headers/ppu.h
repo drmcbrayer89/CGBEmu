@@ -18,6 +18,7 @@ typedef struct {
     bool vram_locked;
     PPU_MODES mode;
     uint8_t ly;
+    uint8_t x;
 } PPU;
 
 void ppuTick(void);

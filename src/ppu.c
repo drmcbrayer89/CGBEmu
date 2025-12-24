@@ -1,6 +1,10 @@
 #include "ppu.h"
 #include "lcd.h"
 
+#define WIDTH_PX 160
+#define MAX_SCANLINES 144
+#define DOTS_PER_LINE 456
+
 PPU ppu = {0};
 
 void ppuStateMachine(void) {
@@ -12,32 +16,41 @@ void ppuTick(void) {
     ppu.dots++;
     switch (ppu.mode) {
         case OAM_SEARCH:
-            ppu.mode = (ppu.dots == 80) ? DRAWING : OAM_SEARCH;
+            if(ppu.dots == 80) ppu.mode = DRAWING;
             break;
         case DRAWING:
-            ppu.mode = (ppu.dots == (289 + 80)) ? HBLANK : DRAWING;
+            // This is where I'll grab pixel data from the FIFO
+            // & place on the screen. 
+            // Just incrementing for now.
+            ppu.x++;
+            if(ppu.x == WIDTH_PX) ppu.mode = HBLANK;
             break;
         case HBLANK:
-            if(ppu.dots == (289 + 80 + 204)) {
-                if(ppu.ly++ == 145) {
+            // Update LY register and transistion to either OAM or VBLANK
+            if(ppu.dots == DOTS_PER_LINE) {
+                ppu.dots = 0;
+                if(++ppu.ly == MAX_SCANLINES) {
                     ppu.mode = VBLANK;
+                }
+                else {
+                    ppu.mode = OAM_SEARCH;
                 }
             }
             break;
         case VBLANK:
-            if(ppu.dots == 289 + 80 + 204) {
-                ppu.ly++;
-            }
-            if(ppu.ly == 154) {
-                ppu.ly = 0;
+            // VBLANK waits for 10 increments of LY...
+            if(ppu.dots == DOTS_PER_LINE) {
+                ppu.dots = 0;
+                if(++ppu.ly == 153) {
+                    ppu.ly = 0;
+                    ppu.mode = OAM_SEARCH;
+                }
             }
             break;
         default:
             break;
             
     }
-    if(ppu.dots == 80) ppu.mode = DRAWING;
-
 }
 
 void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
