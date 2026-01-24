@@ -7,14 +7,12 @@
 
 /* Pulled the memory map from the pan docs website */
 uint8_t busReadAddr(uint16_t addr) {
-    /* Cartridge */
+    // cartridge
     if(addr < 0x8000) {
         return cartReadAddr(addr);
     } 
-    // char/map
     else if(addr < 0xA000) {
         return ppuReadVram(addr);
-        //exit(-1);
     }
     else if(addr < 0xC000) {
         return cartReadAddr(addr);
@@ -26,8 +24,7 @@ uint8_t busReadAddr(uint16_t addr) {
         return 0;
     }
     else if(addr < 0xFEA0) {
-        //TODO
-        return 0;
+        return ppuReadOam(addr);
     } // do not enter
     else if(addr < 0xFF00) {
         return 0;
@@ -48,34 +45,29 @@ uint8_t busReadAddr(uint16_t addr) {
 }
 
 void busWriteAddr(uint16_t addr, uint8_t val) {
-    //printf("WRITE ADDR: 0x%04X 0x%02X\n", addr, val);
-        /* Cartridge */
+    // cartridge
     if(addr < 0x8000) {
-        //printf("0x%04X\n", addr);
         cartWriteAddr(addr, val);
         return;
-    } 
-    // char/map
+    } // vram
     else if(addr < 0xA000) {
         ppuWriteVram(addr, val);
     } // cartridge ram
     else if(addr < 0xC000) {
-        //printf("0x%04X\n", addr);
         cartWriteAddr(addr,val);
         return;
     } // working ram
     else if(addr < 0xE000) {
-        //printf("WRITING (0x%04X): 0x%04X\n", addr, val);
         memWriteWRam(addr, val);
         return;
     } // reserved 
     else if(addr < 0xFE00) {
     } // do not enter
     else if(addr < 0xFEA0) {
-        //TODO
+        ppuWriteOam(addr, val);
     } // do not enter
     else if(addr < 0xFF00) {
-
+        return;
     } // i/o
     else if(addr < 0xFF80) {
         ioWrite(addr, val);

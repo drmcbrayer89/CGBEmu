@@ -1,14 +1,21 @@
 #include "common.h"
 
-#define LYC_INT_SELECT 6
-#define MODE_2_INT_SELECT 5
-#define MODE_1_INT_SELECT 4
-#define MODE_0_INT_SELECT 3
-#define LYC_EQUALS_LY 2
-#define PPU_MODE 1
+#define LCDC_SET(a, b) a & (1 << b);
+
+typedef enum {
+    BG_WINDOW_ENABLE = 0,
+    OBJ_ENABLE,
+    OBJ_SIZE,
+    BG_TILE_MAP,
+    BG_WINDOW_TILES,
+    WINDOW_ENABLE,
+    WINDOW_TILE_MAP,
+    LCD_PPU_ENABLE
+} LCDC_BITS;
 
 typedef struct {
     uint8_t lcdc;
+    uint8_t lcds;
     uint8_t ly;
     uint8_t lyc;
     uint8_t dma_enable;

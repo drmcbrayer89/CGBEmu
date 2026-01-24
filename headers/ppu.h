@@ -13,7 +13,7 @@ typedef enum {
 typedef struct {
     uint8_t vram[0x1FFF];
     uint8_t oam[0x9F];
-    uint32_t dots;
+    uint32_t ticks;
     bool oam_locked;
     bool vram_locked;
     PPU_MODES mode;

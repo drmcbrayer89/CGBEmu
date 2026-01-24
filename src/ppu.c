@@ -13,22 +13,24 @@ void ppuStateMachine(void) {
 
 // Just get this cycling for now.
 void ppuTick(void) {
-    ppu.dots++;
+    static uint32_t dots = 0;
+    ppu.ticks++;
+
+    dots++;
     switch (ppu.mode) {
         case OAM_SEARCH:
-            if(ppu.dots == 80) ppu.mode = DRAWING;
+            if(dots == 80) ppu.mode = DRAWING;
             break;
         case DRAWING:
             // This is where I'll grab pixel data from the FIFO
             // & place on the screen. 
             // Just incrementing for now.
-            ppu.x++;
-            if(ppu.x == WIDTH_PX) ppu.mode = HBLANK;
+            if(++ppu.x == WIDTH_PX) ppu.mode = HBLANK;
             break;
         case HBLANK:
             // Update LY register and transistion to either OAM or VBLANK
-            if(ppu.dots == DOTS_PER_LINE) {
-                ppu.dots = 0;
+            if(dots == DOTS_PER_LINE) {
+                dots = 0;
                 if(++ppu.ly == MAX_SCANLINES) {
                     ppu.mode = VBLANK;
                 }
@@ -39,8 +41,8 @@ void ppuTick(void) {
             break;
         case VBLANK:
             // VBLANK waits for 10 increments of LY...
-            if(ppu.dots == DOTS_PER_LINE) {
-                ppu.dots = 0;
+            if(dots == DOTS_PER_LINE) {
+                dots = 0;
                 if(++ppu.ly == 153) {
                     ppu.ly = 0;
                     ppu.mode = OAM_SEARCH;
@@ -49,7 +51,6 @@ void ppuTick(void) {
             break;
         default:
             break;
-            
     }
 }
 
@@ -85,6 +86,6 @@ uint8_t ppuReadVram(uint16_t addr) {
 
 void ppuInit(void) {
     ppu.oam_locked = true;
-    ppu.dots = 0;
+    ppu.ticks = 0;
     ppu.mode = OAM_SEARCH;
 }
