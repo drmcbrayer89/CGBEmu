@@ -10,6 +10,15 @@ typedef enum {
     OAM_SEARCH
 } PPU_MODES;
 
+/*
+    OAM is going to be weird to read from. Maybe try to use modulo to get the proper indexed byte?
+    y = addr + 0
+    x = addr + 1
+    tile_index = addr + 2
+    word =  addr + 3
+
+    addr % 4 = remainder. Remainder decides the appropriate byte?
+*/
 typedef struct {
     uint8_t y;
     uint8_t x;

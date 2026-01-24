@@ -66,12 +66,28 @@ void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
 
 void ppuWriteOam(uint16_t addr, uint8_t val) {
     addr = addr - OAM_START;
-    ppu.oam[addr] = val;
+    //ppu.oam[addr] = val;
 }
 
 uint8_t ppuReadOam(uint16_t addr) {
     addr = addr - OAM_START;
-    return ppu.oam[addr];
+    // Find OAM byte with modulo (Need to test this)
+    uint8_t byte_index = addr % 4;
+    // Recenter at 0-th byte of OAM entry
+    addr = addr - byte_index;
+
+    switch(byte_index) {
+        case 0:
+            return ppu.oam[addr].y;
+        case 1:
+            return ppu.oam[addr].x;
+        case 2:
+            return ppu.oam[addr].tile_index;
+        case 3:
+            return ppu.oam[addr].attributes.word;
+        default:
+            return 0;
+    }
 }
 
 void ppuWriteVram(uint16_t addr, uint8_t val) {
