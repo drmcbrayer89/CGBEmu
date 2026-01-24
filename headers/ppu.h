@@ -11,8 +11,27 @@ typedef enum {
 } PPU_MODES;
 
 typedef struct {
+    uint8_t y;
+    uint8_t x;
+    uint8_t tile_index;
+
+    union {
+        uint8_t word;
+
+        struct {
+            uint8_t cgb_palette : 3;
+            uint8_t bank : 1;
+            uint8_t dmg_palette : 1;
+            uint8_t x_flip : 1;
+            uint8_t y_flip : 1;
+            uint8_t priority : 1;
+        } bits;
+    } attributes;
+} PPU_OAM;
+
+typedef struct {
     uint8_t vram[0x1FFF];
-    uint8_t oam[0x9F];
+    PPU_OAM oam[0x9F];
     uint32_t ticks;
     bool oam_locked;
     bool vram_locked;
