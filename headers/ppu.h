@@ -41,6 +41,7 @@ typedef struct {
 typedef struct {
     uint8_t vram[0x1FFF];
     PPU_OAM oam[0x9F];
+    uint8_t oam_bytes[0x9F];
     uint32_t ticks;
     bool oam_locked;
     bool vram_locked;
