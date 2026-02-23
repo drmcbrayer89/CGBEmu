@@ -2,6 +2,7 @@
 #include "cpu.h"
 #include "gui.h"
 #include "timer.h"
+#include "dma.h"
 #include "pthread.h"
 #include "unistd.h"
 
@@ -22,6 +23,7 @@ void gbTick(uint8_t cycles) {
             timerTick();
             // sync with PPU later :)
         }
+        dmaTick();
     }
 }
 

@@ -4,6 +4,7 @@
 #include "cpu.h"
 #include "timer.h"
 #include "lcd.h"
+#include "dma.h"
 
 void ioWrite(uint16_t addr, uint8_t val) {
     //printf("0x%04X 0x%02X\n", addr, val);
@@ -26,6 +27,9 @@ void ioWrite(uint16_t addr, uint8_t val) {
             return;
         case 0xFF40 ... 0xFF45:
             lcdWrite(addr, val);
+            return;
+        case 0xFF46:
+            dmaWrite(val);
             return;
         default:
             //printf("incorrect addr\n");
