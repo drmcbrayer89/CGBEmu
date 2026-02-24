@@ -9,3 +9,4 @@ typedef struct {
 
 void dmaWrite(uint8_t val);
 void dmaTick(void);
+bool dmaIsActive(void);

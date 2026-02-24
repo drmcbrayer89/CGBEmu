@@ -65,18 +65,16 @@ void ppuGetColorIndexes(uint16_t line, uint8_t * color_id_out) {
 }
 
 void ppuWriteOam(uint16_t addr, uint8_t val) {
-    if(addr >= 0xFE00) {
-        addr = addr - 0xFE00;
+    if(addr >= OAM_START) {
+        addr = addr - OAM_START;
     }
-
     ppu.oam_bytes[addr] = val;
 }
 
 uint8_t ppuReadOam(uint16_t addr) {
-    if(addr >= 0xFE00) {
-        addr = addr - 0xFE00;
+    if(addr >= OAM_START) {
+        addr = addr - OAM_START;
     }
-
     return ppu.oam_bytes[addr];
 }
 

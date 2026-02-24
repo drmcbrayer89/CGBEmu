@@ -13,7 +13,7 @@ void dmaWrite(uint8_t val) {
 
 void dmaTick(void) {
     if(dma.active) {
-        uint8_t data = busReadAddr((dma.val * 0x100) + dma.byte);
+        uint8_t data = busReadDmaAddr((dma.val * 0x100) + dma.byte);
         ppuWriteOam(dma.byte, data);
 
         dma.byte++;
