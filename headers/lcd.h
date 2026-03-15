@@ -1,6 +1,5 @@
 #include "common.h"
-
-#define LCDC_SET(a, b) a & (1 << b);
+#define LCD_PPU_MODE_MASK (0x3)
 
 typedef enum {
     BG_WINDOW_ENABLE = 0,
@@ -21,5 +20,7 @@ typedef struct {
     uint8_t dma_enable;
 } LCD;
 
+uint8_t lcdGetPpuMode();
 void lcdWrite(uint16_t addr, uint8_t val);
 uint8_t lcdRead(uint16_t addr);
+LCD * lcdGetPtr(void);

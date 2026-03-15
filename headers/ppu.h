@@ -1,14 +1,15 @@
 #include "common.h"
+#include "lcd.h"
 
 #define VRAM_START 0x8000
 #define OAM_START  0xFE00
 
 typedef enum {
-    HBLANK,
-    VBLANK,
-    DRAWING,
-    OAM_SEARCH
-} PPU_MODES;
+    MODE_HBLANK,
+    MODE_VBLANK,
+    MODE_OAM,
+    MODE_DRAW
+} PPU_MODE;
 
 /*
     OAM is going to be weird to read from. Maybe try to use modulo to get the proper indexed byte?
@@ -44,9 +45,9 @@ typedef struct {
     uint32_t ticks;
     bool oam_locked;
     bool vram_locked;
-    PPU_MODES mode;
-    uint8_t ly;
-    uint8_t x;
+    PPU_MODE mode;
+    uint32_t * video_buffer;
+    uint32_t current_frame;
 } PPU;
 
 void ppuTick(void);

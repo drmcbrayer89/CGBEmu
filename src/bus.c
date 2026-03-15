@@ -122,45 +122,6 @@ void busWriteAddr(uint16_t addr, uint8_t val) {
             printf("\t\tInvalid memory address %04X\n", addr);
             return;
     }
-   /*
-    // cartridge
-    if(addr < 0x8000) {
-        cartWriteAddr(addr, val);
-        return;
-    } // vram
-    else if(addr < 0xA000) {
-        ppuWriteVram(addr, val);
-    } // cartridge ram
-    else if(addr < 0xC000) {
-        cartWriteAddr(addr,val);
-        return;
-    } // working ram
-    else if(addr < 0xE000) {
-        memWriteWRam(addr, val);
-        return;
-    } // reserved 
-    else if(addr < 0xFE00) {
-    } // do not enter
-    else if(addr < 0xFEA0) {
-        if(dmaIsActive()) {
-            return;
-        }
-        ppuWriteOam(addr, val);
-    } // do not enter
-    else if(addr < 0xFF00) {
-        return;
-    } // i/o
-    else if(addr < 0xFF80) {
-        ioWrite(addr, val);
-    } // enable interrupt register
-    else if(addr == 0xFFFF) {
-        cpuSetIE(val);
-        return;
-    } // anything else goes to hram
-    else {
-        memWriteHRam(addr, val);
-    }
-        */
 }
 
 void busWriteAddr16(uint16_t addr, uint16_t val) {
